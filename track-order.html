@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order - Slay Station</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        .track-page { max-width: 900px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+        .track-page h1 { margin-bottom: 0.5rem; color: var(--dark); }
+        .track-page .subtitle { color: #666; margin-bottom: 1.5rem; }
+        .track-order-card { background: #fff; border-radius: 15px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 1.5rem; }
+        .track-order-card h2 { font-size: 1.1rem; margin: 0 0 1rem 0; color: var(--primary-pink); }
+        .track-map-wrap { height: 350px; border-radius: 12px; overflow: hidden; background: #e8e8e8; margin-top: 1rem; }
+        .track-map-wrap .leaflet-container { height: 100%; width: 100%; }
+        .track-back { display: inline-block; margin-bottom: 1rem; color: var(--primary-pink); text-decoration: none; font-weight: 600; }
+        .track-back:hover { text-decoration: underline; }
+        .track-status-badge { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem; margin-top: 0.5rem; }
+        .track-status-pending { background: #FFF3CD; color: #856404; }
+        .track-status-processing, .track-status-dispatched { background: #D1ECF1; color: #0C5460; }
+        .track-status-delivered { background: #D4EDDA; color: #155724; }
+        .track-legend { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; font-size: 0.9rem; color: #666; }
+        .track-legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+    </style>
+</head>
+<body class="page-account">
+    <div class="promo-bar">
+        <div class="promo-bar-left"><a href="index.html#contact">Find a Location</a></div>
+        <div class="promo-bar-messages">
+            <p class="promo-bar-text promo-bar-message active">Track your delivery</p>
+        </div>
+    </div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-mobile-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+            <div class="nav-logo-wrap">
+                <div class="logo"><a href="index.html" class="logo-link"><span class="logo-text">Slay Station</span></a></div>
+            </div>
+            <div class="nav-menu-drawer" id="navMenuDrawer">
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html#products">Shop</a></li>
+                    <li><a href="order-history.html">Order History</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="nav-actions">
+                <a href="order-history.html" class="nav-btn-round nav-btn-user" title="Order History"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></a>
+                <a href="index.html" class="nav-btn-round nav-btn-cart" title="Home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="track-page" style="margin-top: 92px;">
+        <a href="order-history.html" class="track-back">← Order History</a>
+        <h1 id="trackTitle">Track Order</h1>
+        <p class="subtitle" id="trackSubtitle">Loading…</p>
+
+        <div id="trackContent" style="display: none;">
+            <div class="track-order-card">
+                <h2>Order #<span id="trackOrderId"></span></h2>
+                <p style="margin: 0; color: #666;"><span id="trackDate"></span></p>
+                <p style="margin: 0.5rem 0 0 0;"><span id="trackAddress" class="order-address"></span></p>
+                <span id="trackStatusBadge" class="track-status-badge"></span>
+            </div>
+            <div class="track-order-card" id="trackMapCard" style="display: none;">
+                <h2>📍 Live location</h2>
+                <p style="margin: 0 0 0.5rem 0; color: #666; font-size: 0.9rem;">Rider is on the way to your delivery address.</p>
+                <div class="track-legend">
+                    <span>🛍️ Store</span>
+                    <span>🏠 Your address</span>
+                    <span>🏍️ Rider</span>
+                </div>
+                <div id="trackMap" class="track-map-wrap"></div>
+            </div>
+        </div>
+        <div id="trackError" style="display: none; padding: 2rem; text-align: center; color: #666;">
+            <p>Order not found or you don’t have access to it.</p>
+            <a href="order-history.html" class="account-btn account-btn-primary" style="display: inline-block; margin-top: 1rem;">Back to Order History</a>
+        </div>
+    </main>
+
+    <script src="auth.js"></script>
+    <script>
+        (function() {
+            function getOrderId() {
+                var params = new URLSearchParams(window.location.search);
+                var o = params.get('order');
+                return o ? parseInt(o, 10) : null;
+            }
+            function getCurrentUser() {
+                try {
+                    if (typeof userAuth !== 'undefined' && userAuth && userAuth.getCurrentUser)
+                        return userAuth.getCurrentUser();
+                    var raw = localStorage.getItem('slayStationCurrentUser');
+                    return raw ? JSON.parse(raw) : null;
+                } catch (e) { return null; }
+            }
+            function getOrders() {
+                try {
+                    var raw = localStorage.getItem('slayStationOrders');
+                    return raw ? JSON.parse(raw) : [];
+                } catch (e) { return []; }
+            }
+            function percentageToLatLng(x, y) {
+                var minLat = -1.35, maxLat = -1.20, minLng = 36.70, maxLng = 36.90;
+                var lat = maxLat - ((y / 100) * (maxLat - minLat));
+                var lng = minLng + ((x / 100) * (maxLng - minLng));
+                return { lat: lat, lng: lng };
+            }
+            function formatDate(iso) {
+                if (!iso) return '—';
+                return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            }
+            function formatStatus(s) {
+                if (!s) return 'Pending';
+                return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+            }
+
+            var orderId = getOrderId();
+            var user = getCurrentUser();
+            var orders = getOrders();
+            var order = orderId ? orders.find(function(o) { return o.id === orderId; }) : null;
+
+            var content = document.getElementById('trackContent');
+            var errorEl = document.getElementById('trackError');
+            var titleEl = document.getElementById('trackTitle');
+            var subtitleEl = document.getElementById('trackSubtitle');
+            var orderIdEl = document.getElementById('trackOrderId');
+            var dateEl = document.getElementById('trackDate');
+            var addressEl = document.getElementById('trackAddress');
+            var statusBadge = document.getElementById('trackStatusBadge');
+            var mapCard = document.getElementById('trackMapCard');
+            var mapDiv = document.getElementById('trackMap');
+
+            if (!order || !user || (order.email || '').toLowerCase().trim() !== (user.email || '').toLowerCase().trim()) {
+                if (content) content.style.display = 'none';
+                if (errorEl) errorEl.style.display = 'block';
+                if (subtitleEl) subtitleEl.textContent = 'Order not found.';
+                return;
+            }
+
+            titleEl.textContent = 'Track Order #' + order.id;
+            subtitleEl.textContent = formatStatus(order.status);
+            orderIdEl.textContent = order.id;
+            dateEl.textContent = formatDate(order.date);
+            addressEl.textContent = order.address || 'Delivery address not set';
+            statusBadge.textContent = formatStatus(order.status);
+            statusBadge.className = 'track-status-badge track-status-' + (order.status || 'pending').toLowerCase();
+            if (content) content.style.display = 'block';
+
+            var canTrack = order.assignedRider && order.deliveryStarted && !order.completed;
+            if (canTrack && typeof L !== 'undefined' && L.map && mapDiv) {
+                mapCard.style.display = 'block';
+                var storeLoc = order.storeLocation || { x: 20, y: 70 };
+                var customerLoc = order.customerLocation || { x: 75, y: 25 };
+                var riderLoc = order.riderLocation || storeLoc;
+                var storeLatLng = percentageToLatLng(storeLoc.x, storeLoc.y);
+                var customerLatLng = order.customerLocationLatLng || percentageToLatLng(customerLoc.x, customerLoc.y);
+                var riderLatLng = order.riderLocationLatLng || percentageToLatLng(riderLoc.x, riderLoc.y);
+                var centerLat = (storeLatLng.lat + customerLatLng.lat + riderLatLng.lat) / 3;
+                var centerLng = (storeLatLng.lng + customerLatLng.lng + riderLatLng.lng) / 3;
+
+                var map = L.map(mapDiv).setView([centerLat, centerLng], 12);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+                var storeIcon = L.divIcon({ className: 'track-store-icon', html: '🛍️', iconSize: [32, 32], iconAnchor: [16, 16] });
+                var customerIcon = L.divIcon({ className: 'track-customer-icon', html: '🏠', iconSize: [32, 32], iconAnchor: [16, 16] });
+                var riderIcon = L.divIcon({ className: 'track-rider-icon', html: '🏍️', iconSize: [40, 40], iconAnchor: [20, 20] });
+
+                L.marker([storeLatLng.lat, storeLatLng.lng], { icon: storeIcon }).addTo(map).bindPopup('Store');
+                L.marker([customerLatLng.lat, customerLatLng.lng], { icon: customerIcon }).addTo(map).bindPopup('Your address');
+                var riderMarker = L.marker([riderLatLng.lat, riderLatLng.lng], { icon: riderIcon }).addTo(map).bindPopup('Rider');
+                map.fitBounds([[storeLatLng.lat, storeLatLng.lng], [customerLatLng.lat, customerLatLng.lng], [riderLatLng.lat, riderLatLng.lng]], { padding: [30, 30] });
+
+                setInterval(function() {
+                    var orders = getOrders();
+                    var o = orders.find(function(x) { return x.id === orderId; });
+                    if (!o || !o.riderLocation || o.completed) return;
+                    var rLatLng = o.riderLocationLatLng || percentageToLatLng(o.riderLocation.x, o.riderLocation.y);
+                    riderMarker.setLatLng([rLatLng.lat, rLatLng.lng]);
+                }, 2000);
+            } else if (order.assignedRider && order.deliveryStarted && order.completed) {
+                mapCard.style.display = 'block';
+                if (mapDiv) mapDiv.innerHTML = '<p style="padding: 2rem; text-align: center; color: #28a745; font-weight: 600;">✅ Delivered</p>';
+            }
+
+            document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+                var nav = document.getElementById('navMenuDrawer');
+                var menu = document.getElementById('navMenu');
+                this.classList.toggle('active');
+                if (nav) nav.classList.toggle('active');
+                if (menu) menu.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
+            });
+        })();
+    </script>
+</body>
+</html>
