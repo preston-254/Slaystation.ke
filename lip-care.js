@@ -154,7 +154,7 @@ function renderProducts(filteredProducts) {
         productCard.style.cursor = 'pointer';
         productCard.innerHTML = `
             <div class="product-image" style="background: #fff;">
-                <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='💄';">
+                <img src="${typeof getAssetUrl==='function'?getAssetUrl(product.image):product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='💄';">
             </div>
             <h3 class="product-name">${product.name}</h3>
             <p class="product-description">${product.description}</p>
@@ -253,7 +253,7 @@ function renderCart() {
     let total = 0;
     allCartItems.forEach(item => {
         const imageHTML = item.image
-            ? `<img src="${item.image}" alt="${item.name}" onerror="this.onerror=null; this.parentElement.innerHTML='💄';">`
+            ? `<img src="${typeof getAssetUrl==='function'?getAssetUrl(item.image):item.image}" alt="${item.name}" onerror="this.onerror=null; this.parentElement.innerHTML='💄';">`
             : '💄';
         cartItems.innerHTML += `
             <div class="cart-item">

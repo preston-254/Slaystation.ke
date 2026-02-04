@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Base URL so image/video paths work on Vercel, GitHub Pages (/slaystation/), and locally -->
-    <script>(function(){var p=window.location.pathname;var dir=p.replace(/\/[^/]*$/, '') || ''; var baseUrl=window.location.origin+dir+(dir?'/':'/');var b=document.createElement('base');b.href=baseUrl;document.head.insertBefore(b,document.head.firstChild);})();</script>
+    <!-- Base URL only for GitHub Pages (/slaystation/). Vercel and local use normal relative paths. -->
+    <script>(function(){var p=window.location.pathname;if(p.indexOf('/slaystation')===0){var b=document.createElement('base');b.href=window.location.origin+'/slaystation/';document.head.insertBefore(b,document.head.firstChild);}})();</script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
