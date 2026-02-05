@@ -29,7 +29,7 @@ const accessoryProducts = [
         name: "Portable MP3 Player",
         description: "Compact MP3 player with excellent sound quality. Perfect for music lovers on the go!",
         price: 2500,
-        image: "images/mp3 player/IMG-20251123-WA0035.jpg",
+        image: "images/mp3-player/IMG-20251123-WA0035.jpg",
         category: "mp3-player"
     },
     {
@@ -37,7 +37,7 @@ const accessoryProducts = [
         name: "Wireless MP3 Player",
         description: "Modern wireless MP3 player with Bluetooth connectivity and sleek design.",
         price: 2800,
-        image: "images/mp3 player/IMG-20251123-WA0036.jpg",
+        image: "images/mp3-player/IMG-20251123-WA0036.jpg",
         category: "mp3-player"
     },
     {
@@ -45,7 +45,7 @@ const accessoryProducts = [
         name: "Premium MP3 Player",
         description: "High-quality MP3 player with advanced features and long battery life.",
         price: 3000,
-        image: "images/mp3 player/IMG-20251123-WA0048.jpg",
+        image: "images/mp3-player/IMG-20251123-WA0048.jpg",
         category: "mp3-player"
     }
 ];

@@ -718,7 +718,7 @@ function selectFriend(friendId, productId) {
 let currentFilter = 'all';
 let searchQuery = '';
 
-// Taupe editorial banners – ad video from images/ad videos/ as background
+// Taupe editorial banners – ad video from images/ad-videos/ as background
 const editorialBanners = [
     {
         headline: 'Watch',
@@ -727,7 +727,7 @@ const editorialBanners = [
         ctaText: 'Shop Now',
         ctaUrl: 'index.html#products',
         useVideo: true,
-        videoUrl: 'images/ad videos/ad1.mp4'
+        videoUrl: 'images/ad-videos/ad1.mp4'
     },
     {
         headline: 'Meet the',
@@ -736,7 +736,7 @@ const editorialBanners = [
         ctaText: 'Learn More',
         ctaUrl: 'lip-care.html',
         useVideo: true,
-        videoUrl: 'images/ad videos/ad1.mp4'
+        videoUrl: 'images/ad-videos/ad1.mp4'
     },
     {
         headline: 'Shop',
@@ -745,7 +745,7 @@ const editorialBanners = [
         ctaText: 'Shop Wallets',
         ctaUrl: 'wallets.html',
         useVideo: true,
-        videoUrl: 'images/ad videos/ad1.mp4'
+        videoUrl: 'images/ad-videos/ad1.mp4'
     },
     {
         headline: 'Discover',
@@ -754,7 +754,7 @@ const editorialBanners = [
         ctaText: 'View Accessories',
         ctaUrl: 'accessories.html',
         useVideo: true,
-        videoUrl: 'images/ad videos/ad1.mp4'
+        videoUrl: 'images/ad-videos/ad1.mp4'
     }
 ];
 
