@@ -513,7 +513,7 @@ const products = [
         name: "Chic Handbag",
         description: "Stylish handbag that complements your wardrobe.",
         price: 3500,
-        image: "images/bags/WhatsApp Image 2025-11-23 at 13.52.07_7bbb9823.jpg",
+        image: "images/bags/whatsapp-2025-11-23-13-52-07-7bbb9823.jpg",
         category: "handbag",
         size: "regular"
     }
