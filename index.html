@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- GitHub Pages only: set base so relative paths work at username.github.io/repo-name/ -->
     <script>(function(){var h=window.location.hostname||'';var p=window.location.pathname||'';if(h.indexOf('github.io')!==-1&&p.indexOf('/slaystation')===0){var b=document.createElement('base');b.href=window.location.origin+'/slaystation/';document.head.insertBefore(b,document.head.firstChild);}})();</script>
+    <!-- Resolve image/video URLs to absolute so they load on GitHub Pages and Vercel -->
+    <script>(function(){var path=window.location.pathname||'/';var base=window.location.origin+(path.replace(/\/[^/]*$/,'/')||'/');function abs(u){if(!u||u.indexOf('http')===0||u.indexOf('data:')===0)return u;return base+(u.charAt(0)==='/'?'':'')+u;}document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('img[src^="images/"], img[src^="./images/"], source[src^="images/"], source[src^="./images/"]').forEach(function(el){var s=el.getAttribute('src');if(s){el.src=abs(s);}});document.querySelectorAll('[style*="images/"]').forEach(function(el){var st=el.getAttribute('style');if(st&&/url\(.*images\//.test(st)){el.style.cssText=st.replace(/url\(['"]?(images\/[^'")]+)['"]?\)/g,function(_,p){return 'url(\''+abs(p)+'\')';});}});});})();</script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">

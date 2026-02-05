@@ -1,3 +1,12 @@
+// Resolve relative image paths to absolute (for GitHub Pages / Vercel)
+function assetUrl(p) {
+    if (!p || typeof p !== 'string' || p.indexOf('http') === 0 || p.indexOf('data:') === 0) return p || '';
+    var path = location.pathname || '/';
+    var base = location.origin + (path.replace(/\/[^/]*$/, '/') || '/');
+    return base + (p.charAt(0) === '/' ? '' : '') + p;
+}
+if (typeof window !== 'undefined') window.assetUrl = assetUrl;
+
 // Product Data - Bags
 // Big coach bags (3800 KSH) vs regular bags (3500 KSH)
 const products = [
@@ -967,7 +976,7 @@ function renderProducts(filteredProducts = null) {
                 ${isInWishlist ? '❤️' : '🤍'}
             </button>
             <div class="product-image" style="background: #fff; ${isSoldOut ? 'opacity: 0.6; filter: grayscale(50%);' : ''}">
-                <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';">
+                <img src="${assetUrl(product.image)}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';">
             </div>
             <div class="product-card-body">
                 <span class="product-brand">${brand.toUpperCase()}</span>
@@ -1022,7 +1031,7 @@ function renderFeaturedOffers() {
         
         card.innerHTML = `
             <div class="featured-product-image">
-                <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';">
+                <img src="${assetUrl(product.image)}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';">
                 <div class="featured-product-badge">SAVE ${discountPercent}%</div>
             </div>
             <div class="featured-product-name">${product.name.toUpperCase()}</div>
@@ -1051,13 +1060,13 @@ function renderScrollingProducts() {
     html += '<div class="scroll-text">IN OUR BAG</div>';
     html += '<div class="scroll-products">';
     scrollProducts.forEach(product => {
-        html += `<div class="scroll-product-item"><img src="${product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';"></div>`;
+        html += `<div class="scroll-product-item"><img src="${assetUrl(product.image)}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';"></div>`;
     });
     html += '</div>';
     html += '<div class="scroll-text">SO YOU CAN BE IN YOURS</div>';
     html += '<div class="scroll-products">';
     scrollProducts.forEach(product => {
-        html += `<div class="scroll-product-item"><img src="${product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';"></div>`;
+        html += `<div class="scroll-product-item"><img src="${assetUrl(product.image)}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';"></div>`;
     });
     html += '</div>';
     
@@ -1065,13 +1074,13 @@ function renderScrollingProducts() {
     html += '<div class="scroll-text">IN OUR BAG</div>';
     html += '<div class="scroll-products">';
     scrollProducts.forEach(product => {
-        html += `<div class="scroll-product-item"><img src="${product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';"></div>`;
+        html += `<div class="scroll-product-item"><img src="${assetUrl(product.image)}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';"></div>`;
     });
     html += '</div>';
     html += '<div class="scroll-text">SO YOU CAN BE IN YOURS</div>';
     html += '<div class="scroll-products">';
     scrollProducts.forEach(product => {
-        html += `<div class="scroll-product-item"><img src="${product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';"></div>`;
+        html += `<div class="scroll-product-item"><img src="${assetUrl(product.image)}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';"></div>`;
     });
     html += '</div>';
     
@@ -1105,7 +1114,7 @@ function renderBrandBanner() {
         html += `
             <div class="banner-product-card" onclick="window.location.href='product-detail.html?id=${product.id}'">
                 <div class="banner-product-image-wrapper">
-                    <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';">
+                    <img src="${assetUrl(product.image)}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';">
                     ${discountHTML}
                 </div>
                 <div class="banner-product-info">
@@ -1135,7 +1144,7 @@ function renderBrandBanner() {
         html += `
             <div class="banner-product-card" onclick="window.location.href='product-detail.html?id=${product.id}'">
                 <div class="banner-product-image-wrapper">
-                    <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';">
+                    <img src="${assetUrl(product.image)}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';">
                     ${discountHTML}
                 </div>
                 <div class="banner-product-info">
@@ -1674,7 +1683,7 @@ function renderCart() {
         const cartItem = document.createElement('div');
         cartItem.className = 'cart-item';
         const imageHTML = item.image && item.image.includes('images/') 
-            ? `<img src="${item.image}" alt="${item.name}" onerror="this.onerror=null; this.parentElement.innerHTML='👜';">`
+            ? `<img src="${assetUrl(item.image)}" alt="${item.name}" onerror="this.onerror=null; this.parentElement.innerHTML='👜';">`
             : item.image || '👜';
         
         cartItem.innerHTML = `
@@ -3441,7 +3450,7 @@ function renderWishlist() {
         const wishlistItem = document.createElement('div');
         wishlistItem.className = 'wishlist-item';
         const imageHTML = item.image && item.image.includes('images/') 
-            ? `<img src="${item.image}" alt="${item.name}" onerror="this.onerror=null; this.parentElement.innerHTML='👜';">`
+            ? `<img src="${assetUrl(item.image)}" alt="${item.name}" onerror="this.onerror=null; this.parentElement.innerHTML='👜';">`
             : item.image || '👜';
         
         wishlistItem.innerHTML = `
@@ -3733,7 +3742,7 @@ function showQuickView(productId) {
             <button class="quick-view-close" onclick="closeQuickView()">✕</button>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: 2rem;">
                 <div class="product-image-large">
-                    <img src="${product.image}" alt="${product.name}" style="width: 100%; border-radius: 15px;" onerror="this.onerror=null; this.parentElement.innerHTML='👜';">
+                    <img src="${assetUrl(product.image)}" alt="${product.name}" style="width: 100%; border-radius: 15px;" onerror="this.onerror=null; this.parentElement.innerHTML='👜';">
                 </div>
                 <div class="product-details-large" style="display: flex; align-items: center; justify-content: center;">
                     <div style="text-align: center; max-width: 420px;">
