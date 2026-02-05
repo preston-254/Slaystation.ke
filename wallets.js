@@ -136,7 +136,7 @@ function renderProducts(filteredProducts) {
         productCard.style.cursor = 'pointer';
         productCard.innerHTML = `
             <div class="product-image" style="background: linear-gradient(135deg, var(--secondary-pink), var(--lavender));">
-                <img src="${typeof getAssetUrl==='function'?getAssetUrl(product.image):product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👛';">
+                <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👛';">
             </div>
             <h3 class="product-name">${product.name}</h3>
             <p class="product-description">${product.description}</p>
@@ -239,7 +239,7 @@ function renderCart() {
 
     window.cart.forEach(item => {
         const imageHTML = item.image && item.image.includes('images/') 
-            ? `<img src="${typeof getAssetUrl==='function'?getAssetUrl(item.image):item.image}" alt="${item.name}" onerror="this.onerror=null; this.parentElement.innerHTML='👜';">`
+            ? `<img src="${item.image}" alt="${item.name}" onerror="this.onerror=null; this.parentElement.innerHTML='👜';">`
             : item.image || '👜';
         
         const cartItem = document.createElement('div');
