@@ -45,41 +45,60 @@
         return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
     }
 
+    function escapeHtml(str) {
+        if (!str) return '';
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
     function renderOrders(orders, container) {
         container.innerHTML = '';
         if (!orders.length) {
-            container.innerHTML = '<p class="account-history-empty" style="padding: 2rem; text-align: center; color: #666;">No orders yet. <a href="index.html#products">Start shopping</a>.</p>';
+            container.innerHTML = '<p class="account-history-empty">No orders yet. <a href="index.html#products">Start shopping</a>.</p>';
             return;
         }
         orders.forEach(function (order) {
             var card = document.createElement('div');
-            card.className = 'order-card';
+            card.className = 'order-history-card';
             var items = order.items || [];
             var itemsHtml = items.length
                 ? items.map(function (i) {
-                    return '<div class="order-item-row"><span>' + (i.name || 'Item') + ' × ' + (i.quantity || 1) + '</span><span>KSH ' + ((i.price || 0) * (i.quantity || 1)).toLocaleString() + '</span></div>';
+                    return '<div class="order-item-row"><span>' + escapeHtml(i.name || 'Item') + ' × ' + (i.quantity || 1) + '</span><span>KSH ' + ((i.price || 0) * (i.quantity || 1)).toLocaleString() + '</span></div>';
                 }).join('')
                 : '<div class="order-item-row"><span>No items</span><span>—</span></div>';
             var total = order.total != null ? order.total : 0;
-            var canTrack = order.assignedRider && order.deliveryStarted && !order.completed;
-            var trackBtn = canTrack
-                ? '<a href="track-order.html?order=' + order.id + '" class="order-track-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, var(--primary-pink), #c77dff); color: #fff; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.95rem; margin-top: 0.5rem;"><span>📍</span> Track rider</a>'
-                : '';
+            var trackOrderUrl = 'track-order.html?order=' + order.id;
+            var trackBtn = '<a href="' + trackOrderUrl + '" class="order-track-btn"><span>📍</span> Track order</a>';
+            var address = (order.address || '').trim();
+            var mapQuery = address ? encodeURIComponent(address) : '';
+            var mapSection = '';
+            if (mapQuery) {
+                var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + mapQuery;
+                var embedUrl = 'https://www.google.com/maps?q=' + mapQuery + '&output=embed';
+                mapSection =
+                    '<div class="order-history-map-wrap">' +
+                    '<h4 class="order-history-map-title">Delivery location</h4>' +
+                    '<a href="' + mapsUrl + '" target="_blank" rel="noopener noreferrer" class="order-history-map-link">Open in Google Maps ↗</a>' +
+                    '<iframe class="order-history-map-iframe" src="' + embedUrl + '" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Delivery location on Google Maps"></iframe>' +
+                    '</div>';
+            }
             card.innerHTML =
-                '<div class="order-header">' +
+                '<div class="order-history-header">' +
                 '<div class="order-info">' +
                 '<h3>Order #' + order.id + '</h3>' +
-                '<p class="order-date">' + formatDate(order.date) + '</p>' +
-                (order.address ? '<p class="order-address">' + (order.address || '') + '</p>' : '') +
+                '<p class="order-date">' + escapeHtml(formatDate(order.date)) + '</p>' +
+                (address ? '<p class="order-address">' + escapeHtml(address) + '</p>' : '') +
                 '</div>' +
                 '<span class="order-status ' + statusClass(order.status) + '">' + formatStatus(order.status) + '</span>' +
                 '</div>' +
-                '<div class="order-items">' +
+                '<div class="order-history-items">' +
                 '<h4>Items</h4>' +
                 itemsHtml +
                 '<div class="order-item-row total-row"><span>Total</span><span><strong>KSH ' + total.toLocaleString() + '</strong></span></div>' +
                 '</div>' +
-                '<div class="order-actions">' +
+                (mapSection ? mapSection : '') +
+                '<div class="order-history-actions">' +
                 trackBtn +
                 '</div>';
             container.appendChild(card);

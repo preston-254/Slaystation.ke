@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout | Slay Station</title>
+    <!-- Google Maps API key for location/Places autocomplete. Restrict by HTTP referrer in Google Cloud Console. -->
+    <script>window.SLAYSTATION_GOOGLE_MAPS_KEY = window.SLAYSTATION_GOOGLE_MAPS_KEY || 'AIzaSyD3FItszXml6cqO1BiLTfhNfJNO4BrevE8';</script>
     <link rel="stylesheet" href="styles.css?v=20250130">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,8 +35,16 @@
         .checkout-summary { position: sticky; top: 100px; background: var(--light-bg, #fafafa); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; }
         .checkout-summary h2 { font-size: 1.1rem; margin-bottom: 16px; }
         .checkout-summary-items { max-height: 240px; overflow-y: auto; margin-bottom: 16px; }
-        .checkout-summary-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        .checkout-summary-item { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; }
         .checkout-summary-item img { width: 56px; height: 56px; object-fit: cover; border-radius: 6px; }
+        /* Order summary items styled like bags cart */
+        .checkout-summary-items .cart-item { margin-bottom: 0.5rem; padding: 0.75rem; background: #f8f8f8; border: 1px solid #eee; border-radius: 8px; }
+        .checkout-summary-items .cart-item-image { width: 72px; height: 72px; flex-shrink: 0; background: #f0f0f0; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .checkout-summary-items .cart-item-image img { width: 100%; height: 100%; object-fit: contain; }
+        .checkout-summary-items .cart-item-name { font-weight: 600; margin-bottom: 0.25rem; font-size: 0.9rem; }
+        .checkout-summary-items .cart-item-price { color: var(--primary-pink, #e91e8c); font-weight: 600; font-size: 0.9rem; }
+        .checkout-summary-items .remove-from-cart-btn { margin-top: 0.5rem; padding: 4px 10px; font-size: 0.8rem; background: #fff; border: 1px solid #ddd; color: #666; border-radius: 6px; cursor: pointer; }
+        .checkout-summary-items .remove-from-cart-btn:hover { background: #fee; border-color: #fcc; color: #c00; }
         .checkout-summary-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.95rem; }
         .checkout-summary-total { font-weight: 700; font-size: 1.15rem; padding-top: 12px; margin-top: 12px; border-top: 2px solid #ddd; }
         .checkout-map-wrap { margin-top: 10px; margin-bottom: 10px; }
@@ -55,12 +65,18 @@
         .btn-place-order { width: 100%; padding: 14px 24px; background: #1a1a1a; color: #fff; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 20px; }
         .btn-place-order:hover { background: #333; }
         .btn-place-order:disabled { opacity: 0.6; cursor: not-allowed; }
+        .location-suggestions { position: absolute; left: 0; right: 0; top: 100%; margin-top: 4px; max-height: 220px; overflow-y: auto; background: #fff; border: 1px solid var(--border-color, #e0e0e0); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10; }
+        .location-suggestions .location-suggestion { padding: 10px 12px; cursor: pointer; font-size: 0.95rem; border-bottom: 1px solid #f0f0f0; }
+        .location-suggestions .location-suggestion:last-child { border-bottom: none; }
+        .location-suggestions .location-suggestion:hover { background: #f5f5f5; }
+        .location-suggestions .location-suggestion-tip { cursor: default; }
+        .location-suggestions .location-suggestion-tip:hover { background: #fff; }
+        .location-suggestions .location-suggestion-use-custom { color: var(--primary-pink, #e91e8c); }
+        .checkout-summary-item { position: relative; }
+        .checkout-summary-item .remove-from-cart-btn { margin-left: auto; padding: 4px 10px; font-size: 0.8rem; background: #fff; border: 1px solid #ddd; color: #666; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+        .checkout-summary-item .remove-from-cart-btn:hover { background: #fee; border-color: #fcc; color: #c00; }
         .empty-checkout { text-align: center; padding: 48px 24px; }
         .empty-checkout a { color: #1976D2; text-decoration: none; font-weight: 600; }
-        .mpesa-fields { margin-top: 16px; padding: 16px; background: #E8F5E9; border-radius: 8px; border: 1px solid #C8E6C9; }
-        .mpesa-fields .form-group { margin-bottom: 12px; }
-        .mpesa-total-line { margin: 12px 0 0; font-size: 1rem; color: #2e7d32; }
-        .mpesa-total-line span { font-size: 1.15rem; }
         /* Checkout page: header below promo bar and content clearance */
         body.page-checkout { padding-top: 0; }
         body.page-checkout .navbar { top: 40px; left: 0; right: 0; }
@@ -88,7 +104,6 @@
     <!-- Site promo bar -->
     <div class="promo-bar">
         <div class="promo-bar-messages">
-            <p class="promo-bar-text promo-bar-message active">Free delivery on orders over KSH 5,000</p>
             <p class="promo-bar-text promo-bar-message">Visit us at Westlands Market, Shop B15</p>
             <p class="promo-bar-text promo-bar-message">Gift wrapping available at checkout</p>
         </div>
@@ -111,7 +126,8 @@
                     <li><a href="index.html#products">Bags</a></li>
                     <li><a href="wallets.html">Wallets</a></li>
                     <li><a href="accessories.html">Accessories</a></li>
-                    <li><a href="lip-care.html">Lip Care</a></li>
+                    <li><a href="lip-care.html">Lip Products</a></li>
+                    <li><a href="fragrances.html">Fragrances</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="index.html#contact">Contact</a></li>
                 </ul>
@@ -152,6 +168,29 @@
                             <input type="tel" id="coPhone" name="phone" required placeholder="e.g. 0712345678">
                         </div>
                         <div class="form-group">
+                            <label for="coCountry">Country *</label>
+                            <select id="coCountry" name="country" required aria-label="Select country">
+                                <option value="KE" selected>Kenya</option>
+                                <option value="TZ">Tanzania</option>
+                                <option value="UG">Uganda</option>
+                                <option value="RW">Rwanda</option>
+                                <option value="BI">Burundi</option>
+                                <option value="SS">South Sudan</option>
+                                <option value="ET">Ethiopia</option>
+                                <option value="SO">Somalia</option>
+                                <option value="DJ">Djibouti</option>
+                                <option value="ER">Eritrea</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="coLocation">Location (town, city, area or landmark) *</label>
+                            <div class="location-input-wrap" style="position: relative;">
+                                <input type="text" id="coLocation" name="location" required placeholder="Type your area, apartment name or address" autocomplete="off">
+                                <div id="coLocationSuggestions" class="location-suggestions" role="listbox" aria-label="Location suggestions" style="display: none;"></div>
+                            </div>
+                            <p id="coLocationTip" class="location-tip" style="display: none; margin: 6px 0 0; font-size: 0.8rem; color: #666;">Tip: For apartment and business name search, add your Google Maps API key in checkout.html (search for SLAYSTATION_GOOGLE_MAPS_KEY).</p>
+                        </div>
+                        <div class="form-group">
                             <label for="coAddress">Delivery Address *</label>
                             <div id="checkoutMapWrap" class="checkout-map-wrap">
                                 <p style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">Pin your exact location on the map (Nairobi).</p>
@@ -165,25 +204,11 @@
                     <section class="checkout-form-section">
                         <h2>Payment Method</h2>
                         <label class="payment-option selected">
-                            <input type="radio" name="payment" value="mpesa" checked> M-Pesa
+                            <input type="radio" name="payment" value="mpesa" checked> M-Pesa (Till 3193269)
                         </label>
-                        <label class="payment-option">
-                            <input type="radio" name="payment" value="card"> Credit / Debit Card
-                        </label>
-                        <label class="payment-option">
-                            <input type="radio" name="payment" value="cash"> Cash on Delivery
-                        </label>
-
-                        <!-- M-Pesa: phone number and total to pay (shown when M-Pesa selected) -->
-                        <div id="mpesaFields" class="mpesa-fields">
-                            <div class="form-group">
-                                <label for="coMpesaPhone">M-Pesa Phone Number <span style="color: #dc3545;">*</span></label>
-                                <input type="tel" id="coMpesaPhone" name="mpesaPhone" placeholder="e.g. 0712345678" pattern="[0-9]{9,10}" maxlength="10" inputmode="numeric">
-                                <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 0.25rem;">Enter the number registered with M-Pesa (start with 0)</small>
-                            </div>
-                            <p class="mpesa-total-line"><strong>Total to pay via M-Pesa:</strong> <span id="coMpesaTotal">KSH 0</span></p>
-                        </div>
-
+                        <p style="margin: 0.5rem 0 1rem 0; padding: 1rem; background: #E3F2FD; border-radius: 10px; border-left: 4px solid #2196F3; font-size: 0.9rem; color: #1565C0;">
+                            Pay to <strong>Till number 3193269</strong>. After you place the order you’ll see your unique reference and can paste your M-Pesa confirmation code there.
+                        </p>
                         <div id="cardFields" class="card-fields" style="display: none;">
                             <div class="form-group">
                                 <label>Card Number</label>
@@ -262,7 +287,8 @@
                             <li><a href="index.html#products">Bags</a></li>
                             <li><a href="wallets.html">Wallets</a></li>
                             <li><a href="accessories.html">Accessories</a></li>
-                            <li><a href="lip-care.html">Lip Care</a></li>
+                            <li><a href="lip-care.html">Lip Products</a></li>
+                    <li><a href="fragrances.html">Fragrances</a></li>
                         </ul>
                     </div>
                     <div class="footer-col">
@@ -287,6 +313,35 @@
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Google Places: if you see "This page can't load Google Maps correctly", go to Google Cloud Console → Credentials → your key → set Application restrictions to HTTP referrers and add: http://localhost/*, http://127.0.0.1/*, and your live site (e.g. https://yoursite.com/*). Enable "Maps JavaScript API" and "Places API". -->
+    <script>
+    (function(){
+      var key = (window.SLAYSTATION_GOOGLE_MAPS_KEY || '').trim();
+      if (!key) return;
+      window.slayStationMapsCallback = function() {
+        window.slayStationMapsReady = true;
+        if (window.slayStationMapsTimeout) clearTimeout(window.slayStationMapsTimeout);
+        if (window.onSlayStationMapsReady) window.onSlayStationMapsReady();
+      };
+      window.slayStationMapsTimeout = setTimeout(function() {
+        if (window.slayStationMapsReady) return;
+        window.slayStationMapsReady = false;
+        window.slayStationMapsFailed = true;
+        if (window.onSlayStationMapsReady) window.onSlayStationMapsReady();
+      }, 8000);
+      var s = document.createElement('script');
+      s.onerror = function() {
+        if (!window.slayStationMapsReady) {
+          window.slayStationMapsFailed = true;
+          if (window.slayStationMapsTimeout) clearTimeout(window.slayStationMapsTimeout);
+          if (window.onSlayStationMapsReady) window.onSlayStationMapsReady();
+        }
+      };
+      s.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(key) + '&libraries=places&callback=slayStationMapsCallback';
+      s.async = true; s.defer = true;
+      document.head.appendChild(s);
+    })();
+    </script>
     <script src="delivery-fee-calculator.js"></script>
     <script src="checkout.js"></script>
     <script>

@@ -1,13 +1,38 @@
 # Deploy Slay Station – All Changes
 
-**Repository:** [github.com/preston-254/slay](https://github.com/preston-254/slay)  
-**Your username:** preston-254
+**Repository:** [github.com/preston-254/Slaystation.ke](https://github.com/preston-254/Slaystation.ke)  
+**Live site:** [slaystation-ke.vercel.app](https://slaystation-ke.vercel.app)
 
-Your site files are in this folder (`slaystation/deploy`). Use one of the methods below.
+Your site files are in this folder (`deploy`). Use one of the methods below.
 
 ---
 
-### Quick deploy (push to **preston-254/slay**)
+## Deploy the `images` folder (GitHub + Vercel)
+
+For the **images** folder to be live on the site, it must be in the repo and pushed:
+
+1. **Ensure `images` is not ignored**  
+   `.gitignore` should not contain `images/` (only `.firebase/` is ignored).
+
+2. **Add and push the images folder** (from your project root, e.g. where `deploy` lives):
+   ```powershell
+   git add deploy/images/
+   git status
+   git commit -m "Deploy images folder"
+   git push origin main
+   ```
+   If your repo root **is** the deploy folder (e.g. you clone Slaystation.ke and see `index.html` and `images/` side by side), run instead:
+   ```powershell
+   git add images/
+   git commit -m "Deploy images folder"
+   git push origin main
+   ```
+
+3. **Vercel** deploys the whole repo (or the Root Directory you set). The `images/` folder at repo root (or inside your Root Directory) will be served at `https://slaystation-ke.vercel.app/images/...`.
+
+---
+
+### Quick deploy (push to **preston-254/Slaystation.ke**)
 
 Open PowerShell or Git Bash in your project folder and run:
 
@@ -16,8 +41,9 @@ cd "C:\Users\USER\Documents\slaystation bags\slaystation"
 # If you see "rebase in progress", finish or abort it first:
 #   git rebase --abort
 git add deploy/
+git add deploy/images/
 git status
-git commit -m "Deploy: cart, checkout, menu, East African cities, Sale removed"
+git commit -m "Deploy: include images folder"
 # If push is rejected ("remote contains work you do not have"), pull first then push:
 git pull origin main --rebase
 git push origin main
@@ -39,7 +65,7 @@ cd "C:\Users\USER\Documents\slaystation bags\slaystation"
 git push origin main --force
 ```
 
-After this, check **github.com/preston-254/slay** — your latest code should be there and Vercel will auto-deploy (or trigger a manual deploy).
+After this, check **github.com/preston-254/Slaystation.ke** — your latest code (including `images/`) should be there and Vercel will auto-deploy.
 
 **Option B – Keep remote commits and replay yours on top (no force):**
 
@@ -66,8 +92,8 @@ If the project is already connected to Vercel:
    git commit -m "Deploy: cart, checkout, menu, East African cities, search"
    git push
    ```
-   Remote is already set to `https://github.com/preston-254/slay.git`.  
-   In Vercel: **Project → Settings → Git**: connect **preston-254/slay** and set **Root Directory** to `deploy` (or `slaystation/deploy` if repo root is `slaystation`).
+   Remote: `https://github.com/preston-254/Slaystation.ke.git`.  
+   In Vercel: **Project → Settings → Git**: connect **preston-254/Slaystation.ke**. Set **Root Directory** to `deploy` if your repo has a parent folder, or leave blank if the repo root is this deploy folder (index.html and images/ at root).
 
 2. **Or deploy with CLI** (after logging in once):
    ```bash

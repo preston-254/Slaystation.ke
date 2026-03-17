@@ -44,11 +44,27 @@ function loadRiderOrders() {
         order.completed || order.status === 'delivered'
     );
     
+    // Update nav badge counts (Uber-style)
+    const activeCountEl = document.getElementById('riderActiveCount');
+    const deliveredTodayEl = document.getElementById('riderDeliveredToday');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayDelivered = deliveredOrders.filter(o => {
+        const d = new Date(o.deliveredTime || o.deliveryStartTime || 0);
+        d.setHours(0, 0, 0, 0);
+        return d.getTime() === today.getTime();
+    });
+    if (activeCountEl) activeCountEl.textContent = activeOrders.length;
+    if (deliveredTodayEl) deliveredTodayEl.textContent = todayDelivered.length;
+    
     // Render statistics portal
     renderRiderStats(allRiderOrders, activeOrders, deliveredOrders);
     
     // Render orders
     renderRiderOrders(activeOrders, deliveredOrders);
+    
+    // Update main map with all active deliveries (Uber-style)
+    updateRiderMainMap(activeOrders);
 }
 
 // Render rider statistics portal (Daily Statistics)
@@ -189,11 +205,11 @@ function renderRiderOrders(activeOrders, deliveredOrders = []) {
         }
     });
     
-    ordersList.innerHTML = '';
+    activeOrdersList.innerHTML = '';
     
     // Render active orders section
     if (activeOrders.length === 0) {
-        ordersList.innerHTML = `
+        activeOrdersList.innerHTML = `
             <div class="no-orders">
                 <h3>No Active Orders 📦</h3>
                 <p>There are no active orders at the moment.</p>
@@ -203,7 +219,7 @@ function renderRiderOrders(activeOrders, deliveredOrders = []) {
     } else {
         const activeSection = document.createElement('div');
         activeSection.innerHTML = '<h2 style="margin-bottom: 1.5rem; color: var(--dark);">🟢 Active Deliveries</h2>';
-        ordersList.appendChild(activeSection);
+        activeOrdersList.appendChild(activeSection);
         
         const ordersContainer = document.createElement('div');
         ordersContainer.className = 'dispatched-orders';
@@ -250,6 +266,12 @@ function renderRiderOrders(activeOrders, deliveredOrders = []) {
                     </div>
                 </div>
                 
+                <!-- Message customer -->
+                <div class="rider-message-customer" style="margin-top: 1rem; padding: 0.75rem; background: #f0f7ff; border-radius: 10px; border: 1px solid #2196F3;">
+                    <p style="margin: 0 0 0.5rem 0; font-weight: 600; color: #1976D2;">💬 Message customer</p>
+                    <textarea id="riderMsg-${order.id}" placeholder="e.g. On my way! ETA 10 min." rows="2" style="width: 100%; padding: 0.5rem; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+                    <button type="button" onclick="sendMessageToCustomer(${order.id})" style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: #2196F3; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Send message</button>
+                </div>
                 <!-- Weather Info -->
                 <div id="weather-${order.id}" class="weather-info" style="margin-top: 1rem; padding: 0.75rem; background: #e3f2fd; border-radius: 10px; display: none;">
                     <p style="margin: 0; font-weight: 600; color: #1976D2;">🌤️ Weather: <span id="weather-text-${order.id}">Loading...</span></p>
@@ -446,8 +468,54 @@ function renderRiderOrders(activeOrders, deliveredOrders = []) {
             `;
             historyPortal.appendChild(emptyState);
         }
-        ordersList.appendChild(historyPortal);
+        historyList.appendChild(historyPortal);
     }
+}
+
+// Main overview map (Uber-style: always show map; add delivery markers when present)
+let riderMainMapInstance = null;
+function updateRiderMainMap(activeOrders) {
+    window._lastActiveOrders = activeOrders || [];
+    const container = document.getElementById('riderMainMap');
+    const hint = document.getElementById('riderMapHint');
+    if (!container) return;
+    if (hint) hint.style.display = activeOrders.length === 0 ? 'block' : 'none';
+    if (typeof L === 'undefined' || !L.map) return;
+    // Always ensure the map exists (so rider always sees a map, not blank area)
+    if (!riderMainMapInstance) {
+        riderMainMapInstance = L.map(container, {
+            center: [-1.267, 36.806],
+            zoom: 12,
+            zoomControl: true
+        });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(riderMainMapInstance);
+        riderMainMapInstance._deliveryMarkers = [];
+    }
+    // Clear previous delivery markers
+    (riderMainMapInstance._deliveryMarkers || []).forEach(m => { if (m && riderMainMapInstance.removeLayer) riderMainMapInstance.removeLayer(m); });
+    riderMainMapInstance._deliveryMarkers = [];
+    const bounds = [];
+    (activeOrders || []).forEach(order => {
+        const storeLoc = order.storeLocation || { x: 20, y: 70 };
+        const customerLoc = order.customerLocation || { x: 75, y: 25 };
+        const riderLoc = order.riderLocation || storeLoc;
+        const storeLatLng = percentageToLatLngRider(storeLoc.x, storeLoc.y);
+        const customerLatLng = percentageToLatLngRider(customerLoc.x, customerLoc.y);
+        const riderLatLng = percentageToLatLngRider(riderLoc.x, riderLoc.y);
+        const storeIcon = L.divIcon({ className: 'rider-main-marker', html: '🛍️', iconSize: [28, 28], iconAnchor: [14, 14] });
+        const customerIcon = L.divIcon({ className: 'rider-main-marker', html: '📍', iconSize: [32, 32], iconAnchor: [16, 16] });
+        const riderIcon = L.divIcon({ className: 'rider-main-marker', html: '🏍️', iconSize: [36, 36], iconAnchor: [18, 18] });
+        const m1 = L.marker([storeLatLng.lat, storeLatLng.lng], { icon: storeIcon }).addTo(riderMainMapInstance).bindPopup('Order #' + order.id + ' – Store');
+        const m2 = L.marker([customerLatLng.lat, customerLatLng.lng], { icon: customerIcon }).addTo(riderMainMapInstance).bindPopup('Order #' + order.id + ' – ' + (order.name || 'Customer'));
+        const m3 = L.marker([riderLatLng.lat, riderLatLng.lng], { icon: riderIcon }).addTo(riderMainMapInstance).bindPopup('Order #' + order.id + ' – Rider');
+        riderMainMapInstance._deliveryMarkers.push(m1, m2, m3);
+        bounds.push([storeLatLng.lat, storeLatLng.lng], [customerLatLng.lat, customerLatLng.lng], [riderLatLng.lat, riderLatLng.lng]);
+    });
+    if (bounds.length > 0 && riderMainMapInstance.fitBounds) riderMainMapInstance.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+    else riderMainMapInstance.setView([-1.267, 36.806], 12);
+    setTimeout(function() {
+        if (riderMainMapInstance && riderMainMapInstance.invalidateSize) riderMainMapInstance.invalidateSize();
+    }, 100);
 }
 
 // Leaflet map instances for each order
@@ -1091,6 +1159,31 @@ function whatsappCustomer(phone, orderId) {
     const message = order ? `Hello ${order.name}, this is your delivery rider. I'm on my way with your order #${orderId}. ETA: ${order.estimatedTime || 'soon'}.` : 'Hello, this is your delivery rider.';
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
     showNotification('Opening WhatsApp... 💬');
+}
+
+// Send in-app message to customer (shown on track-order page)
+function sendMessageToCustomer(orderId) {
+    const textarea = document.getElementById('riderMsg-' + orderId);
+    const text = textarea ? textarea.value.trim() : '';
+    if (!text) {
+        showNotification('Please type a message first.');
+        return;
+    }
+    const orders = JSON.parse(localStorage.getItem('slayStationOrders') || '[]');
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return;
+    order.riderMessages = order.riderMessages || [];
+    order.riderMessages.push({
+        from: 'rider',
+        text: text,
+        time: new Date().toISOString()
+    });
+    const index = orders.findIndex(o => o.id === orderId);
+    if (index !== -1) orders[index] = order;
+    else orders.push(order);
+    localStorage.setItem('slayStationOrders', JSON.stringify(orders));
+    textarea.value = '';
+    showNotification('Message sent! Customer will see it on their track order page.');
 }
 
 // Weather Integration

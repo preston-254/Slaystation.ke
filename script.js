@@ -1,527 +1,111 @@
-// Resolve relative image paths to absolute (for GitHub Pages / Vercel)
+// Resolve relative image paths to absolute (Netlify, GitHub Pages, Vercel)
+function getBaseUrl() {
+    var path = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+    var hasFile = /\.[^/]+$/.test(path);
+    var dir = hasFile ? path.replace(/\/[^/]*$/, '') : path;
+    dir = (dir === '' ? '/' : dir);
+    var origin = (typeof location !== 'undefined' && location.origin) ? location.origin : '';
+    return origin + (dir.endsWith('/') ? dir : dir + '/');
+}
 function assetUrl(p) {
     if (!p || typeof p !== 'string' || p.indexOf('http') === 0 || p.indexOf('data:') === 0) return p || '';
-    var path = location.pathname || '/';
-    var base = location.origin + (path.replace(/\/[^/]*$/, '/') || '/');
-    return base + (p.charAt(0) === '/' ? '' : '') + p;
-}
-if (typeof window !== 'undefined') window.assetUrl = assetUrl;
-
-// Product Data - Bags
-// Big coach bags (3800 KSH) vs regular bags (3500 KSH)
-const products = [
-    {
-        id: 1,
-        name: "Tory burch bag",
-        description: "Perfect for lounging at home in style! Soft and comfortable - extra spacious!",
-        price: 3800,
-        image: "images/bags/IMG_1328.jpg",
-        category: "coach-bag",
-        size: "big"
-    },
-    {
-        id: 2,
-        name: "Fully boxed Teri Coach Bag",
-        description: "Add some sparkle to your style! Elegant and chic - large size!",
-        price: 3700,
-        image: "images/bags/IMG_1329.jpg",
-        category: "on sale",
-        size: "big"
-    },
-    {
-        id: 3,
-        name: "white satchel Coach Bag",
-        description: "Luxurious velvet coach bag for ultimate style - premium size!",
-        price: 3800,
-        image: "images/bags/IMG_1330.jpg",
-        category: "coach-bag",
-        size: "big"
-    },
-    {
-        id: 4,
-        name: "bloom into style",
-        description: "Beautiful floral pattern tote bag for everyday use.",
-        price: 3900,
-        image: "images/bags/IMG_1331.jpg",
-        category: "tote-bag",
-        size: "regular"
-    },
-    {
-        id: 5,
-        name: "LV gold Alma",
-        description: "Pretty in pink! The perfect bag for any occasion.",
-        price: 3500,
-        image: "images/bags/IMG_1332.jpg",
-        category: "tote-bag",
-        size: "regular"
-    },
-    {
-        id: 6,
-        name: "LV capucines",
-        description: "Free-spirited boho design that screams style!",
-        price: 4100,
-        image: "images/bags/IMG_1333.jpg",
-        category: "tote-bag",
-        size: "regular"
-    },
-    {
-        id: 7,
-        name: "leather black coach ",
-        description: "Cute and compact, perfect for on-the-go adventures.",
-        price: 3800,
-        image: "images/bags/IMG_1334.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-  
-    {
-        id: 9,
-        name: "Coach Rowan bag",
-        description: "Perfect for special occasions and evening events.",
-        price: 3800,
-        image: "images/bags/IMG_1336.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-
-    {
-        id: 12,
-        name: "Miu Miu Bag",
-        description: "Beautiful floral pattern bag that matches your style.",
-        price: 3200,
-        image: "images/bags/IMG_1339.jpg",
-        category: "miu miu-bag",
-        size: "regular"
-    },
-    {
-        id: 13,
-        name: "Compact Zipper Bag",
-        description: "Compact design with zipper closure for secure storage.",
-        price: 3700,
-        image: "images/bags/IMG_1340.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 14,
-        name: "coach teri shoulder Bag",
-        description: "Elegant designer-inspired bag with premium finish.",
-        price: 3700,
-        image: "images/bags/IMG_1341.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 15,
-        name: "pink princess coach Bag",
-        description: "Vibrant colors with quilted texture for a unique look.",
-        price: 3700,
-        image: "images/bags/IMG_1342.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 16,
-        name: "white tabby Bag",
-        description: "Trendy shoulder bag perfect for everyday elegance.",
-        price: 3800,
-        image: "images/bags/IMG-20251123-WA0004.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 18,
-        name: "cherry print coach bag",
-        description: "Sophisticated handbag for the modern woman.",
-        price: 3900,
-        image: "images/bags/IMG-20251123-WA0006.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 19,
-        name: "Coach Lana Bag",
-        description: "Fashion-forward tote bag with contemporary design.",
-        price: 3900,
-        image: "images/bags/IMG-20251123-WA0007.jpg",
-        category: "Coach-bag",
-        size: "regular"
-    },
-    {
-        id: 20,
-        name: "floral black coach Bag",
-        description: "Premium evening bag for special occasions.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0008.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 21,
-        name: "white crossbody Bag",
-        description: "Perfect casual bag for your daily adventures.",
-        price: 3800,
-        image: "images/bags/IMG-20251123-WA0009.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 22,
-        name: "slay pink tote ",
-        description: "Stylish shoulder tote with modern appeal.",
-        price: 3600,
-        image: "images/bags/IMG-20251123-WA0010.jpg",
-        category: "tote-bag",
-        size: "regular"
-    },
-    {
-        id: 23,
-        name: "claret rowan",
-        description: "Timeless crossbody bag with versatile design.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0011.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 24,
-        name: "kiss coach tabby",
-        description: "Sophisticated clutch perfect for evening events.",
-        price: 3900,
-        image: "images/bags/IMG-20251123-WA0012.jpg",
-        category: "shoulder-bag",
-        size: "regular"
-    },
-    {
-        id: 26,
-        name: "Stylish black",
-        description: "Chic handbag that complements any outfit.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0014.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 27,
-        name: "classy in biege",
-        description: "Fashionable shoulder bag with unique details.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0015.jpg",
-        category: "shoulder-bag",
-        size: "regular"
-    },
-    {
-        id: 28,
-        name: "mini cargo",
-        description: "Refined crossbody bag for everyday elegance.",
-        price: 3100,
-        image: "images/bags/IMG-20251123-WA0016.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 29,
-        name: "cherry Nolita",
-        description: "Premium tote bag with sophisticated styling.",
-        price: 3800,
-        image: "images/bags/IMG-20251123-WA0017.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 30,
-        name: "mini sierra satchel",
-        description: "Glamorous evening bag for special nights out.",
-        price: 3800,
-        image: "images/bags/IMG-20251123-WA0018.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 31,
-        name: "sleek black",
-        description: "Trendy bag that keeps you ahead of the style curve.",
-        price: 3700,
-        image: "images/bags/IMG-20251123-WA0019.jpg",
-        category: "tote-bag",
-        size: "regular"
-    },
-
-    {
-        id: 33,
-        name: "Modern Crossbody",
-        description: "Contemporary crossbody with sleek lines.",
-        price: 3700,
-        image: "images/bags/IMG-20251123-WA0021.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 34,
-        name: "Elegant purse white",
-        description: "Sophisticated tote bag for the discerning fashionista.",
-        price: 3700,
-        image: "images/bags/IMG-20251123-WA0023.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 36,
-        name: "lv capucines",
-        description: "Fashionable shoulder tote with modern flair.",
-        price: 4100,
-        image: "images/bags/IMG-20251123-WA0026.jpg",
-        category: "shoulder-bag",
-        size: "regular"
-    },
-    {
-        id: 37,
-        name: "cheetah print ysl",
-        description: "Premium crossbody bag with refined elegance.",
-        price: 3200,
-        image: "images/bags/IMG-20251123-WA0027.jpg",
-        category: "crossbody",
-        size: "regular"
-    },
-    {
-        id: 38,
-        name: "dark brown teri",
-        description: "Sophisticated clutch for glamorous occasions.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0028.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 39,
-        name: "timeless coach lana",
-        description: "Contemporary tote with cutting-edge design.",
-        price: 3900,
-        image: "images/bags/IMG-20251123-WA0029.jpg",
-        category: "tote-bag",
-        size: "regular"
-    },
-    {
-        id: 40,
-        name: "sweet teri",
-        description: "Stylish shoulder bag with chic appeal.",
-        price: 3900,
-        image: "images/bags/IMG-20251123-WA0030.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 42,
-        name: "coach Lana Rich Red",
-        description: "Refined handbag with timeless elegance.",
-        price: 3800,
-        image: "images/bags/IMG-20251123-WA0032.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 43,
-        name: "Laurel Beige",
-        description: "Premium tote bag with sophisticated design.",
-        price: 3800,
-        image: "images/bags/IMG-20251123-WA0033.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 44,
-        name: "Clarey Rowan ",
-        description: "Glamorous evening bag for special events.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0034.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 45,
-        name: "TH bag ",
-        description: "Contemporary shoulder bag with sleek design.",
-        price: 3800,
-        image: "images/bags/IMG-20251123-WA0037.jpg",
-        category: "shoulder-bag",
-        size: "regular"
-    },
-    {
-        id: 46,
-        name: "plain Black Tote",
-        description: "Fashionable crossbody bag with modern style.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0038.jpg",
-        category: "tote-bag",
-        size: "regular"
-    },
-    {
-        id: 47,
-        name: "plain Black Gallery Crossboady",
-        description: "Sophisticated tote for everyday elegance.",
-        price: 3700,
-        image: "images/bags/IMG-20251123-WA0039.jpg",
-        category: "tote-bag",
-        size: "regular"
-    },
-    {
-        id: 48,
-        name: "White Lv ",
-        description: "Fashion-forward handbag with unique character.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0040.jpg",
-        category: "handbag",
-        size: "regular"
-    },
-    {
-        id: 49,
-        name: "Luxury Shoulder Bag",
-        description: "Premium shoulder bag with refined details.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0041.jpg",
-        category: "shoulder-bag",
-        size: "regular"
-    },
-    {
-        id: 50,
-        name: "Leopard print YSL",
-        description: "Timeless crossbody bag with versatile appeal.",
-        price: 3200,
-        image: "images/bags/IMG-20251123-WA0042.jpg",
-        category: "crossbody",
-        size: "regular"
-    },
-    {
-        id: 51,
-        name: "Denim Lauren",
-        description: "Glamorous evening bag for special occasions.",
-        price: 3800,
-        image: "images/bags/IMG-20251123-WA0043.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 52,
-        name: "Miu Miu Shoulder Bag",
-        description: "Contemporary tote with innovative design.",
-        price: 2700,
-        image: "images/bags/IMG-20251123-WA0044.jpg",
-        category: "shoulder-bag",
-        size: "regular"
-    },
-    {
-        id: 53,
-        name: "Black Jaxquemus",
-        description: "Chic shoulder tote with elegant styling.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0045.jpg",
-        category: "shoulder-bag",
-        size: "regular"
-    },
-    {
-        id: 54,
-        name: "Black Teri",
-        description: "Trendy crossbody bag for modern style.",
-        price: 3700,
-        image: "images/bags/IMG-20251123-WA0046.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 55,
-        name: "White Satchel",
-        description: "Comes with optional Hello kitty charm at Ksh 700",
-        price: 3800,
-        image: "images/bags/IMG-20251123-WA0047.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 56,
-        name: "Black Coach ",
-        description: "Refined tote bag for the style-savvy.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0049.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 57,
-        name: "Black Mini Lauren",
-        description: "Stylish shoulder bag with contemporary flair.",
-        price: 3800,
-        image: "images/bags/IMG-20251123-WA0051.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 59,
-        name: "Fully boxed Miu Miu Bag",
-        description: "Fashionable evening bag for glamorous nights.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0053.jpg",
-        category: "miu miu-bag",
-        size: "regular"
-    },
-    {
-        id: 60,
-        name: "Young $ Smart",
-        description: "Sophisticated handbag with timeless design.",
-        price: 3800,
-        image: "images/bags/IMG-20251123-WA0055.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 61,
-        name: "Luxury Brown Tote Bag",
-        description: "Premium tote bag with elegant sophistication.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0056.jpg",
-        category: "tote-bag",
-        size: "regular"
-    },
-    {
-        id: 62,
-        name: "Leopard print Teri",
-        description: "Chic crossbody bag for everyday style.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0058.jpg",
-        category: "coach-bag",
-        size: "regular"
-    },
-    {
-        id: 63,
-        name: "Mini Kelly",
-        description: "Contemporary shoulder bag with innovative design.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0060.jpg",
-        category: "shoulder-bag",
-        size: "regular"
-    },
-    {
-        id: 64,
-        name: "plain White Coach Teri",
-        description: "Glamorous clutch for special evening events.",
-        price: 3500,
-        image: "images/bags/IMG-20251123-WA0061.jpg",
-        category: "evening-bag",
-        size: "regular"
-    },
-    {
-        id: 66,
-        name: "Chic Handbag",
-        description: "Stylish handbag that complements your wardrobe.",
-        price: 3500,
-        image: "images/bags/whatsapp-2025-11-23-13-52-07-7bbb9823.jpg",
-        category: "handbag",
-        size: "regular"
+    var pathname = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+    var origin = (typeof location !== 'undefined' && location.origin) ? location.origin : '';
+    var rel = (p.charAt(0) === '/' ? p.slice(1) : p);
+    // Netlify/filesystems are case-sensitive: always request lowercase paths
+    rel = rel.split('/').map(function(part) { return part.toLowerCase(); }).join('/');
+    if (pathname === '/' || pathname === '/index.html' || pathname === '') {
+        return origin + '/' + rel;
     }
+    var base = getBaseUrl();
+    return base + rel;
+}
+if (typeof window !== 'undefined') { window.assetUrl = assetUrl; window.getBaseUrl = getBaseUrl; }
+
+// From main image path get alternate hover paths.
+// Supports: "images/bags/miu miu 1.jpg" -> "... 2.jpg", "... 3.jpg", "... 4.jpg"
+// and: "images/Fragrances/1.jpg" -> "images/Fragrances/2.jpg", "images/Fragrances/3.jpg", "images/Fragrances/4.jpg"
+function getHoverImagePaths(imagePath) {
+    if (!imagePath || typeof imagePath !== 'string' || imagePath.indexOf('http') === 0) return [];
+    // Pattern: path ending with " name 1.jpg" (space + number + ext) – bags and others
+    var match = imagePath.match(/^(.+)\s+(\d+)(\.[a-zA-Z0-9]+)$/);
+    if (match) {
+        var base = match[1];
+        var num = parseInt(match[2], 10);
+        var ext = match[3];
+        var out = [];
+        out.push(base + ' ' + (num + 1) + ext);
+        out.push(base + ' ' + (num + 2) + ext);
+        return out;
+    }
+    // Pattern: path ending with "/1.jpg" (numeric filename only, e.g. fragrances 1, 2, 3...)
+    var matchNum = imagePath.match(/^(.+\/)(\d+)(\.[a-zA-Z0-9]+)$/);
+    if (matchNum) {
+        var basePath = matchNum[1];
+        var num = parseInt(matchNum[2], 10);
+        var ext = matchNum[3];
+        var out = [];
+        for (var i = num + 1; i <= num + 3; i++) { out.push(basePath + i + ext); }
+        return out;
+    }
+    return [];
+}
+
+// Product Data - Bags (new quality pictures: name 1.jpg = main, 2/3/4 = hover)
+const products = [
+    { id: 1, name: "Black Coach", description: "Classic black Coach bag, perfect for everyday elegance.", price: 3700, image: "images/bags/black coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 2, name: "Bossy Coach", description: "Bold Coach design that makes a statement.", price: 3700, image: "images/bags/bossy coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 3, name: "Brown Coach", description: "Timeless brown Coach bag with premium finish.", price: 3700, image: "images/bags/brown coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 4, name: "Chainy Brown Coach", description: "Chain-strap brown Coach for a chic look.", price: 3700, image: "images/bags/chainy brown coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 5, name: "Chainy Coach", description: "Coach bag with chain detail for extra style.", price: 3700, image: "images/bags/chainy coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 6, name: "Coach", description: "Iconic Coach bag in a versatile design.", price: 3700, image: "images/bags/coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 7, name: "Dark Coach", description: "Dark-toned Coach bag for a sophisticated look.", price: 3700, image: "images/bags/dark coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 8, name: "Flashy Coach", description: "Eye-catching Coach bag for those who love to stand out.", price: 3700, image: "images/bags/flashy coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 9, name: "Girly Coach", description: "Feminine Coach bag with a playful touch.", price: 3700, image: "images/bags/girly coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 10, name: "Grey Coach", description: "Elegant grey Coach bag for any outfit.", price: 3700, image: "images/bags/grey coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 11, name: "Malt Coach", description: "Malt-toned Coach bag with a warm finish.", price: 3700, image: "images/bags/malt coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 12, name: "Miu Miu", description: "Classic Miu Miu bag for the modern wardrobe.", price: 3200, image: "images/bags/miu miu 1.jpg", category: "miu miu-bag", size: "regular" },
+    { id: 13, name: "Orange Coach", description: "Vibrant orange Coach bag for a pop of color.", price: 3700, image: "images/bags/orange coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 14, name: "Pink Coach", description: "Pretty in pink – a Coach bag that brightens any look.", price: 3700, image: "images/bags/pink coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 15, name: "Plain Coach", description: "Clean, minimal Coach bag for everyday wear.", price: 3500, image: "images/bags/plain coach 1.jpg", category: "coach-bag", size: "regular" },
+    { id: 16, name: "Shinny Miu Miu", description: "Shimmering Miu Miu bag for special occasions.", price: 3200, image: "images/bags/shinny miu miu 1.jpg", category: "miu miu-bag", size: "regular" },
+    { id: 17, name: "White Coach", description: "Crisp white Coach bag for a fresh, clean style.", price: 3700, image: "images/bags/white coach 2.jpg", category: "coach-bag", size: "regular" },
+    { id: 18, name: "White LV", description: "Elegant white Louis Vuitton–inspired bag.", price: 3500, image: "images/bags/white lv 1.jpg", category: "tote-bag", size: "regular" }
 ];
 
 // Cart Management
 let cart = [];
 let wishlist = [];
+// Per-product displayed "likes" count – increases by 1 when added to wishlist, decreases when removed (realistic scenario)
+let productWishlistDisplayCounts = {};
+const WISHLIST_DISPLAY_COUNTS_KEY = 'slayStationProductWishlistDisplayCounts';
+function getProductWishlistDisplayCount(product) {
+    const key = (product.id || '') + '_' + (product.category || 'bag');
+    if (productWishlistDisplayCounts[key] !== undefined) return productWishlistDisplayCounts[key];
+    return product.wishlistCount !== undefined ? product.wishlistCount : (Math.floor(Math.random() * 80) + 10);
+}
+function incrementProductWishlistDisplayCount(productId, category) {
+    const key = (productId || '') + '_' + (category || 'bag');
+    const product = products.find(p => p.id === productId && (p.category || 'bag') === (category || 'bag'));
+    const base = product ? (product.wishlistCount !== undefined ? product.wishlistCount : (Math.floor(Math.random() * 80) + 10)) : 10;
+    const current = productWishlistDisplayCounts[key];
+    productWishlistDisplayCounts[key] = (current !== undefined ? current : base) + 1;
+    try { localStorage.setItem(WISHLIST_DISPLAY_COUNTS_KEY, JSON.stringify(productWishlistDisplayCounts)); } catch (e) {}
+}
+function decrementProductWishlistDisplayCount(productId, category) {
+    const key = (productId || '') + '_' + (category || 'bag');
+    const current = productWishlistDisplayCounts[key];
+    if (current !== undefined && current > 0) {
+        productWishlistDisplayCounts[key] = current - 1;
+        try { localStorage.setItem(WISHLIST_DISPLAY_COUNTS_KEY, JSON.stringify(productWishlistDisplayCounts)); } catch (e) {}
+    }
+}
+function loadProductWishlistDisplayCounts() {
+    try {
+        const raw = localStorage.getItem(WISHLIST_DISPLAY_COUNTS_KEY);
+        if (raw) productWishlistDisplayCounts = JSON.parse(raw);
+    } catch (e) {}
+}
 
 // Make DELIVERY_FEE globally available to avoid conflicts
 // Use a function instead of const to avoid redeclaration errors
@@ -728,6 +312,12 @@ let currentFilter = 'all';
 let searchQuery = '';
 
 // Taupe editorial banners – ad video from images/ad-videos/ as background
+// Banner folder images – add more filenames here to rotate; one is picked at random per load (only include files that exist)
+const bannerFolderImages = [
+    'images/banner/wallets-banner.jpg',
+    'images/banner/new product-banner.jpeg'
+];
+
 const editorialBanners = [
     {
         headline: 'Watch',
@@ -739,22 +329,9 @@ const editorialBanners = [
         videoUrl: 'images/ad-videos/ad1.mp4'
     },
     {
-        headline: 'Meet the',
-        title: 'Lip Care Collection',
-        body: 'Healthy lips are an essential part of your look. Our curated lip care range—balms, scrubs, oils and masks.',
-        ctaText: 'Learn More',
-        ctaUrl: 'lip-care.html',
-        useVideo: true,
-        videoUrl: 'images/ad-videos/ad1.mp4'
-    },
-    {
-        headline: 'Shop',
-        title: 'Premium Wallets',
-        body: 'Refined leather and compact styles for every occasion. Quality and style that last.',
-        ctaText: 'Shop Wallets',
-        ctaUrl: 'wallets.html',
-        useVideo: true,
-        videoUrl: 'images/ad-videos/ad1.mp4'
+        title: 'Shop',
+        ctaUrl: 'index.html#products',
+        bannerFolder: true
     },
     {
         headline: 'Discover',
@@ -769,14 +346,27 @@ const editorialBanners = [
 
 function createEditorialBanner(config, bannerIndex) {
     const section = document.createElement('section');
-    section.className = 'editorial-banner' + (config.useVideo ? ' editorial-banner--video' : '');
-    section.setAttribute('aria-label', config.title);
+    const useBannerImage = config.bannerImage || (config.bannerFolder && typeof bannerFolderImages !== 'undefined' && bannerFolderImages.length > 0);
+    section.className = 'editorial-banner' + (config.useVideo ? ' editorial-banner--video' : '') + (useBannerImage ? ' editorial-banner--image' : '');
+    section.setAttribute('aria-label', config.title || 'Promo');
 
+    if (config.bannerFolder && typeof bannerFolderImages !== 'undefined' && bannerFolderImages.length > 0) {
+        const picked = bannerFolderImages[Math.floor(Math.random() * bannerFolderImages.length)];
+        const imgSrc = typeof assetUrl === 'function' ? assetUrl(picked) : picked;
+        section.innerHTML = '<a href="' + (config.ctaUrl || '#') + '" class="editorial-banner-image-link"><img src="' + imgSrc + '" alt="' + (config.title || 'Promo').replace(/"/g, '&quot;') + '" class="editorial-banner-image-img" loading="lazy" width="1200" height="400"></a>';
+        return section;
+    }
+    if (config.bannerImage) {
+        const imgSrc = typeof assetUrl === 'function' ? assetUrl(config.bannerImage) : config.bannerImage;
+        section.innerHTML = '<a href="' + (config.ctaUrl || '#') + '" class="editorial-banner-image-link"><img src="' + imgSrc + '" alt="' + (config.title || '').replace(/"/g, '&quot;') + '" class="editorial-banner-image-img" loading="lazy" width="1200" height="400"></a>';
+        return section;
+    }
     if (config.useVideo && config.videoUrl) {
+        var videoSrc = (typeof assetUrl === 'function' ? assetUrl(config.videoUrl) : config.videoUrl);
         section.innerHTML = `
             <div class="editorial-banner-video-wrap">
                 <video class="editorial-banner-video" autoplay muted loop playsinline>
-                    <source src="${config.videoUrl}" type="video/mp4">
+                    <source src="${videoSrc}" type="video/mp4">
                 </video>
                 <div class="editorial-banner-video-overlay"></div>
             </div>
@@ -790,8 +380,8 @@ function createEditorialBanner(config, bannerIndex) {
             </div>
         `;
     } else {
-        const leftImgs = (config.leftImgs || []).map((src) => `<img src="${src}" alt="" loading="lazy">`).join('');
-        const rightImgs = (config.rightImgs || []).map((src) => `<img src="${src}" alt="" loading="lazy">`).join('');
+        const leftImgs = (config.leftImgs || []).map((src) => `<img src="${typeof assetUrl==='function'?assetUrl(src):src}" alt="" loading="lazy">`).join('');
+        const rightImgs = (config.rightImgs || []).map((src) => `<img src="${typeof assetUrl==='function'?assetUrl(src):src}" alt="" loading="lazy">`).join('');
         section.innerHTML = `
             <div class="editorial-banner-inner">
                 <div class="editorial-banner-imagery editorial-banner-imagery-left">${leftImgs}</div>
@@ -821,17 +411,136 @@ function observeEditorialBanners() {
     banners.forEach(function(b) { observer.observe(b); });
 }
 
-function observeValentineBanner() {
-    const banner = document.querySelector('.valentine-banner');
-    if (!banner) return;
-    const video = document.getElementById('valentineBannerVideo');
-    function playValentineVideo() {
-        if (video && video.paused) {
-            video.play().catch(function() {});
+// Hero banner carousel – only files that exist in images/banner (lipcare-banner.jpg removed to avoid 404)
+var heroBannerSlides = [
+    { type: 'video', src: 'images/banner/banner1.mp4' },
+    { type: 'video', src: 'images/banner/banner2.mp4' },
+    { type: 'video', src: 'images/banner/woman fashionable-banner.mp4' },
+    { type: 'image', src: 'images/banner/new product-banner.jpeg' },
+    { type: 'image', src: 'images/banner/wallets-banner.jpg' }
+];
+var heroBannerCurrentIndex = 0;
+var heroBannerIntervalId = null;
+var HERO_BANNER_AUTO_MS = 6000;
+
+function initHeroBannerCarousel() {
+    const slidesContainer = document.getElementById('heroBannerSlides');
+    const dotsContainer = document.getElementById('heroBannerDots');
+    if (!slidesContainer || !dotsContainer || !heroBannerSlides.length) return;
+
+    var baseUrl = typeof assetUrl === 'function' ? function(u) { return assetUrl(u); } : function(u) { return u; };
+
+    slidesContainer.innerHTML = '';
+    heroBannerSlides.forEach(function(item, i) {
+        var slide = document.createElement('div');
+        slide.className = 'valentine-banner-slide' + (i === 0 ? ' active' : '');
+        slide.setAttribute('data-slide-index', i);
+        if (item.type === 'video') {
+            slide.innerHTML = '<div class="valentine-banner-video-wrap"><video class="valentine-banner-video" muted loop playsinline preload="auto" data-banner-video><source src="' + baseUrl(item.src) + '" type="video/mp4"></video><div class="valentine-banner-video-overlay"></div></div>';
+        } else {
+            slide.innerHTML = '<div class="valentine-banner-image-wrap" style="background-image:url(\'' + baseUrl(item.src) + '\')"></div>';
+        }
+        slidesContainer.appendChild(slide);
+    });
+
+    dotsContainer.innerHTML = '';
+    heroBannerSlides.forEach(function(_, i) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'valentine-banner-dot' + (i === 0 ? ' active' : '');
+        btn.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        btn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+        btn.addEventListener('click', function() { goToHeroBannerSlide(i); });
+        dotsContainer.appendChild(btn);
+    });
+
+    function pauseAllVideos() {
+        slidesContainer.querySelectorAll('video').forEach(function(v) { v.pause(); });
+    }
+    function playCurrentVideo() {
+        var activeSlide = slidesContainer.querySelector('.valentine-banner-slide.active');
+        if (activeSlide) {
+            var v = activeSlide.querySelector('video');
+            if (v) {
+                v.currentTime = 0;
+                v.play().catch(function() {});
+            }
         }
     }
+
+    function advanceToNextSlide() {
+        var nextIndex = (heroBannerCurrentIndex + 1) % heroBannerSlides.length;
+        goToHeroBannerSlide(nextIndex);
+    }
+
+    window.goToHeroBannerSlide = function(index) {
+        if (index < 0 || index >= heroBannerSlides.length) return;
+        heroBannerCurrentIndex = index;
+        var slides = slidesContainer.querySelectorAll('.valentine-banner-slide');
+        var dots = dotsContainer.querySelectorAll('.valentine-banner-dot');
+        var nextSlide = slides[index];
+        var nextVideo = nextSlide ? nextSlide.querySelector('video') : null;
+        if (nextVideo) {
+            nextVideo.currentTime = 0;
+        }
+        pauseAllVideos();
+        slides.forEach(function(s, i) {
+            s.classList.toggle('active', i === index);
+        });
+        dots.forEach(function(d, i) {
+            d.classList.toggle('active', i === index);
+            d.setAttribute('aria-selected', i === index ? 'true' : 'false');
+        });
+        playCurrentVideo();
+    };
+
+    function startLoopInterval() {
+        if (heroBannerIntervalId) clearInterval(heroBannerIntervalId);
+        heroBannerIntervalId = setInterval(advanceToNextSlide, HERO_BANNER_AUTO_MS);
+    }
+
+    playCurrentVideo();
+    startLoopInterval();
+    dotsContainer.querySelectorAll('.valentine-banner-dot').forEach(function(btn) {
+        btn.addEventListener('click', function() { startLoopInterval(); });
+    });
+
+    var banner = document.querySelector('.valentine-banner');
+    if (banner) {
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('valentine-banner-visible');
+                    playCurrentVideo();
+                } else {
+                    pauseAllVideos();
+                }
+            });
+        }, { rootMargin: '0px 0px -60px 0px', threshold: 0.15 });
+        observer.observe(banner);
+    }
+}
+
+function observeValentineBanner() {
+    var banner = document.querySelector('.valentine-banner');
+    if (!banner) return;
+    if (document.getElementById('heroBannerSlides')) {
+        initHeroBannerCarousel();
+        return;
+    }
+    var video = document.getElementById('valentineBannerVideo');
+    if (video && typeof assetUrl === 'function') {
+        var bannerVideoUrl = assetUrl('images/banner/banner1.mp4');
+        if (bannerVideoUrl) {
+            video.src = bannerVideoUrl;
+            video.load();
+        }
+    }
+    function playValentineVideo() {
+        if (video && video.paused) video.play().catch(function() {});
+    }
     playValentineVideo();
-    const observer = new IntersectionObserver(function(entries) {
+    var observer = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
             if (entry.isIntersecting) {
                 entry.target.classList.add('valentine-banner-visible');
@@ -947,8 +656,8 @@ function renderProducts(filteredProducts = null) {
             }
             return false;
         }
-        const isAdmin = checkIfAdmin();
-        const editButtonHTML = isAdmin ? `<button class="edit-product-btn-frontend" onclick="editProductFromFrontend(${product.id}, '${product.category || 'bag'}')" style="width: 100%; margin-top: 0.5rem; padding: 0.6rem; background: linear-gradient(135deg, var(--primary-pink), var(--purple)); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: all 0.3s;">✏️ Edit Product</button>` : '';
+        // Edit button removed from bags (no pencil/edit on product cards)
+        const editButtonHTML = '';
         
         // Luxury-style: derive brand from category or product name
         const categoryToBrand = {
@@ -971,12 +680,13 @@ function renderProducts(filteredProducts = null) {
         productCard.innerHTML = `
             ${discountHTML}
             ${soldOutHTML}
-            <span class="product-likes" aria-label="Favorites">❤️ ${(product.wishlistCount || Math.floor(Math.random() * 80) + 10)}</span>
+            <span class="product-likes" aria-label="Favorites">❤️ ${getProductWishlistDisplayCount(product)}</span>
             <button class="wishlist-heart ${isInWishlist ? 'active' : ''}" onclick="event.stopPropagation(); toggleWishlistItem(${product.id})" title="${isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}">
                 ${isInWishlist ? '❤️' : '🤍'}
             </button>
             <div class="product-image" style="background: #fff; ${isSoldOut ? 'opacity: 0.6; filter: grayscale(50%);' : ''}">
-                <img src="${assetUrl(product.image)}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';">
+                <img src="${assetUrl(product.image)}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none';">
+                ${(getHoverImagePaths(product.image) || []).map(function(hoverPath) { return '<img class="product-img-hover" src="' + assetUrl(hoverPath) + '" alt="' + product.name.replace(/"/g, '&quot;') + '" onerror="this.style.display=\'none\'">'; }).join('')}
             </div>
             <div class="product-card-body">
                 <span class="product-brand">${brand.toUpperCase()}</span>
@@ -1512,6 +1222,9 @@ function initBagsMobileFilter() {
 
 // Allow Enter key to search
 document.addEventListener('DOMContentLoaded', function() {
+    // Skip frontend init when on admin page (admin only needs products/cart from this file)
+    var isAdminPage = typeof window !== 'undefined' && window.location && (/(^|\/)admin\.html$/i.test(window.location.pathname || '') || /admin\.html/i.test(window.location.href || ''));
+    if (isAdminPage) return;
     const searchInput = document.getElementById('productSearch');
     if (searchInput) {
         searchInput.addEventListener('keypress', function(e) {
@@ -1545,6 +1258,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize cart count on page load
     updateCartCount();
+    loadProductWishlistDisplayCounts();
+    loadWishlistFromStorage();
+    updateWishlistCount();
+
+    // Checkout button: prevent default and run checkout() so cart is checked and URL is correct
+    var cartCheckoutBtn = document.getElementById('cartCheckoutBtn');
+    if (cartCheckoutBtn) {
+        cartCheckoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (typeof checkout === 'function') checkout();
+        });
+    }
 
     // Animate Valentine banner on scroll
     observeValentineBanner();
@@ -1631,11 +1357,14 @@ function addToCart(productId) {
     }
 }
 
-// Remove from Cart (works across all pages)
-function removeFromCart(productId) {
-    // Load from shared cart to ensure we have all items
+// Remove from Cart (works across all pages). Pass category so we remove the right line when same id exists in different categories.
+function removeFromCart(productId, category) {
     const allCartItems = getSharedCart();
-    cart = allCartItems.filter(item => item.id !== productId);
+    cart = allCartItems.filter(function(item) {
+        if (item.id !== productId) return true;
+        if (category != null && (item.category || 'bag') !== (category || 'bag')) return true;
+        return false;
+    });
     saveCartToStorage();
     updateCartCount();
     renderCart();
@@ -1653,7 +1382,7 @@ function updateQuantity(productId, change) {
     item.quantity += change;
     
     if (item.quantity <= 0) {
-        removeFromCart(productId);
+        removeFromCart(productId, item.category);
     } else {
         saveCartToStorage();
         updateCartCount();
@@ -1695,7 +1424,7 @@ function renderCart() {
                     <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">−</button>
                     <span>Qty: ${item.quantity}</span>
                     <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
-                    <button class="remove-item" onclick="removeFromCart(${item.id})" style="margin-left: auto;">Remove</button>
+                    <button type="button" class="remove-item" onclick="event.stopPropagation(); removeFromCart(${item.id}, '${(item.category || 'bag').replace(/'/g, "\\'")}')">Remove</button>
                 </div>
             </div>
         `;
@@ -1765,15 +1494,21 @@ let mapPickerMarker = null;
 let mapPickerInitialized = false;
 let pinnedLocation = null;
 
-// Checkout – go to full-page checkout
+// Checkout – go to full-page checkout (works when hosted on Vercel etc.)
 function checkout() {
-    if (cart.length === 0) {
+    var items = typeof getSharedCart === 'function' ? getSharedCart() : (typeof cart !== 'undefined' ? cart : []);
+    if (!items || items.length === 0) {
         alert('Your cart is empty! Add some items first. 💕');
         return;
     }
-    saveCartToStorage();
-    window.location.href = 'checkout.html';
+    if (typeof saveCartToStorage === 'function') saveCartToStorage();
+    var path = typeof location !== 'undefined' && location.pathname ? location.pathname : '/';
+    var dir = path.replace(/\/[^/]*$/, '') || '/';
+    if (!dir.endsWith('/')) dir += '/';
+    var base = (typeof location !== 'undefined' && location.origin ? location.origin : '') + dir;
+    window.location.href = base + 'checkout.html';
 }
+if (typeof window !== 'undefined') window.checkout = checkout;
 
 // You May Also Like – render carousel (Fashionphile-style)
 function renderYouMayAlsoLike(containerId) {
@@ -1798,7 +1533,8 @@ function renderYouMayAlsoLike(containerId) {
         const price = typeof p.price === 'number' ? p.price : parseInt(p.price, 10) || 0;
         const count = wishlistCounts[i % wishlistCounts.length];
         const href = (typeof productDetailUrl === 'function' ? productDetailUrl(p.id) : null) || 'product-detail.html?id=' + p.id || 'index.html#products';
-        const img = (p.image || '').indexOf('http') === 0 ? p.image : (p.image || 'images/bags/IMG_1328.jpg');
+        const imgRaw = (p.image || '').indexOf('http') === 0 ? p.image : (p.image || 'images/bags/img_1328.jpg');
+        const img = (typeof assetUrl === 'function' ? assetUrl(imgRaw) : imgRaw);
         const name = (p.name || 'Product').substring(0, 45);
         const escName = name.replace(/"/g, '&quot;');
         if (isCartYmal) {
@@ -1845,26 +1581,12 @@ function scrollYouMayAlsoLike(containerId, direction) {
     container.scrollBy({ left: direction * step, behavior: 'smooth' });
 }
 function handlePaymentMethodChange(paymentMethod) {
+    const manualSection = document.getElementById('manualPaymentSection');
     const mpesaSection = document.getElementById('mpesaPaymentSection');
-    const mpesaAmount = document.getElementById('mpesaAmount');
-    const mpesaPhoneInput = document.getElementById('mpesaPhone');
-    
-    if (paymentMethod === 'mpesa') {
-        if (mpesaSection) mpesaSection.style.display = 'block';
-        if (mpesaPhoneInput) { mpesaPhoneInput.required = true; mpesaPhoneInput.removeAttribute('data-optional'); }
-        // Update M-Pesa amount with FULL TOTAL (items + delivery fee)
-        if (mpesaAmount) {
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const giftWrap = document.getElementById('giftWrap')?.checked ? 80 : 0;
-            const deliveryFee = calculatedDeliveryFee !== null ? calculatedDeliveryFee : getDeliveryFee();
-            const fullTotal = subtotal + giftWrap + deliveryFee;
-            mpesaAmount.textContent = `KSH ${fullTotal.toLocaleString()}`;
-        }
-    } else {
-        if (mpesaSection) mpesaSection.style.display = 'none';
-        if (mpesaPhoneInput) { mpesaPhoneInput.required = false; mpesaPhoneInput.setAttribute('data-optional', '1'); }
-    }
-    
+    const mpesaTillSection = document.getElementById('mpesaTillSection');
+    if (manualSection) manualSection.style.display = 'none';
+    if (mpesaSection) mpesaSection.style.display = 'none';
+    if (mpesaTillSection) mpesaTillSection.style.display = paymentMethod === 'mpesa' ? 'block' : 'none';
     updateOrderSummary();
 }
 
@@ -2182,13 +1904,6 @@ function applyDeliveryFeeResult(result) {
         deliveryFeeAmount.textContent = `KSH ${result.fee.toLocaleString()}`;
         deliveryFeeDetails.textContent = result.message || 'Based on distance from Westlands Market (KSH 40/km)';
         deliveryFeeDistance.textContent = result.distance ? `📍 ${result.distance} km from shop` : '';
-        const paymentMethod = document.getElementById('payment')?.value;
-        const mpesaAmount = document.getElementById('mpesaAmount');
-        if (paymentMethod === 'mpesa' && mpesaAmount) {
-            var subtotal = (typeof cart !== 'undefined' && cart) ? cart.reduce(function(s, i) { return s + (i.price * i.quantity); }, 0) : 0;
-            var giftWrap = document.getElementById('giftWrap')?.checked ? 80 : 0;
-            mpesaAmount.textContent = 'KSH ' + (subtotal + giftWrap + result.fee).toLocaleString();
-        }
     } else if (result.outsideNairobi) {
         calculatedDeliveryFee = null;
         calculatedDeliveryDistance = null;
@@ -2197,8 +1912,6 @@ function applyDeliveryFeeResult(result) {
         deliveryFeeAmount.textContent = 'Admin will set';
         deliveryFeeDetails.textContent = 'Address is outside Nairobi';
         deliveryFeeDistance.textContent = '📧 You will be notified when admin sets the delivery fee';
-        var mpesaAmount = document.getElementById('mpesaAmount');
-        if (mpesaAmount) mpesaAmount.textContent = 'TBD by Admin';
     } else {
         calculatedDeliveryFee = null;
         calculatedDeliveryDistance = null;
@@ -2272,16 +1985,6 @@ function setupDeliveryFeeCalculator() {
                         deliveryFeeDetails.textContent = `Based on distance from Westlands Market (KSH 40/km)`;
                         deliveryFeeDistance.textContent = `📍 ${result.distance} km from shop`;
                         
-                        // Update M-Pesa amount if M-Pesa is selected (full total)
-                        const paymentMethod = document.getElementById('payment')?.value;
-                        const mpesaAmount = document.getElementById('mpesaAmount');
-                        if (paymentMethod === 'mpesa' && mpesaAmount) {
-                            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                            const giftWrap = document.getElementById('giftWrap')?.checked ? 80 : 0;
-                            const fullTotal = subtotal + giftWrap + result.fee;
-                            mpesaAmount.textContent = `KSH ${fullTotal.toLocaleString()}`;
-                        }
-                        
                         // Update order summary with new fee
                         updateOrderSummary();
                     } else if (result.outsideNairobi) {
@@ -2295,13 +1998,6 @@ function setupDeliveryFeeCalculator() {
                         deliveryFeeAmount.textContent = 'Admin will set';
                         deliveryFeeDetails.textContent = 'Address is outside Nairobi';
                         deliveryFeeDistance.textContent = '📧 You will be notified when admin sets the delivery fee';
-                        
-                        // Update M-Pesa amount if M-Pesa is selected
-                        const paymentMethod = document.getElementById('payment')?.value;
-                        const mpesaAmount = document.getElementById('mpesaAmount');
-                        if (paymentMethod === 'mpesa' && mpesaAmount) {
-                            mpesaAmount.textContent = 'TBD by Admin';
-                        }
                         
                         // Update order summary
                         updateOrderSummary();
@@ -2393,20 +2089,16 @@ function updateOrderSummary() {
             <span>KSH ${itemsTotal.toLocaleString()}</span>
         </div>
         ${paymentMethod === 'mpesa' ? `
-        <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; padding: 0.75rem; background: rgba(76, 175, 80, 0.2); border-radius: 8px; font-weight: bold; font-size: 1.3rem; color: #4CAF50;">
-            <span>💰 M-Pesa Total (Items + Delivery)</span>
-            <span>KSH ${fullTotal.toLocaleString()}</span>
-        </div>
         <div style="margin-top: 0.5rem; padding: 0.75rem; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 0.85rem; color: #fff;">
-            <strong>📱 M-Pesa Payment:</strong> You will pay the full amount (KSH ${fullTotal.toLocaleString()}) via M-Pesa now. Enter the confirmation code after payment.
+            <strong>📱 M-Pesa (Till 3193269):</strong> Pay to Till, then paste your confirmation code on the order success screen.
         </div>
-        ` : paymentMethod === 'cash' ? `
+        ` : paymentMethod === 'card' ? `
         <div style="margin-top: 0.5rem; padding: 0.75rem; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 0.85rem; color: #fff;">
-            <strong>💰 Cash on Delivery:</strong> You will pay for items (KSH ${itemsTotal.toLocaleString()}) on delivery. Delivery fee (KSH ${deliveryFee.toLocaleString()}) will be paid separately via M-Pesa after admin sets it.
+            <strong>💳 Card:</strong> You will enter card details on the next step.
         </div>
         ` : `
         <div style="margin-top: 0.5rem; padding: 0.75rem; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 0.85rem; color: #fff;">
-            <strong>Note:</strong> Select a payment method to see payment details.
+            <strong>Note:</strong> Select a payment method.
         </div>
         `}
     `;
@@ -2663,11 +2355,11 @@ async function sendStkPushImmediately(amount, orderData) {
                                      errorText.includes('NetworkError');
                 
                 if (isBackendError) {
-                    failureMessage.innerHTML = '⚠️ M-Pesa payment is currently unavailable.<br><br>Please use <strong>Cash on Delivery</strong> or <strong>Card</strong> payment instead.<br><br>Thank you for your understanding! 💕';
+                    failureMessage.innerHTML = '⚠️ M-Pesa payment is currently unavailable.<br><br>Please use <strong>M-Pesa Till 3193269</strong> or <strong>Card</strong> payment instead.<br><br>Thank you for your understanding! 💕';
                 } else if (errorText.includes('quota') || errorText.includes('exceeded')) {
-                    failureMessage.innerHTML = '⚠️ Payment quota exceeded.<br><br>Please try again later or use <strong>Cash on Delivery</strong> or <strong>Card</strong> payment.';
+                    failureMessage.innerHTML = '⚠️ Payment quota exceeded.<br><br>Please try again later or use <strong>M-Pesa Till 3193269</strong> or <strong>Card</strong> payment.';
                 } else {
-                    failureMessage.innerHTML = errorText || 'Payment could not be processed.<br><br>Please try again or use <strong>Cash on Delivery</strong>.';
+                    failureMessage.innerHTML = errorText || 'Payment could not be processed.<br><br>Please try again or use <strong>M-Pesa Till 3193269</strong> or <strong>Card</strong>.';
                 }
             }
         }
@@ -2894,10 +2586,10 @@ function generateMpesaConfirmationCode() {
     return code;
 }
 
-// Handle Order Form Submission
-const orderForm = document.getElementById('orderForm');
-if (orderForm) {
-    orderForm.addEventListener('submit', function(e) {
+// Handle Order Form Submission (use unique var to avoid redeclaration with other scripts)
+var orderFormElMain = document.getElementById('orderForm');
+if (orderFormElMain) {
+    orderFormElMain.addEventListener('submit', function(e) {
         e.preventDefault();
         
         const formData = new FormData(e.target);
@@ -2914,7 +2606,6 @@ if (orderForm) {
         const fullTotal = total + deliveryFee;
         
         // Validate form
-        const mpesaPhone = formData.get('mpesaPhone');
         const name = formData.get('name');
         const email = formData.get('email');
         const phone = formData.get('phone');
@@ -2929,39 +2620,12 @@ if (orderForm) {
             return;
         }
         
-        // Validate M-Pesa phone number if M-Pesa is selected
-        if (paymentMethod === 'mpesa') {
-            if (!mpesaPhone || mpesaPhone.trim().length < 9) {
-                alert('⚠️ Please enter a valid M-Pesa phone number (9-10 digits)\n\nExample: 0712345678');
-                document.getElementById('mpesaPhone')?.focus();
-                return;
-            }
-            // Format phone number (remove any spaces or dashes)
-            const cleanPhone = mpesaPhone.replace(/[\s-]/g, '').trim();
-            if (cleanPhone.length < 9 || cleanPhone.length > 10) {
-                alert('⚠️ Please enter a valid M-Pesa phone number (9-10 digits)\n\nExample: 0712345678');
-                document.getElementById('mpesaPhone')?.focus();
-                return;
-            }
-        }
-        
-        // Format M-Pesa phone number
-        let formattedMpesaPhone = mpesaPhone;
-        if (paymentMethod === 'mpesa' && mpesaPhone) {
-            formattedMpesaPhone = mpesaPhone.replace(/[\s-]/g, '').trim();
-            // Add leading 0 if missing
-            if (formattedMpesaPhone.length === 9 && !formattedMpesaPhone.startsWith('0')) {
-                formattedMpesaPhone = '0' + formattedMpesaPhone;
-            }
-        }
-        
         const orderCountry = formData.get('orderCountry') || '';
         const orderCounty = formData.get('orderCounty') || '';
         const orderData = {
             name: name,
             email: email,
             phone: phone,
-            mpesaPhone: paymentMethod === 'mpesa' ? (formattedMpesaPhone || phone) : phone, // Use formatted M-Pesa phone
             address: deliveryAddress,
             orderCountry: orderCountry,
             orderCounty: orderCounty,
@@ -2970,46 +2634,26 @@ if (orderForm) {
             giftWrap: giftWrap,
             subtotal: subtotal,
             total: total,
-            mpesaCode: null, // Will be set after STK push
-            paymentStatus: paymentMethod === 'cash' ? 'pending' : 'pending',
-            // Payment amounts
-            itemsPaid: paymentMethod === 'mpesa' ? false : false, // Will be true after payment
-            deliveryFeePaid: paymentMethod === 'mpesa' ? false : false, // Will be true after payment
-            itemsPaymentMethod: paymentMethod === 'cash' ? 'cash_on_delivery' : paymentMethod === 'mpesa' ? 'mpesa_paid' : null,
-            deliveryFee: null, // Will be auto-calculated
+            paymentStatus: 'pending',
+            itemsPaid: false,
+            deliveryFeePaid: false,
+            itemsPaymentMethod: paymentMethod === 'mpesa' ? 'mpesa_till' : (paymentMethod === 'card' ? 'card' : null),
+            deliveryFee: null,
             deliveryFeeAutoCalculated: false,
-            pinnedLocation: pinnedLocation || null // Include pinned location coordinates if available
+            pinnedLocation: pinnedLocation || null
         };
         
-        // If M-Pesa, show "coming soon" and do not proceed with payment
-        if (paymentMethod === 'mpesa') {
-            e.preventDefault();
-            e.stopPropagation();
-            alert('📱 M-Pesa payment will be available soon.\n\nPlease use Cash on Delivery or Card payment for now. Thank you for your patience! 💕');
-            return false;
-        }
-        
-        // For cash on delivery, proceed directly
         proceedWithOrderPlacement(orderData, subtotal, giftWrap, paymentMethod, null, e);
         
         return; // Exit early, order will be created after payment or directly
     });
 }
 
-// Proceed with order placement (called after STK push payment or for cash)
+// Proceed with order placement (mpesa or card)
 function proceedWithOrderPlacement(orderData, subtotal, giftWrap, paymentMethod, mpesaCode, event) {
     const deliveryAddress = orderData.address;
     
-    // Update order data with M-Pesa code if provided
-    if (mpesaCode) {
-        orderData.mpesaCode = mpesaCode;
-        orderData.paymentStatus = 'pending_verification';
-        orderData.itemsPaid = paymentMethod === 'mpesa' ? true : false;
-        orderData.deliveryFeePaid = paymentMethod === 'mpesa' ? true : false;
-    }
-    
     // Auto-calculate delivery fee based on address
-    // For M-Pesa payments in Nairobi, auto-set delivery fee (no manual addition needed)
     const isNairobi = deliveryAddress && deliveryAddress.toLowerCase().includes('nairobi');
     const isMpesaPaid = paymentMethod === 'mpesa' && mpesaCode;
     
@@ -3099,6 +2743,12 @@ function createOrderWithData(orderData, subtotal, giftWrap, paymentMethod, mpesa
         let order;
         if (typeof window.createOrder === 'function') {
             order = window.createOrder(orderData);
+            if (order && !order.mpesaReference) {
+                order.mpesaReference = 'SLY' + order.id + '-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+                const orders = JSON.parse(localStorage.getItem('slayStationOrders') || '[]');
+                const idx = orders.findIndex(o => o.id === order.id);
+                if (idx !== -1) { orders[idx] = order; localStorage.setItem('slayStationOrders', JSON.stringify(orders)); }
+            }
         } else {
             // Fallback if admin.js not loaded
             const orders = JSON.parse(localStorage.getItem('slayStationOrders') || '[]');
@@ -3108,15 +2758,15 @@ function createOrderWithData(orderData, subtotal, giftWrap, paymentMethod, mpesa
                 date: new Date().toISOString(),
                 ...orderData,
                 status: 'pending',
-                deliveryFee: orderData.deliveryFee || null, // Use auto-calculated fee if available
-                deliveryFeePaid: orderData.deliveryFeePaid || false, // M-Pesa pays delivery fee upfront
+                deliveryFee: orderData.deliveryFee || null,
+                deliveryFeePaid: orderData.deliveryFeePaid || false,
                 deliveryFeeSet: orderData.deliveryFeeAutoCalculated ? true : false,
                 deliveryFeeNotificationSent: false,
-                mpesaCode: orderData.mpesaCode || null,
-                itemsPaid: orderData.itemsPaid || false, // M-Pesa pays items upfront
+                itemsPaid: orderData.itemsPaid || false,
                 itemsPaymentMethod: orderData.itemsPaymentMethod || null,
                 notifications: []
             };
+            order.mpesaReference = 'SLY' + order.id + '-' + Math.random().toString(36).substr(2, 4).toUpperCase();
             orders.push(order);
             localStorage.setItem('slayStationOrders', JSON.stringify(orders));
         }
@@ -3149,9 +2799,9 @@ function createOrderWithData(orderData, subtotal, giftWrap, paymentMethod, mpesa
         
         let paymentMessage = '';
         if (paymentMethod === 'mpesa') {
-            paymentMessage = `\n💳 M-Pesa Payment: Full amount (KSH ${fullTotal.toLocaleString()}) paid via M-Pesa.\nYour payment confirmation code (${mpesaCode}) is being verified.\n`;
-        } else if (paymentMethod === 'cash') {
-            paymentMessage = `\n💰 Cash on Delivery:\n- Items (KSH ${itemsTotal.toLocaleString()}) will be paid on delivery.\n- Delivery fee (KSH ${deliveryFee > 0 ? deliveryFee.toLocaleString() : 'TBD'}) will be paid separately via M-Pesa after admin sets it.\n`;
+            paymentMessage = `\n📱 M-Pesa (Till 3193269):\nPay to Till 3193269, then paste your confirmation code on the order success screen.\n`;
+        } else if (paymentMethod === 'card') {
+            paymentMessage = `\n💳 Card payment will be processed separately.\n`;
         }
         
         // Send notification for new order
@@ -3159,20 +2809,20 @@ function createOrderWithData(orderData, subtotal, giftWrap, paymentMethod, mpesa
             window.notifyOrderStatusChange(order.id, 'pending', null);
         }
         
-        alert(`🎉 Order Placed Successfully! 🎉\n\nThank you ${orderData.name}! Your order has been received.\n\nOrder #${order.id}\n\nItems: KSH ${itemsTotal.toLocaleString()}\n${deliveryFee > 0 ? `Delivery Fee: KSH ${deliveryFee.toLocaleString()}\n` : 'Delivery Fee: Will be set by admin\n'}${paymentMethod === 'mpesa' ? `Total Paid: KSH ${fullTotal.toLocaleString()}\n` : ''}${pointsMessage}${paymentMessage}\n📦 Your order is being processed.\n\nYou can track your order using Order #${order.id}!\n\nWe'll contact you soon! 💕`);
-        
         // Clear cart completely
         cart = [];
         localStorage.setItem('slayStationCart', JSON.stringify([]));
         updateCartCount();
-        
-        // Update cart display if it's open
         if (document.getElementById('cartOverlay') && document.getElementById('cartOverlay').classList.contains('active')) {
             renderCart();
         }
-        
-        // Close modal and reset form
         closeOrderModal();
+        
+        if (typeof window.showOrderSuccessWithMpesa === 'function') {
+            window.showOrderSuccessWithMpesa(order);
+        } else {
+            alert(`🎉 Order Placed Successfully! 🎉\n\nThank you ${orderData.name}! Your order has been received.\n\nOrder #${order.id}\n\nItems: KSH ${itemsTotal.toLocaleString()}\n${deliveryFee > 0 ? `Delivery Fee: KSH ${deliveryFee.toLocaleString()}\n` : 'Delivery Fee: Will be set by admin\n'}${pointsMessage}${paymentMessage}\n📦 Your order is being processed.\n\nYou can track your order using Order #${order.id}!\n\nWe will contact you soon! 💕`);
+        }
         if (event && event.target) {
             event.target.reset();
         } else {
@@ -3269,20 +2919,28 @@ function addToCart(productId, qty) {
             quantity: quantity,
             category: product.category || 'bag'
         };
-        cart.push(itemToAdd);
+        allCartItems.push(itemToAdd);
+        cart = allCartItems;
     }
 
-    updateCartCount();
-    saveCartToStorage();
-    showNotification(quantity > 1 ? `${product.name} (${quantity}) added to cart! ✨` : `${product.name} added to cart! ✨`);
-    
+    // Always persist to localStorage from this cart (other scripts may overwrite saveCartToStorage)
+    try {
+        localStorage.setItem('slayStationCart', JSON.stringify(cart));
+    } catch (e) {}
+    if (typeof updateCartCount === 'function') updateCartCount();
+    if (typeof showNotification === 'function') {
+        showNotification(quantity > 1 ? `${product.name} (${quantity}) added to cart! ✨` : `${product.name} added to cart! ✨`);
+    } else {
+        alert(quantity > 1 ? `${product.name} (${quantity}) added to cart!` : `${product.name} added to cart!`);
+    }
     // Only update cart panel if it's already open – do NOT open the cart
     const cartOverlayEl = document.getElementById('cartOverlay');
     if (cartOverlayEl && cartOverlayEl.classList.contains('active')) {
-        renderCart();
+        if (typeof renderCart === 'function') renderCart();
         if (typeof renderYouMayAlsoLike === 'function') renderYouMayAlsoLike('cartYouMayAlsoLike');
     }
 }
+if (typeof window !== 'undefined') { window.addToCartUnified = addToCart; }
 
 // Show Notification (wishlist, cart, etc.) – high visibility, above nav
 function showNotification(message) {
@@ -3414,12 +3072,14 @@ function toggleWishlistItem(productId) {
     
     if (existingItem) {
         wishlist = wishlist.filter(item => !(item.id === productId && item.category === product.category));
+        decrementProductWishlistDisplayCount(productId, product.category);
         showNotification(`${product.name} removed from wishlist 💔`);
     } else {
         wishlist.push({
             ...product,
             category: product.category || 'bag'
         });
+        incrementProductWishlistDisplayCount(productId, product.category);
         createHeartAnimation();
         showNotification(`${product.name} added to wishlist 💖`);
     }
@@ -3474,6 +3134,8 @@ function addToCartFromWishlist(productId) {
 }
 
 function removeFromWishlist(productId) {
+    const item = wishlist.find(i => i.id === productId);
+    if (item) decrementProductWishlistDisplayCount(item.id, item.category);
     wishlist = wishlist.filter(item => item.id !== productId);
     saveWishlistToStorage();
     updateWishlistCount();
@@ -3533,6 +3195,8 @@ if (typeof window !== 'undefined') {
 
 // Check if flash sale was closed on page load
 document.addEventListener('DOMContentLoaded', function() {
+    var isAdminPage = typeof window !== 'undefined' && window.location && (/(^|\/)admin\.html$/i.test(window.location.pathname || '') || /admin\.html/i.test(window.location.href || ''));
+    if (isAdminPage) return;
     if (localStorage.getItem('flashSaleClosed') === 'true') {
         const flashSaleBanner = document.getElementById('flashSaleBanner');
         if (flashSaleBanner) {
@@ -3585,6 +3249,86 @@ function createFloatingHearts() {
         }
     }, 3000);
 }
+
+// Order success modal with M-Pesa till, unique reference, and paste code (used after place order)
+const MPESA_TILL = '3193269';
+function showOrderSuccessWithMpesa(order) {
+    let ref = order.mpesaReference || ('SLY' + order.id + '-' + Math.random().toString(36).substr(2, 4).toUpperCase());
+    if (!order.mpesaReference) {
+        order.mpesaReference = ref;
+        const orders = JSON.parse(localStorage.getItem('slayStationOrders') || '[]');
+        const idx = orders.findIndex(o => o.id === order.id);
+        if (idx !== -1) { orders[idx] = order; localStorage.setItem('slayStationOrders', JSON.stringify(orders)); }
+    }
+    const total = order.total || (order.subtotal + (order.deliveryFee || 0));
+    const orderMessage = 'Order #' + order.id + ' | ' + (order.name || '') + ' | KSH ' + (total || 0).toLocaleString() + ' | Ref: ' + ref;
+    const modal = document.createElement('div');
+    modal.id = 'orderSuccessMpesaModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;';
+    modal.innerHTML =
+        '<div style="background:#fff;border-radius:16px;max-width:440px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">' +
+        '<div style="padding:1.5rem;">' +
+        '<h2 style="margin:0 0 0.5rem 0;font-size:1.5rem;">Order Successful</h2>' +
+        '<div style="background:linear-gradient(135deg,#ffebee,#fce4ec);border:2px solid #e91e63;border-radius:10px;padding:0.75rem 1rem;margin-bottom:1rem;">' +
+        '<span style="color:#c2185b;font-weight:600;font-size:0.9rem;">Your order is currently unpaid. Please pay via M-Pesa or contact us.</span>' +
+        '</div>' +
+        '<div style="text-align:center;margin:1rem 0;">' +
+        '<div style="width:64px;height:64px;margin:0 auto 0.5rem;background:#4caf50;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:2rem;">✓</div>' +
+        '<p style="margin:0;font-weight:600;">Thank you for your order!</p>' +
+        '<p style="margin:0.25rem 0 0;color:#666;font-size:0.9rem;">Your order has been received. We\'ll process it shortly.</p>' +
+        '</div>' +
+        '<div style="background:#e8f5e9;padding:0.75rem;border-radius:10px;margin-bottom:1rem;font-size:0.9rem;">It typically takes about 2 hours to process. We\'ll notify you when it\'s ready.</div>' +
+        '<p style="margin:0 0 0.25rem 0;font-size:0.85rem;color:#666;">Delivery to:</p>' +
+        '<p style="margin:0 0 1rem 0;font-weight:600;">' + (order.name || '') + ' · ' + (order.address || order.location || '') + '</p>' +
+        '<div style="background:#f5f5f5;padding:1rem;border-radius:10px;margin-bottom:1rem;">' +
+        '<p style="margin:0 0 0.5rem 0;font-weight:600;font-size:0.9rem;">Pay via M-Pesa</p>' +
+        '<p style="margin:0 0 0.25rem 0;font-size:0.85rem;">Till number: <strong>' + MPESA_TILL + '</strong></p>' +
+        '<p style="margin:0 0 0.5rem 0;font-size:0.85rem;">Use this unique reference when paying: <strong style="font-family:monospace;background:#fff;padding:0.2rem 0.4rem;border-radius:4px;">' + ref + '</strong></p>' +
+        '<label style="display:block;margin:0.5rem 0 0.25rem 0;font-size:0.85rem;">Paste M-Pesa message / code</label>' +
+        '<input type="text" id="orderSuccessMpesaCode" placeholder="e.g. ABC123XY or code from M-Pesa message" style="width:100%;padding:0.6rem;border:2px solid #ddd;border-radius:8px;box-sizing:border-box;margin-top:0.25rem;">' +
+        '<button type="button" id="orderSuccessSubmitCode" style="margin-top:0.5rem;width:100%;padding:0.6rem;background:#2196f3;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Submit M-Pesa code</button>' +
+        '</div>' +
+        '<div style="display:flex;flex-direction:column;gap:0.5rem;">' +
+        '<button type="button" class="order-success-copy" style="padding:0.6rem;background:#f5f5f5;border:1px solid #ddd;border-radius:8px;cursor:pointer;font-weight:600;">Copy order message</button>' +
+        '<button type="button" class="order-success-close" style="padding:0.6rem;background:#fff;border:2px solid #333;border-radius:8px;cursor:pointer;font-weight:600;">Close</button>' +
+        '<a href="#" class="order-success-whatsapp" style="display:block;text-align:center;padding:0.6rem;background:#25d366;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;">Send to WhatsApp</a>' +
+        '</div></div></div>';
+    document.body.appendChild(modal);
+    const codeInput = document.getElementById('orderSuccessMpesaCode');
+    const submitBtn = document.getElementById('orderSuccessSubmitCode');
+    function closeModal() {
+        if (modal.parentNode) modal.parentNode.removeChild(modal);
+        window.location.href = 'track-order.html?order=' + order.id;
+    }
+    modal.querySelector('.order-success-copy').onclick = function() {
+        try { navigator.clipboard.writeText(orderMessage); alert('Order message copied.'); } catch (e) { prompt('Copy this:', orderMessage); }
+    };
+    modal.querySelector('.order-success-close').onclick = closeModal;
+    const waNum = '254794594595';
+    const waText = encodeURIComponent('Hi, I just placed Order #' + order.id + '. Ref: ' + ref + '. Total: KSH ' + (total || 0).toLocaleString() + '.');
+    const waLink = modal.querySelector('.order-success-whatsapp');
+    waLink.href = 'https://wa.me/' + waNum + '?text=' + waText;
+    waLink.onclick = function(e) { e.preventDefault(); window.open(this.href, '_blank'); };
+    submitBtn.onclick = function() {
+        const code = (codeInput && codeInput.value) ? codeInput.value.trim() : '';
+        if (!code) { alert('Please enter your M-Pesa code.'); return; }
+        const orders = JSON.parse(localStorage.getItem('slayStationOrders') || '[]');
+        const o = orders.find(x => x.id === order.id);
+        if (o) {
+            o.mpesaCode = code;
+            o.mpesaCodeSubmittedTime = new Date().toISOString();
+            o.payment = o.payment || 'mpesa';
+            const i = orders.findIndex(x => x.id === order.id);
+            if (i !== -1) orders[i] = o;
+            localStorage.setItem('slayStationOrders', JSON.stringify(orders));
+        }
+        submitBtn.textContent = 'Code submitted!';
+        submitBtn.disabled = true;
+        if (codeInput) codeInput.disabled = true;
+        setTimeout(closeModal, 1500);
+    };
+}
+window.showOrderSuccessWithMpesa = showOrderSuccessWithMpesa;
 
 // Create confetti on order success
 function createConfetti() {

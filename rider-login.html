@@ -13,373 +13,203 @@
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
-        .rider-login-container {
+        /* Rider login – Google-only, main-page style */
+        body { margin: 0; font-family: 'Poppins', sans-serif; }
+        .rider-login-wrap {
             min-height: 100vh;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+        }
+        .rider-login-left {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--light-bg) 0%, #FFF0F5 100%);
-            padding: 20px;
+            background: #fff;
+            padding: 2rem;
         }
-        
-        .rider-login-box {
-            background: white;
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            max-width: 450px;
+        .rider-login-card {
             width: 100%;
+            max-width: 420px;
             text-align: center;
         }
-        
-        .rider-login-box h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, var(--primary-pink), var(--purple));
+        .rider-login-card .rider-logo-text {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-pink, #ec4899), var(--purple, #8b5cf6));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.02em;
         }
-        
-        .rider-login-box p {
-            color: #666;
-            margin-bottom: 2rem;
-        }
-        
-        .rider-login-box input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid var(--light-bg);
-            border-radius: 10px;
-            font-family: 'Poppins', sans-serif;
+        .rider-login-card .rider-subtitle {
+            color: #555;
             font-size: 1rem;
-            margin-bottom: 1rem;
-            transition: border-color 0.3s;
+            margin-bottom: 1.75rem;
         }
-        
-        .rider-login-box input:focus {
-            outline: none;
-            border-color: var(--primary-pink);
-        }
-        
-        .rider-login-btn {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, var(--primary-pink), var(--purple));
-            color: white;
-            border: none;
-            border-radius: 10px;
+        .rider-login-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            color: #0369a1;
+            font-size: 0.9rem;
             font-weight: 600;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 1rem;
+            margin-bottom: 1.5rem;
         }
-        
-        .rider-login-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(255, 107, 157, 0.4);
-        }
-        
-        .back-link {
-            display: inline-block;
-            margin-top: 2rem;
-            color: var(--primary-pink);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .back-link:hover {
-            color: var(--purple);
-        }
-        
-        /* Google Sign-In Button Styling */
+        #riderLoginMessages { margin-bottom: 1rem; }
         #googleSignInButton {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
-        
-        /* Style the Google button container */
-        #googleSignInButton > div {
-            width: 100% !important;
-            max-width: 100% !important;
-        }
-        
-        /* Custom Google button styling */
+        #googleSignInButton > div { width: 100% !important; max-width: 100% !important; }
         #googleSignInButton iframe {
-            border-radius: 10px !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
-            transition: all 0.3s ease !important;
+            border-radius: 12px !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
+            transition: box-shadow 0.2s, transform 0.2s !important;
         }
-        
         #googleSignInButton iframe:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important;
             transform: translateY(-2px) !important;
         }
-        
-        /* Custom Google Sign-In Button (fallback if Google button doesn't render) */
         .custom-google-btn {
             width: 100%;
-            padding: 1rem;
-            background: white;
-            color: #4285F4;
-            border: 2px solid #dadce0;
-            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            background: #fff;
+            color: #1f2937;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.75rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.25rem;
         }
-        
         .custom-google-btn:hover {
-            background: #f8f9fa;
-            border-color: #4285F4;
-            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.2);
-            transform: translateY(-2px);
+            background: #f9fafb;
+            border-color: #d1d5db;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
-        
-        .custom-google-btn:active {
-            transform: translateY(0);
+        .custom-google-btn svg { width: 20px; height: 20px; }
+        .rider-login-origin-help {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 12px;
+            text-align: left;
         }
-        
-        .custom-google-btn svg {
-            width: 20px;
-            height: 20px;
+        .rider-back-wrap {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
         }
-        
-        .divider {
-            display: flex;
+        .back-link {
+            display: inline-flex;
             align-items: center;
-            text-align: center;
-            margin: 1.5rem 0;
-            color: #666;
-            font-size: 0.9rem;
+            gap: 0.35rem;
+            color: #6b7280;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
         }
-        
-        .divider::before,
-        .divider::after {
-            content: '';
+        .back-link:hover { color: var(--primary-pink, #ec4899); }
+        .rider-login-right {
             flex: 1;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .divider::before {
-            margin-right: 1rem;
-        }
-        
-        .divider::after {
-            margin-left: 1rem;
-        }
-        
-        /* Forgot Password Modal */
-        .forgot-password-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            min-height: 50vh;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #f5f3ff 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10000;
-            animation: fadeIn 0.3s ease;
+            padding: 2rem;
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .rider-login-right-inner {
+            text-align: center;
+            max-width: 320px;
         }
-        
-        .forgot-password-content {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            max-width: 450px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: slideUp 0.3s ease;
-        }
-        
-        @keyframes slideUp {
-            from {
-                transform: translateY(30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        .forgot-password-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .forgot-password-header h2 {
-            font-size: 1.8rem;
-            background: linear-gradient(135deg, var(--primary-pink), var(--purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 0;
-        }
-        
-        .close-forgot-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #666;
-            cursor: pointer;
-            padding: 0.5rem;
-            line-height: 1;
-            transition: color 0.3s;
-        }
-        
-        .close-forgot-modal:hover {
-            color: var(--primary-pink);
-        }
-        
-        .back-to-login-btn:hover {
-            background: var(--primary-pink) !important;
-            color: white !important;
-        }
-        
-        /* Forgot Password Link Hover */
-        a[onclick*="openForgotPasswordModal"]:hover {
-            background: var(--primary-pink) !important;
-            color: white !important;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
-        }
-        
-        /* Password Toggle Button Hover */
-        button[onclick*="togglePasswordVisibility"]:hover,
-        button[onclick*="toggleNewPasswordVisibility"]:hover {
-            color: var(--primary-pink) !important;
-        }
-        
-        .forgot-password-content input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid var(--light-bg);
-            border-radius: 10px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1rem;
+        .rider-login-right-inner .rider-icon-hero {
+            font-size: 5rem;
             margin-bottom: 1rem;
-            transition: border-color 0.3s;
-            box-sizing: border-box;
+            filter: drop-shadow(0 4px 12px rgba(236, 72, 153, 0.2));
         }
-        
-        .forgot-password-content input:focus {
-            outline: none;
-            border-color: var(--primary-pink);
+        .rider-login-right-inner p {
+            color: #6b7280;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .rider-login-wrap { flex-direction: column; }
+            .rider-login-right { min-height: 280px; }
         }
     </style>
 </head>
 <body>
-    <div class="rider-login-container">
-        <div class="rider-login-box">
-            <h1>🚴 Rider Login</h1>
-            <p>Sign in with Google to access deliveries</p>
-            
-            <div style="background: linear-gradient(135deg, #E3F2FD, #BBDEFB); padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; border: 2px solid #2196F3;">
-                <p style="margin: 0; color: #1976D2; font-weight: 600; font-size: 0.9rem;">🔒 Restricted Access - Authorized Riders Only</p>
-            </div>
-            
-            <!-- Google Sign-In Button -->
-            <div id="googleSignInButton"></div>
-            
-            <!-- Custom Google Button (fallback) -->
-            <button type="button" class="custom-google-btn" id="customGoogleBtn" onclick="triggerGoogleSignIn()" style="display: none;">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                <span>Sign in with Google</span>
-            </button>
-            
-            <!-- Forgot Password Link (Always Visible) -->
-            <div style="text-align: center; margin: 1.5rem 0;">
-                <a href="#" onclick="event.preventDefault(); openForgotPasswordModal();" style="color: var(--primary-pink); text-decoration: none; font-weight: 600; font-size: 0.95rem; display: inline-block; padding: 0.75rem 1.5rem; border: 2px solid var(--primary-pink); border-radius: 10px; transition: all 0.3s;">
-                    🔑 Forgot Password?
-                </a>
-            </div>
-            
-            <div class="divider">OR</div>
-            
-            <!-- Fallback Email/Password Form -->
-            <form id="riderLoginForm" onsubmit="handleRiderLogin(event)" style="display: none;">
-                <input type="email" id="riderEmail" placeholder="Enter your Gmail/Email" required autocomplete="email">
-                <div style="position: relative; margin-bottom: 1rem;">
-                    <input type="password" id="riderPassword" placeholder="Enter your password" required autocomplete="current-password" minlength="6" style="padding-right: 3rem; width: 100%; box-sizing: border-box;">
-                    <button type="button" id="toggleRiderPassword" onclick="togglePasswordVisibility('riderPassword', 'toggleRiderPassword')" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #666; cursor: pointer; padding: 0.5rem; font-size: 1.2rem; z-index: 10; transition: color 0.3s;" title="Show/Hide Password">👁️</button>
+    <div class="rider-login-wrap">
+        <div class="rider-login-left">
+            <div class="rider-login-card">
+                <h1 class="rider-logo-text">Slay Station Rider</h1>
+                <p class="rider-subtitle">Sign in with Google to access your deliveries</p>
+                
+                <div class="rider-login-badge">🔒 Authorized riders only</div>
+                
+                <div id="riderLoginMessages"></div>
+                
+                <div id="googleSignInButton"></div>
+                
+                <button type="button" class="custom-google-btn" id="customGoogleBtn" onclick="triggerGoogleSignIn()" style="display: none;">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span>Sign in with Google</span>
+                </button>
+                
+                <div class="rider-login-origin-help">
+                    <p style="margin: 0 0 0.5rem 0; font-weight: 600; color: #92400e; font-size: 0.9rem;">⚠️ Can’t log in? “Access blocked” or “origin not allowed”?</p>
+                    <p style="margin: 0; color: #666; font-size: 0.85rem;">This page uses the OAuth client whose <strong>Client ID ends with <code style="background: #fff; padding: 0 0.2rem;">…r1llf24</code></strong>. In Console, edit <em>that</em> client and add the origin below.</p>
+                    <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.85rem;"><strong>Add this exact origin</strong> (no trailing slash):</p>
+                    <div style="margin: 0.5rem 0 0 0; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                        <code id="riderCurrentOrigin" style="background: #f0f0f0; padding: 0.35rem 0.6rem; border-radius: 6px; font-size: 0.85rem; word-break: break-all; flex: 1; min-width: 0;">...</code>
+                        <button type="button" id="riderCopyOriginBtn" style="flex-shrink: 0; padding: 0.35rem 0.75rem; background: #0369a1; color: #fff; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">Copy</button>
+                    </div>
+                    <p style="margin: 0.75rem 0 0 0; color: #555; font-size: 0.8rem;"><strong>Steps:</strong> 1) Click Copy. 2) Open <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener" style="color: #0369a1;">Google Cloud Console → Credentials</a>. 3) Click the <strong>OAuth 2.0 Client ID</strong> whose ID ends with <strong>r1llf24</strong>. 4) Under <strong>Authorized JavaScript origins</strong>, click <strong>+ Add URI</strong>, paste, <strong>Save</strong>. 5) Wait 1–2 minutes, then refresh this page and try again.</p>
+                    <details style="margin-top: 0.75rem;">
+                        <summary style="cursor: pointer; font-weight: 600; color: #92400e; font-size: 0.85rem;">Still not working? Check this</summary>
+                        <ul style="margin: 0.5rem 0 0 0; padding-left: 1.25rem; color: #555; font-size: 0.8rem; line-height: 1.6;">
+                            <li>You must edit the client whose Client ID ends with <strong>r1llf24</strong> (not a different OAuth client).</li>
+                            <li>Origin must match exactly: same scheme (http vs https), same port, <strong>no trailing slash</strong>.</li>
+                            <li>Click <strong>Save</strong> in Console and wait 1–2 minutes.</li>
+                            <li>Try in a <strong>private/incognito</strong> window, or clear cache and hard refresh (Ctrl+Shift+R).</li>
+                            <li>Open DevTools (F12) → Console and look for the exact error; it will say which origin Google received.</li>
+                        </ul>
+                    </details>
                 </div>
-                <button type="submit" class="rider-login-btn">Login as Rider 🏍️</button>
-            </form>
-            
-            <!-- Forgot Password Modal -->
-            <div id="forgotPasswordModal" class="forgot-password-modal" style="display: none;">
-                <div class="forgot-password-content">
-                    <div class="forgot-password-header">
-                        <h2>🔐 Reset Password</h2>
-                        <button class="close-forgot-modal" onclick="closeForgotPasswordModal()">✕</button>
-                    </div>
-                    <form id="forgotPasswordForm" onsubmit="handleForgotPassword(event)">
-                        <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.9rem;">Enter your email address and we'll send you a password reset link.</p>
-                        <input type="email" id="forgotEmail" placeholder="Enter your email address" required autocomplete="email">
-                        <button type="submit" class="rider-login-btn">Send Reset Link 📧</button>
-                    </form>
-                    <div id="emailSentSection" style="display: none; margin-top: 1.5rem;">
-                        <div style="background: #e8f5e9; border: 2px solid #4caf50; border-radius: 10px; padding: 1.5rem; text-align: center;">
-                            <p style="color: #2e7d32; font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">📧 Email Sent!</p>
-                            <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">We've sent a password reset link to:</p>
-                            <p style="color: var(--primary-pink); font-weight: 600; margin-bottom: 1.5rem; font-size: 1rem;" id="sentEmailAddress"></p>
-                            <div style="background: white; border: 2px solid #e0e0e0; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
-                                <p style="color: #666; font-size: 0.85rem; margin-bottom: 0.5rem;">Reset Link:</p>
-                                <a href="#" id="resetLink" style="color: var(--primary-pink); text-decoration: none; font-weight: 600; word-break: break-all; font-size: 0.9rem;" onclick="event.preventDefault(); window.open(this.href, '_blank');">Click here to reset password</a>
-                            </div>
-                            <p style="color: #666; font-size: 0.85rem; margin: 0;">⚠️ Note: In production, this link would be sent via email. For now, copy the link above.</p>
-                        </div>
-                    </div>
-                    <div id="resetPasswordSection" style="display: none; margin-top: 1.5rem;">
-                        <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">Enter your new password:</p>
-                        <div style="position: relative; margin-bottom: 1rem;">
-                            <input type="password" id="newPassword" placeholder="New password (min 6 characters)" required minlength="6" style="width: 100%; padding: 1rem; padding-right: 3rem; border: 2px solid var(--light-bg); border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 1rem; box-sizing: border-box;">
-                            <button type="button" onclick="toggleNewPasswordVisibility('newPassword', 'toggleNewPassword')" id="toggleNewPassword" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #666; cursor: pointer; padding: 0.5rem; font-size: 1.2rem; z-index: 10; transition: color 0.3s;" title="Show/Hide Password">👁️</button>
-                        </div>
-                        <div style="position: relative; margin-bottom: 1rem;">
-                            <input type="password" id="confirmPassword" placeholder="Confirm new password" required minlength="6" style="width: 100%; padding: 1rem; padding-right: 3rem; border: 2px solid var(--light-bg); border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 1rem; box-sizing: border-box;">
-                            <button type="button" onclick="toggleNewPasswordVisibility('confirmPassword', 'toggleConfirmPassword')" id="toggleConfirmPassword" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #666; cursor: pointer; padding: 0.5rem; font-size: 1.2rem; z-index: 10; transition: color 0.3s;" title="Show/Hide Password">👁️</button>
-                        </div>
-                        <button type="button" class="rider-login-btn" onclick="confirmPasswordReset()">Update Password ✨</button>
-                    </div>
-                    <button type="button" class="back-to-login-btn" onclick="closeForgotPasswordModal()" style="width: 100%; padding: 0.75rem; background: transparent; color: var(--primary-pink); border: 2px solid var(--primary-pink); border-radius: 10px; font-weight: 600; font-size: 0.9rem; cursor: pointer; margin-top: 1rem;">Back to Login</button>
+                
+                <div class="rider-back-wrap">
+                    <a href="index.html" class="back-link">← Back to website</a>
                 </div>
             </div>
-            
-            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light-bg);">
-                <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">Don't have a rider account?</p>
-                <a href="signup.html" style="color: var(--primary-pink); text-decoration: none; font-weight: 600; font-size: 0.9rem;">Sign up as Rider</a>
+        </div>
+        <div class="rider-login-right">
+            <div class="rider-login-right-inner">
+                <div class="rider-icon-hero" aria-hidden="true">🏍️</div>
+                <p>Deliver with Slay Station. Sign in with your authorized Google account to view and complete orders.</p>
             </div>
-            
-            <a href="index.html" class="back-link">← Back to Website</a>
         </div>
     </div>
 
@@ -407,32 +237,21 @@
         
         // Error and success message functions (global scope)
         function showError(message) {
-            const errorDiv = document.getElementById('errorMessage') || document.createElement('div');
-            errorDiv.id = 'errorMessage';
-            errorDiv.style.cssText = 'background: #ffebee; color: #c62828; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; border: 2px solid #ef5350; text-align: center; font-weight: 600;';
-            errorDiv.textContent = message;
-            
-            const form = document.getElementById('riderLoginForm');
-            if (form && !document.getElementById('errorMessage')) {
-                form.insertBefore(errorDiv, form.firstChild);
-            } else if (!form) {
-                // If form doesn't exist, insert before the login box content
-                const loginBox = document.querySelector('.rider-login-box');
-                if (loginBox && !document.getElementById('errorMessage')) {
-                    loginBox.insertBefore(errorDiv, loginBox.firstChild);
-                } else if (document.getElementById('errorMessage')) {
-                    errorDiv.textContent = message;
-                }
-            } else {
-                errorDiv.textContent = message;
+            let errorDiv = document.getElementById('errorMessage');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.id = 'errorMessage';
+                errorDiv.style.cssText = 'background: #fef2f2; color: #b91c1c; padding: 0.75rem 1rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid #fecaca; text-align: center; font-weight: 600; font-size: 0.9rem;';
             }
-            
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                if (errorDiv.parentNode) {
-                    errorDiv.remove();
-                }
-            }, 5000);
+            errorDiv.textContent = message;
+            const container = document.getElementById('riderLoginMessages');
+            if (container && !container.contains(errorDiv)) {
+                container.innerHTML = '';
+                container.appendChild(errorDiv);
+            }
+            setTimeout(function() {
+                if (errorDiv.parentNode) errorDiv.remove();
+            }, 6000);
         }
         
         function showSuccess(message) {
@@ -454,6 +273,20 @@
         
         // Wait for scripts and Google Sign-In to load
         document.addEventListener('DOMContentLoaded', function() {
+            var originEl = document.getElementById('riderCurrentOrigin');
+            var origin = typeof location !== 'undefined' ? location.origin : '';
+            if (originEl) originEl.textContent = origin || '(unknown)';
+            var copyBtn = document.getElementById('riderCopyOriginBtn');
+            if (copyBtn && origin) {
+                copyBtn.addEventListener('click', function() {
+                    navigator.clipboard.writeText(origin).then(function() {
+                        var t = copyBtn.textContent;
+                        copyBtn.textContent = 'Copied!';
+                        copyBtn.style.background = '#059669';
+                        setTimeout(function() { copyBtn.textContent = t; copyBtn.style.background = '#0369a1'; }, 1500);
+                    });
+                });
+            }
             if (typeof window.login === 'undefined' || typeof window.authenticateRider === 'undefined') {
                 console.error('Auth or rider functions not loaded. Please refresh the page.');
             }

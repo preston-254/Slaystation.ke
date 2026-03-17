@@ -5,7 +5,7 @@ const accessoryProducts = [
         name: "Classic Leather Belt",
         description: "Timeless leather belt with elegant buckle design. Perfect for any outfit!",
         price: 1200,
-        image: "images/belt/IMG-20251123-WA0050.jpg",
+        image: "images/belt/img-20251123-wa0050.jpg",
         category: "belt"
     },
     {
@@ -13,7 +13,7 @@ const accessoryProducts = [
         name: "Stylish Designer Belt",
         description: "Fashionable belt with modern design and premium quality.",
         price: 1200,
-        image: "images/belt/IMG-20251123-WA0054.jpg",
+        image: "images/belt/img-20251123-wa0054.jpg",
         category: "belt"
     },
     {
@@ -21,7 +21,7 @@ const accessoryProducts = [
         name: "Elegant Fashion Belt",
         description: "Sophisticated belt that adds the perfect finishing touch to your look.",
         price: 1200,
-        image: "images/belt/IMG-20251123-WA0063.jpg",
+        image: "images/belt/img-20251123-wa0063.jpg",
         category: "belt"
     },
     {
@@ -29,7 +29,7 @@ const accessoryProducts = [
         name: "Portable MP3 Player",
         description: "Compact MP3 player with excellent sound quality. Perfect for music lovers on the go!",
         price: 2500,
-        image: "images/mp3-player/IMG-20251123-WA0035.jpg",
+        image: "images/mp3-player/img-20251123-wa0035.jpg",
         category: "mp3-player"
     },
     {
@@ -37,7 +37,7 @@ const accessoryProducts = [
         name: "Wireless MP3 Player",
         description: "Modern wireless MP3 player with Bluetooth connectivity and sleek design.",
         price: 2800,
-        image: "images/mp3-player/IMG-20251123-WA0036.jpg",
+        image: "images/mp3-player/img-20251123-wa0036.jpg",
         category: "mp3-player"
     },
     {
@@ -45,7 +45,7 @@ const accessoryProducts = [
         name: "Premium MP3 Player",
         description: "High-quality MP3 player with advanced features and long battery life.",
         price: 3000,
-        image: "images/mp3-player/IMG-20251123-WA0048.jpg",
+        image: "images/mp3-player/img-20251123-wa0048.jpg",
         category: "mp3-player"
     }
 ];
@@ -57,7 +57,7 @@ if (typeof window.cart === 'undefined') {
 
 // Taupe editorial banners – Valentine image as background
 const VALENTINE_EDITORIAL_BG = 'images/valentine-editorial-bg.png';
-const editorialBanners = [
+const editorialBannersAccessories = [
     { headline: 'Happy', title: "Valentine's Day Sale", body: 'Discover the look, feel and quality of Slay Station.', ctaText: 'Read More', ctaUrl: 'index.html#products', useVideo: true, backgroundImageUrl: VALENTINE_EDITORIAL_BG },
     { headline: 'Discover', title: 'Bag Accessories', body: 'Belts, MP3 players and more to complete your look.', ctaText: 'View Accessories', ctaUrl: 'accessories.html', useVideo: true, backgroundImageUrl: VALENTINE_EDITORIAL_BG }
 ];
@@ -131,8 +131,10 @@ function initAccessoryMobileFilter() {
     if (closeBtn) closeBtn.addEventListener('click', closeFilter);
 }
 
-// Load products on page load
+// Load products on page load (skip on admin page – no cart/filters DOM)
 document.addEventListener('DOMContentLoaded', function() {
+    var isAdminPage = typeof window !== 'undefined' && window.location && (/(^|\/)admin\.html$/i.test((window.location.pathname || '') + (window.location.href || '')));
+    if (isAdminPage) return;
     renderProducts(accessoryProducts);
     var countEl = document.getElementById('accessoryItemCount');
     if (countEl) countEl.textContent = accessoryProducts.length;
@@ -167,8 +169,8 @@ function renderProducts(filteredProducts) {
             <div class="product-price">KSH ${product.price.toLocaleString()}</div>
         `;
         productsGrid.appendChild(productCard);
-        if ((i + 1) % 2 === 0 && i + 1 < list.length && editorialBanners.length > 0) {
-            var config = editorialBanners[bannerIndex % editorialBanners.length];
+        if ((i + 1) % 2 === 0 && i + 1 < list.length && editorialBannersAccessories.length > 0) {
+            var config = editorialBannersAccessories[bannerIndex % editorialBannersAccessories.length];
             productsGrid.appendChild(createEditorialBanner(config));
             bannerIndex++;
         }
@@ -185,38 +187,29 @@ function getSharedCart() {
     return [];
 }
 
-// Add to Cart (shared across all pages)
-function addToCart(productId) {
+// Add to Cart – use unified (script.js) when available so product-detail works for all categories
+function addToCartAccessories(productId) {
     const product = accessoryProducts.find(p => p.id === productId);
     if (!product) return;
-
-    // Get all items from shared cart
     const allCartItems = getSharedCart();
     const existingItem = allCartItems.find(item => item.id === productId && item.category === product.category);
-    
     if (existingItem) {
         existingItem.quantity += 1;
         window.cart = allCartItems;
     } else {
-        const itemToAdd = {
-            ...product,
-            quantity: 1,
-            category: product.category || 'accessory'
-        };
-        allCartItems.push(itemToAdd);
+        allCartItems.push({ ...product, quantity: 1, category: product.category || 'accessory' });
         window.cart = allCartItems;
     }
-
     saveCartToStorage();
     updateCartCount();
     showNotification(`${product.name} added to cart! ✨`);
-    
-    // Update cart display if it's open
-    if (document.getElementById('cartOverlay').classList.contains('active')) {
+    var cartOverlay = document.getElementById('cartOverlay');
+    if (cartOverlay && cartOverlay.classList.contains('active')) {
         renderCart();
         if (typeof renderYouMayAlsoLike === 'function') renderYouMayAlsoLike('cartYouMayAlsoLike');
     }
 }
+window.addToCart = (typeof window.addToCartUnified === 'function') ? window.addToCartUnified : addToCartAccessories;
 
 // Remove from Cart
 function removeFromCart(productId) {
@@ -291,9 +284,10 @@ function renderCart() {
 // Update Cart Count (shows count from all pages)
 function updateCartCount() {
     const cartCount = document.getElementById('cartCount');
+    if (!cartCount) return; // Not on a page with cart badge (e.g. admin)
     // Get total from shared cart to include items from all pages
     const allCartItems = getSharedCart();
-    const totalItems = allCartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const totalItems = (allCartItems || []).reduce((sum, item) => sum + (item.quantity || 1), 0);
     cartCount.textContent = totalItems;
 }
 
@@ -338,7 +332,7 @@ function renderYouMayAlsoLike(containerId) {
         const price = typeof p.price === 'number' ? p.price : parseInt(p.price, 10) || 0;
         const count = wishlistCounts[i % wishlistCounts.length];
         const href = 'product-detail.html?id=' + (p.id || '') + '&category=accessory';
-        const img = (p.image || '').indexOf('http') === 0 ? p.image : (p.image || 'images/bags/IMG_1328.jpg');
+        const img = (p.image || '').indexOf('http') === 0 ? p.image : (p.image || 'images/bags/img_1328.jpg');
         const name = (p.name || 'Product').substring(0, 45);
         const escName = name.replace(/"/g, '&quot;');
         if (isCartYmal) {
@@ -425,11 +419,14 @@ function checkout() {
 
 // Close Order Modal
 function closeOrderModal() {
-    document.getElementById('orderModal').classList.remove('active');
+    var modal = document.getElementById('orderModal');
+    if (modal) modal.classList.remove('active');
 }
 
-// Handle Order Form Submission
-document.getElementById('orderForm').addEventListener('submit', function(e) {
+// Handle Order Form Submission (only on pages that have orderForm)
+var orderFormElAcc = document.getElementById('orderForm');
+if (orderFormElAcc) {
+    orderFormElAcc.addEventListener('submit', function(e) {
     e.preventDefault();
     
     const formData = new FormData(e.target);
@@ -499,7 +496,8 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     // Close modal and reset form
     closeOrderModal();
     e.target.reset();
-});
+    });
+}
 
 // Save Cart to Local Storage
 function saveCartToStorage() {
@@ -576,14 +574,16 @@ if (!document.getElementById('accessory-notification-styles')) {
 }
 
 // Close cart when clicking outside
-document.getElementById('cartOverlay').addEventListener('click', function(e) {
+var cartOverlayEl = document.getElementById('cartOverlay');
+if (cartOverlayEl) cartOverlayEl.addEventListener('click', function(e) {
     if (e.target === this) {
         toggleCart();
     }
 });
 
 // Close modal when clicking outside
-document.getElementById('orderModal').addEventListener('click', function(e) {
+var orderModalEl = document.getElementById('orderModal');
+if (orderModalEl) orderModalEl.addEventListener('click', function(e) {
     if (e.target === this) {
         closeOrderModal();
     }

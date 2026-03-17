@@ -237,7 +237,7 @@ async function initiateStkPush(phoneNumber, amount, orderId) {
         if (!MPESA_CONFIG.BACKEND_URL || MPESA_CONFIG.BACKEND_URL.includes('localhost') || MPESA_CONFIG.BACKEND_URL.includes('your-mpesa-backend')) {
             return {
                 success: false,
-                error: 'M-Pesa backend server not configured. The backend server needs to be deployed to Render.com. Please use Cash on Delivery or contact support.',
+                error: 'M-Pesa backend server not configured. The backend server needs to be deployed to Render.com. Please use M-Pesa Till 3193269 or contact support.',
                 needsBackend: true,
                 backendUrl: MPESA_CONFIG.BACKEND_URL
             };
@@ -270,7 +270,7 @@ async function initiateStkPush(phoneNumber, amount, orderId) {
             console.error('Backend connectivity test failed:', testError);
             return {
                 success: false,
-                error: `Cannot reach M-Pesa backend server at ${MPESA_CONFIG.BACKEND_URL}. The server may not be deployed or is down. Please use Cash on Delivery or contact support.`,
+                error: `Cannot reach M-Pesa backend server at ${MPESA_CONFIG.BACKEND_URL}. The server may not be deployed or is down. Please use M-Pesa Till 3193269 or contact support.`,
                 needsBackend: true,
                 suggestAlternative: true,
                 testError: testError.message
@@ -303,7 +303,7 @@ async function initiateStkPush(phoneNumber, amount, orderId) {
             if (response.status === 404) {
                 return {
                     success: false,
-                    error: 'M-Pesa endpoint not found. The backend server may not be properly configured. Please use Cash on Delivery.',
+                    error: 'M-Pesa endpoint not found. The backend server may not be properly configured. Please use M-Pesa Till 3193269.',
                     needsBackend: true,
                     suggestAlternative: true
                 };
@@ -343,7 +343,7 @@ async function initiateStkPush(phoneNumber, amount, orderId) {
         if (isNetworkError) {
             return {
                 success: false,
-                error: `Cannot connect to M-Pesa payment server. The backend at ${MPESA_CONFIG.BACKEND_URL} may not be deployed or is unreachable. Please use Cash on Delivery or contact support.`,
+                error: `Cannot connect to M-Pesa payment server. The backend at ${MPESA_CONFIG.BACKEND_URL} may not be deployed or is unreachable. Please use M-Pesa Till 3193269 or contact support.`,
                 needsBackend: true,
                 suggestAlternative: true,
                 backendUrl: MPESA_CONFIG.BACKEND_URL
@@ -352,7 +352,7 @@ async function initiateStkPush(phoneNumber, amount, orderId) {
         
         return {
             success: false,
-            error: errorMessage || 'Payment request failed. Please try again or use Cash on Delivery.'
+            error: errorMessage || 'Payment request failed. Please try again or use M-Pesa Till 3193269.'
         };
     }
 }
@@ -389,6 +389,31 @@ async function queryStkPushStatus(checkoutRequestID) {
     } catch (error) {
         console.error('Error querying STK Push status:', error);
         throw error;
+    }
+}
+
+/**
+ * Verify a manual M-Pesa transaction ID (Paybill/Till) via backend.
+ * Your backend should call Safaricom "Transaction Status" API and return { valid: true/false, ... }.
+ * Add endpoint e.g. POST BACKEND_URL/api/mpesa/transaction-status with body { transactionId, amount }.
+ * Until then, manual payment codes are only format-validated and verified by admin in the admin panel.
+ * @param {string} transactionId - M-Pesa transaction/receipt ID from customer
+ * @param {number} expectedAmount - Expected amount in KSH (optional)
+ * @returns {Promise<Object>} { valid: boolean, message?: string }
+ */
+async function verifyManualMpesaTransaction(transactionId, expectedAmount) {
+    if (!MPESA_CONFIG.BACKEND_URL || !transactionId) return null;
+    try {
+        const res = await fetch(`${MPESA_CONFIG.BACKEND_URL}/api/mpesa/transaction-status`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ transactionId: transactionId.trim(), amount: expectedAmount })
+        });
+        if (!res.ok) return { valid: false, message: 'Verification unavailable' };
+        return await res.json();
+    } catch (e) {
+        console.warn('verifyManualMpesaTransaction:', e);
+        return null;
     }
 }
 
@@ -430,6 +455,7 @@ if (typeof module !== 'undefined' && module.exports) {
         initiateStkPush,
         queryStkPushStatus,
         verifyMpesaPayment,
+        verifyManualMpesaTransaction,
         formatPhoneNumber,
         testMpesaConnection,
         getMpesaAccessToken,
@@ -437,9 +463,10 @@ if (typeof module !== 'undefined' && module.exports) {
     };
 }
 
-// Make test function available globally for easy testing in browser console
+// Expose for use in checkout (manual payment) and console
 if (typeof window !== 'undefined') {
     window.testMpesaConnection = testMpesaConnection;
+    window.verifyManualMpesaTransaction = verifyManualMpesaTransaction;
     console.log('💡 Tip: Run testMpesaConnection() in the console to test your M-Pesa API credentials!');
 }
 

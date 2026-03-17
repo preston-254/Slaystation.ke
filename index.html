@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- GitHub Pages only: set base so relative paths work at username.github.io/repo-name/ -->
-    <script>(function(){var h=window.location.hostname||'';var p=window.location.pathname||'';if(h.indexOf('github.io')!==-1&&p.indexOf('/slaystation')===0){var b=document.createElement('base');b.href=window.location.origin+'/slaystation/';document.head.insertBefore(b,document.head.firstChild);}})();</script>
+    <!-- Set base from current path so images/videos load on GitHub Pages (e.g. .../slaystation/ or .../slaystation/deploy/) -->
+    <script>(function(){var path=window.location.pathname||'/';var hasFile=/\.[^/]+$/.test(path);var dir=hasFile?path.replace(/\/[^/]*$/,''):path;dir=dir===''?'/':dir;var base=window.location.origin+(dir.endsWith('/')?dir:dir+'/');var b=document.createElement('base');b.href=base;document.head.insertBefore(b,document.head.firstChild);})();</script>
     <!-- Resolve image/video URLs to absolute so they load on GitHub Pages and Vercel -->
-    <script>(function(){var path=window.location.pathname||'/';var base=window.location.origin+(path.replace(/\/[^/]*$/,'/')||'/');function abs(u){if(!u||u.indexOf('http')===0||u.indexOf('data:')===0)return u;return base+(u.charAt(0)==='/'?'':'')+u;}function fixImg(el){var s=el.getAttribute('src');if(s&&(s.indexOf('images/')===0||s.indexOf('./images/')===0))el.src=abs(s);}document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('img[src^="images/"], img[src^="./images/"], source[src^="images/"], source[src^="./images/"]').forEach(function(el){var s=el.getAttribute('src');if(s){el.src=abs(s);}});document.querySelectorAll('[style*="images/"]').forEach(function(el){var st=el.getAttribute('style');if(st&&/url\(.*images\//.test(st)){el.style.cssText=st.replace(/url\(['"]?(images\/[^'")]+)['"]?\)/g,function(_,p){return 'url(\''+abs(p)+'\')';});}});var obs=new MutationObserver(function(mutations){mutations.forEach(function(m){m.addedNodes.forEach(function(n){if(n.nodeType===1){if(n.tagName==='IMG')fixImg(n);n.querySelectorAll&&n.querySelectorAll('img[src^="images/"], img[src^="./images/"]').forEach(fixImg);}});});});obs.observe(document.body,{childList:true,subtree:true});});})();</script>
+    <script>(function(){var path=window.location.pathname||'/';var hasFile=/\.[^/]+$/.test(path);var dir=hasFile?path.replace(/\/[^/]*$/,''):path;dir=(dir===''?'/':dir);var base=window.location.origin+(dir.endsWith('/')?dir:dir+'/');function abs(u){if(!u||u.indexOf('http')===0||u.indexOf('data:')===0)return u;var r=u.charAt(0)==='/'?u.slice(1):u;r=r.split('/').map(function(p){return p.toLowerCase();}).join('/');return base+r;}function fixImg(el){var s=el.getAttribute('src');if(s&&(s.indexOf('images/')===0||s.indexOf('./images/')===0))el.src=abs(s);}document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('img[src^="images/"], img[src^="./images/"], source[src^="images/"], source[src^="./images/"]').forEach(function(el){var s=el.getAttribute('src');if(s){el.src=abs(s);}});document.querySelectorAll('[style*="images/"]').forEach(function(el){var st=el.getAttribute('style');if(st&&/url\(.*images\//.test(st)){el.style.cssText=st.replace(/url\(['"]?(images\/[^'")]+)['"]?\)/g,function(_,p){return 'url(\''+abs(p)+'\')';});}});var obs=new MutationObserver(function(mutations){mutations.forEach(function(m){m.addedNodes.forEach(function(n){if(n.nodeType===1){if(n.tagName==='IMG')fixImg(n);n.querySelectorAll&&n.querySelectorAll('img[src^="images/"], img[src^="./images/"]').forEach(fixImg);}});});});obs.observe(document.body,{childList:true,subtree:true});});})();</script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -148,25 +148,43 @@
                         </div>
                     </li>
                     <li class="nav-item-has-mega">
-                        <a href="lip-care.html">Lip Care</a>
+                        <a href="lip-care.html">Lip Products</a>
                         <div class="nav-mega-menu">
-                            <div class="nav-mega-inner">
-                                <div class="nav-mega-column">
-                                    <span class="nav-mega-heading">Shop</span>
-                                    <a href="lip-care.html">Shop All Lip Care</a>
-                                    <a href="lip-care.html">Lipsticks</a>
-                                    <a href="lip-care.html">Lip Gloss</a>
-                                    <a href="lip-care.html">Lip Balms</a>
-                                </div>
-                                <div class="nav-mega-column">
-                                    <span class="nav-mega-heading">Featured</span>
-                                    <a href="lip-care.html">Best Sellers</a>
-                                    <a href="lip-care.html">New Arrivals</a>
-                                </div>
+                        <div class="nav-mega-inner">
+                            <div class="nav-mega-column">
+                                <span class="nav-mega-heading">Shop</span>
+                                <a href="lip-care.html">Shop All Lip Products</a>
+                                <a href="lip-care.html">Lipsticks</a>
+                                <a href="lip-care.html">Lip Gloss</a>
+                                <a href="lip-care.html">Lip Balms</a>
+                            </div>
+                            <div class="nav-mega-column">
+                                <span class="nav-mega-heading">Featured</span>
+                                <a href="lip-care.html">Best Sellers</a>
+                                <a href="lip-care.html">New Arrivals</a>
                             </div>
                         </div>
-                    </li>
-                    <li><a href="about.html">About</a></li>
+                    </div>
+                </li>
+                <li class="nav-item-has-mega">
+                        <a href="fragrances.html">Fragrances</a>
+                        <div class="nav-mega-menu">
+                        <div class="nav-mega-inner">
+                            <div class="nav-mega-column">
+                                <span class="nav-mega-heading">Shop</span>
+                                <a href="fragrances.html">Shop All Fragrances</a>
+                                <a href="fragrances.html">Body Creams</a>
+                                <a href="fragrances.html">Mists &amp; Sprays</a>
+                            </div>
+                            <div class="nav-mega-column">
+                                <span class="nav-mega-heading">Featured</span>
+                                <a href="fragrances.html">Best Sellers</a>
+                                <a href="fragrances.html">New Arrivals</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="about.html">About</a></li>
                     <li><a href="index.html#contact">Contact</a></li>
                     <li><a href="index.html#contact">Location</a></li>
                 </ul>
@@ -223,22 +241,21 @@
     <div class="flash-sale-banner" id="flashSaleBanner">
         <div class="flash-sale-content">
             <span class="sale-icon">🎉</span>
-            <span class="sale-text">FLASH SALE! Valentine is here!</span>
-            <span class="sale-icon">✨</span>
+
             <button class="close-sale" id="closeFlashSaleBtn" type="button">✕</button>
         </div>
     </div>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <!-- Hero Image Carousel -->
+        <!-- Hero Image Carousel: bag pictures fade in and out as background -->
         <div class="hero-carousel">
-            <div class="hero-slide active" style="background-image: url('images/bags/IMG_1328.jpg');"></div>
-            <div class="hero-slide" style="background-image: url('images/bags/IMG_1330.jpg');"></div>
-            <div class="hero-slide" style="background-image: url('images/bags/IMG_1331.jpg');"></div>
-            <div class="hero-slide" style="background-image: url('images/bags/IMG_1332.jpg');"></div>
-            <div class="hero-slide" style="background-image: url('images/bags/IMG_1333.jpg');"></div>
-            <div class="hero-slide" style="background-image: url('images/bags/IMG_1334.jpg');"></div>
+            <div class="hero-slide active" style="background-image: url('images/bags/black%20coach%201.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('images/bags/brown%20coach%201.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('images/bags/shinny%20miu%20miu%201.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('images/bags/white%20lv%201.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('images/bags/girly%20coach%201.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('images/bags/white%20coach%202.jpg');"></div>
         </div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
@@ -248,31 +265,11 @@
         </div>
     </section>
 
-    <!-- Valentine's Day Banner (video background) -->
-    <section class="valentine-banner valentine-banner--video" aria-label="Valentine's Day Super Sale">
-        <div class="valentine-banner-video-wrap">
-            <video id="valentineBannerVideo" class="valentine-banner-video" autoplay muted loop playsinline preload="auto">
-                <source src="images/ad-videos/ad1.mp4" type="video/mp4">
-            </video>
-            <div class="valentine-banner-video-overlay"></div>
-        </div>
-        <div class="valentine-banner-bg-pattern" aria-hidden="true"></div>
-        <div class="valentine-banner-blurs" aria-hidden="true"></div>
-        <div class="valentine-banner-inner">
-            <div class="valentine-banner-content">
-                <span class="valentine-banner-happy">Happy</span>
-                <span class="valentine-banner-script">Valentine's</span>
-                <div class="valentine-banner-sale-row">
-                    <span class="valentine-banner-super">Super</span>
-                    <span class="valentine-banner-day-sale">Day Sale</span>
-                </div>
-                <p class="valentine-banner-brand">slays station</p>
-                <a href="#products" class="valentine-banner-cta">Read More</a>
-            </div>
-            <div class="valentine-banner-hearts" aria-hidden="true">
-                <span class="valentine-heart valentine-heart--large"></span>
-                <span class="valentine-heart valentine-heart--small"></span>
-            </div>
+    <!-- Main promo banner carousel (rotates through images/banner: banner1.mp4, banner2.mp4, etc.) -->
+    <section class="valentine-banner valentine-banner--carousel" aria-label="Slay Station promo">
+        <div class="valentine-banner-carousel">
+            <div class="valentine-banner-slides" id="heroBannerSlides"></div>
+            <div class="valentine-banner-dots" id="heroBannerDots" role="tablist" aria-label="Banner slides"></div>
         </div>
     </section>
 
@@ -592,7 +589,7 @@
                         <span class="faq-icon">➕</span>
                     </div>
                     <div class="faq-answer">
-                        <p>We offer same day deliveries for orders confirmed before 1pm! For orders placed after 1pm, delivery will be the following day. You can track your order in real-time once it's dispatched!</p>
+                        <p>Delivery and store hours are 10am–6pm, Monday–Saturday. Track your order in real-time once it's dispatched!</p>
                     </div>
                 </div>
                 
@@ -602,7 +599,7 @@
                         <span class="faq-icon">➕</span>
                     </div>
                     <div class="faq-answer">
-                        <p>We accept M-Pesa, Credit/Debit Cards, and Cash on Delivery for your convenience!</p>
+                        <p>We accept M-Pesa (Till 3193269) and Credit/Debit Cards. Pay via Till 3193269, then share your M-Pesa confirmation code after placing your order.</p>
                     </div>
                 </div>
                 
@@ -643,13 +640,10 @@
                 </div>
             </div>
             <div class="cart-footer">
-                <div class="delivery-fee-info">
-                    <small>📦 Delivery fee will be paid separately (KSH 200)</small>
-                </div>
                 <div class="cart-total">
                     <strong>Total: KSH <span id="cartTotal">0</span></strong>
                 </div>
-                <button class="checkout-btn" onclick="checkout()">Checkout</button>
+                <a href="checkout.html" class="checkout-btn" id="cartCheckoutBtn" role="button">Checkout</a>
             </div>
         </div>
     </div>
@@ -719,11 +713,37 @@
                 <div class="form-group">
                     <label for="payment">Payment Method</label>
                     <select id="payment" name="payment" required onchange="handlePaymentMethodChange(this.value)">
-                        <option value="">Select payment method</option>
-                        <option value="mpesa">M-Pesa</option>
+                        <option value="mpesa" selected>M-Pesa (Till 3193269)</option>
                         <option value="card">Credit/Debit Card</option>
-                        <option value="cash">Cash on Delivery</option>
                     </select>
+                </div>
+                
+                <div id="mpesaTillSection" style="margin-bottom: 1rem; padding: 1rem; background: #E3F2FD; border-radius: 10px; border-left: 4px solid #2196F3;">
+                    <p style="margin: 0 0 0.25rem 0; font-weight: 600; color: #1565C0;">Pay via M-Pesa Till</p>
+                    <p style="margin: 0; font-size: 0.95rem;">Till number: <strong>3193269</strong>. After you place the order you'll see your unique reference and can paste your M-Pesa confirmation code on the next screen.</p>
+                </div>
+                
+                <div id="manualPaymentSection" class="manual-payment-section" style="display: none;">
+                    <div class="form-group">
+                        <label for="mpesaTransactionId">M-Pesa Transaction ID <span style="color: #dc3545;">*</span></label>
+                        <input type="text" id="mpesaTransactionId" name="mpesaTransactionId" placeholder="e.g. ABC123XY or the code from your M-Pesa message" maxlength="20" autocomplete="off">
+                        <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 0.25rem;">
+                            Enter the transaction ID/code you received after paying via M-Pesa (Paybill or till).
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="receiptEmail">Email for receipt <span style="color: #dc3545;">*</span></label>
+                        <input type="email" id="receiptEmail" name="receiptEmail" placeholder="e.g. your@email.com">
+                        <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 0.25rem;">
+                            We’ll send your order confirmation and receipt to this email.
+                        </small>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #FFF3E0, #FFE0B2); padding: 1rem; border-radius: 10px; margin-top: 1rem; border-left: 4px solid #FF9800;">
+                        <p style="margin: 0; color: #E65100; font-weight: 600; font-size: 0.95rem;">💡 Manual payment</p>
+                        <p style="margin: 0.5rem 0 0 0; color: #555; font-size: 0.9rem; line-height: 1.5;">
+                            Pay via M-Pesa (Paybill or till), then enter the transaction ID and the email where you want your receipt. Our team will verify your payment and confirm your order.
+                        </p>
+                    </div>
                 </div>
                 
                 <!-- M-Pesa Payment Section (phone field appears when M-Pesa is selected) -->
@@ -783,94 +803,6 @@
         </div>
     </div>
 
-    <!-- M-Pesa STK Push Modal -->
-    <div class="modal-overlay" id="stkPushModal" style="z-index: 5000;">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <h2>📱 M-Pesa Payment</h2>
-                <button class="close-modal" onclick="closeStkPushModal()">✕</button>
-            </div>
-            <div style="padding: 2rem;">
-                <!-- Phone Prompt -->
-                <div id="stkPhonePrompt" style="text-align: center;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">📱</div>
-                    <h3 style="margin-bottom: 1rem; color: #1976D2;">Check Your Phone!</h3>
-                    <p style="color: #666; margin-bottom: 1.5rem; line-height: 1.6;">
-                        An M-Pesa payment request has been sent to:<br>
-                        <strong style="font-size: 1.1rem; color: #1976D2;" id="stkPhoneNumber">Your Phone</strong><br><br>
-                        <strong>Please check your phone and enter your M-Pesa PIN</strong> to complete the payment.
-                    </p>
-                    <div style="background: #E3F2FD; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
-                        <div style="font-size: 1.2rem; font-weight: 600; color: #1976D2; margin-bottom: 0.5rem;">
-                            Amount: <span id="stkAmount">KSH 0</span>
-                        </div>
-                        <div style="font-size: 0.9rem; color: #666;">
-                            Paybill: <strong>516600</strong> | Account: <strong>944444</strong>
-                        </div>
-                    </div>
-                    <button onclick="proceedToPinEntry()" class="submit-order-btn" style="width: 100%;">
-                        I've Entered My PIN ✅
-                    </button>
-                    <button onclick="closeStkPushModal()" style="width: 100%; margin-top: 0.5rem; padding: 0.75rem; background: #f5f5f5; border: none; border-radius: 8px; cursor: pointer; color: #666;">
-                        Cancel Payment
-                    </button>
-                </div>
-
-                <!-- PIN Entry -->
-                <div id="stkPinEntry" style="display: none;">
-                    <div style="text-align: center; margin-bottom: 1.5rem;">
-                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🔒</div>
-                        <h3 style="margin-bottom: 0.5rem;">Enter M-Pesa PIN</h3>
-                        <p style="color: #666; font-size: 0.9rem;">Enter your 4-digit M-Pesa PIN</p>
-                    </div>
-                    <div class="form-group">
-                        <input type="password" id="mpesaPinInput" maxlength="4" pattern="[0-9]{4}" placeholder="Enter 4-digit PIN" style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem; font-weight: 600;">
-                        <small style="color: #666; display: block; margin-top: 0.5rem; text-align: center;">
-                            Your PIN is secure and encrypted
-                        </small>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
-                        <button onclick="goBackToPhonePrompt()" style="flex: 1; padding: 0.75rem; background: #f5f5f5; border: none; border-radius: 8px; cursor: pointer; color: #666;">
-                            ← Back
-                        </button>
-                        <button onclick="confirmMpesaPayment()" class="submit-order-btn" style="flex: 2;">
-                            Confirm Payment 💳
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Processing -->
-                <div id="stkProcessing" style="display: none; text-align: center;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem; animation: spin 1s linear infinite;">⏳</div>
-                    <h3 style="margin-bottom: 0.5rem;">Processing Payment...</h3>
-                    <p style="color: #666;">Please wait while we confirm your payment</p>
-                </div>
-
-                <!-- Success -->
-                <div id="stkSuccess" style="display: none; text-align: center;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem; color: #4CAF50;">✅</div>
-                    <h3 style="margin-bottom: 0.5rem; color: #4CAF50;">Payment Successful!</h3>
-                    <p style="color: #666; margin-bottom: 1rem;">Your order has been saved and is being processed</p>
-                    <div style="background: #E8F5E9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                        <div style="font-size: 0.9rem; color: #2e7d32;">
-                            Confirmation Code: <strong id="stkConfirmationCode" style="font-family: monospace; font-size: 1.1rem;">ABC123XYZ</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Failure -->
-                <div id="stkFailed" style="display: none; text-align: center;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem; color: #f44336;">❌</div>
-                    <h3 style="margin-bottom: 0.5rem; color: #f44336;">Transaction Failed</h3>
-                    <p id="stkFailureMessage" style="color: #666; margin-bottom: 1rem;">Payment could not be processed</p>
-                    <button onclick="closeStkPushModal()" class="submit-order-btn" style="width: 100%; margin-top: 1rem;">
-                        Close
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Location / Get In Touch Section -->
     <section id="contact" class="location-section">
         <div class="container">
@@ -881,13 +813,13 @@
                     <div class="location-card-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                     </div>
-                    <p><a href="mailto:hello@slaystation.com" class="location-card-link">hello@slaystation.com</a></p>
+                    <p><a href="mailto:slaystation.ke@yahoo.com" class="location-card-link">slaystation.ke@yahoo.com</a></p>
                 </div>
                 <div class="location-card">
                     <div class="location-card-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
                     </div>
-                    <p><a href="tel:+254719563607" class="location-card-link">+254 719 563 607</a></p>
+                    <p><a href="tel:+254794594595" class="location-card-link">0794 594 595</a></p>
                 </div>
                 <div class="location-card">
                     <div class="location-card-icon" aria-hidden="true">
@@ -910,8 +842,8 @@
             <div class="location-store-details">
                 <h3 class="location-store-name">Slay Station</h3>
                 <a href="https://www.google.com/maps/search/?api=1&query=Westlands+Market+Shop+B15+Nairobi+Kenya" target="_blank" rel="noopener noreferrer" class="location-store-address">Westlands Market, Shop B15, Nairobi</a>
-                <a href="tel:+254719563607" class="location-store-phone">+254 719 563 607</a>
-                <p class="location-store-services">Services: Shop, Pick Up, Selling Drop Off</p>
+                <a href="tel:+254794594595" class="location-store-phone">0794 594 595</a>
+                <p class="location-store-services">Store &amp; delivery: Mon–Sat, 10am–6pm. Services: Shop, Pick Up, Selling Drop Off</p>
                 <a href="https://www.google.com/maps/search/?api=1&query=Westlands+Market+Shop+B15+Nairobi+Kenya" target="_blank" rel="noopener noreferrer" class="location-view-more">View on Map</a>
             </div>
         </div>
@@ -1047,7 +979,8 @@
                             <li><a href="index.html#products">Bags</a></li>
                             <li><a href="wallets.html">Wallets</a></li>
                             <li><a href="accessories.html">Accessories</a></li>
-                            <li><a href="lip-care.html">Lip Care</a></li>
+                            <li><a href="lip-care.html">Lip Products</a></li>
+                            <li><a href="fragrances.html">Fragrances</a></li>
                             <li><a href="index.html#contact">Gift Cards</a></li>
                             <li><a href="index.html#contact">Personal Shopping</a></li>
                         </ul>
@@ -1095,7 +1028,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
                     Slay Station
                 </div>
-                <p class="help-chat-msg-text">Welcome to Slay Station! Our live chat agents are either assisting other clients or you've reached us outside of business hours (Every day, 7am–7pm EAT). Please select an option below to find helpful resources or leave us a message, and we'll get back to you as soon as possible.</p>
+                <p class="help-chat-msg-text">Welcome to Slay Station! Our live chat agents are either assisting other clients or you've reached us outside of business hours (Mon–Sat, 10am–6pm EAT). Please select an option below to find helpful resources or leave us a message, and we'll get back to you as soon as possible.</p>
                 <div class="help-chat-buttons">
                     <a href="https://help.fashionphile.com/s/" target="_blank" rel="noopener noreferrer">Explore Our FAQs</a>
                     <a href="index.html#contact">Leave a Message</a>
@@ -1105,18 +1038,12 @@
         <div class="help-chat-footer">just now</div>
     </div>
 
-    <!-- Firebase: app, analytics, auth – load before auth.js -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="firebase.js"></script>
-    <script src="auth.js?v=20250127"></script>
-    <script src="admin.js?v=20250127"></script>
-    <script src="notifications.js?v=20250127"></script>
-    <script src="delivery-fee-calculator.js?v=20250127"></script>
-    <!-- M-Pesa API integration - credentials configured -->
-    <script src="mpesa-api.js?v=20250127"></script>
-    <script src="script.js?v=20250127"></script>
+    <!-- No Firebase on home page – keeps load fast; auth works without it, Firebase loads on login/signup -->
+    <script defer src="auth.js?v=20250127"></script>
+    <script defer src="admin.js?v=20250127"></script>
+    <script defer src="notifications.js?v=20250127"></script>
+    <script defer src="delivery-fee-calculator.js?v=20250127"></script>
+    <script defer src="script.js?v=20250127"></script>
     <script>
         // Cache busting for iOS Safari
         const APP_VERSION = '20250127';

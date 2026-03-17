@@ -9,20 +9,27 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
+        /* Match main site: Slay Station colors and typography */
         :root {
-            --admin-bg: #f8f9fc;
+            --admin-bg: #fafafa;
             --admin-card: #ffffff;
-            --admin-border: #e8ecf4;
-            --admin-accent: #6366f1;
-            --admin-accent-hover: #4f46e5;
-            --admin-text: #1e293b;
-            --admin-muted: #64748b;
+            --admin-border: #e0e0e0;
+            --admin-accent: #333333;
+            --admin-accent-hover: #1a1a1a;
+            --admin-text: #1a1a1a;
+            --admin-muted: #666666;
+        }
+        
+        body.admin-page {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--admin-text);
+            background: var(--admin-bg);
         }
         
         .admin-container {
             max-width: 1400px;
-            margin: 100px auto 50px;
-            padding: 0 24px;
+            margin: 0 auto;
+            padding: 106px 24px 50px; /* clear top bar (38px) + navbar (68px) */
         }
         
         /* ----- Login (admin link only) ----- */
@@ -31,10 +38,49 @@
             min-height: 100vh;
             background: var(--admin-bg);
             display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            padding: 0;
+            margin: 0;
+        }
+        
+        body.login-page-active .login-page-wrap,
+        body:has(#loginSection:not([style*="display: none"])) .login-page-wrap {
+            flex: 1;
+            display: flex;
             align-items: center;
             justify-content: center;
             padding: 24px;
+        }
+        
+        #fileProtocolWarning {
+            flex-shrink: 0;
+        }
+        
+        .file-protocol-warning {
             margin: 0;
+            padding: 0.75rem 1.25rem;
+            background: #fff3cd;
+            border-bottom: 2px solid #ffc107;
+            color: #856404;
+            font-size: 0.85rem;
+            text-align: center;
+            line-height: 1.4;
+        }
+        .file-protocol-warning code {
+            background: rgba(0,0,0,0.08);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+        body.dark-mode .file-protocol-warning {
+            background: #423002;
+            border-bottom-color: #b38600;
+            color: #fef3c7;
+        }
+        body.dark-mode .file-protocol-warning code {
+            background: rgba(0,0,0,0.25);
         }
         
         .login-section {
@@ -42,8 +88,9 @@
             max-width: 420px;
             background: var(--admin-card);
             padding: 2.5rem 2rem;
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border: 1px solid var(--admin-border);
             position: relative;
             z-index: 1;
         }
@@ -53,7 +100,7 @@
             height: 56px;
             margin: 0 auto 1.25rem;
             background: var(--admin-accent);
-            border-radius: 14px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -99,7 +146,35 @@
         .login-section input[type="email"]:focus {
             outline: none;
             border-color: var(--admin-accent);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+        }
+        
+        .login-section input[type="password"],
+        .login-section #adminPassword {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--admin-border);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background: var(--admin-card);
+            color: var(--admin-text);
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            letter-spacing: 0.05em;
+        }
+        
+        .login-section input[type="password"]::placeholder,
+        .login-section #adminPassword::placeholder {
+            color: var(--admin-muted);
+            letter-spacing: normal;
+        }
+        
+        .login-section input[type="password"]:focus,
+        .login-section #adminPassword:focus {
+            outline: none;
+            border-color: var(--admin-accent);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
         }
         
         #loginError {
@@ -135,6 +210,35 @@
         
         .login-btn:active { transform: translateY(0); }
         
+        .admin-2fa-note {
+            font-size: 0.875rem;
+            color: var(--admin-muted);
+            margin-bottom: 1.25rem;
+            padding: 0.75rem 1rem;
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+        }
+        .google-signin-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            background: #fff !important;
+            color: var(--admin-text) !important;
+            border: 2px solid var(--admin-border) !important;
+        }
+        .google-signin-btn:hover {
+            background: var(--admin-bg) !important;
+            border-color: var(--admin-accent) !important;
+        }
+        .google-signin-btn .google-icon {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #4285f4;
+            font-family: 'Roboto', 'Poppins', sans-serif;
+        }
+        
         .back-to-site {
             display: inline-flex;
             align-items: center;
@@ -149,19 +253,242 @@
         
         .back-to-site:hover { color: var(--admin-accent); }
         
+        .forgot-password-link {
+            background: none;
+            border: none;
+            color: var(--admin-accent);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 0;
+        }
+        .forgot-password-link:hover { text-decoration: underline; }
+        
+        .login-code-step { margin-top: 1rem; }
+        .login-code-step .login-code-email { font-weight: 600; color: var(--admin-text); margin-bottom: 0.25rem; }
+        .login-code-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--admin-border);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            letter-spacing: 0.4em;
+            text-align: center;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+        }
+        .login-code-input:focus {
+            outline: none;
+            border-color: var(--admin-accent);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+        }
+        .login-code-error { color: #b91c1c; font-size: 0.875rem; margin-bottom: 0.5rem; min-height: 1.25rem; }
+        .back-to-email-link {
+            display: block;
+            margin-top: 1rem;
+            background: none;
+            border: none;
+            color: var(--admin-muted);
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 0;
+        }
+        .back-to-email-link:hover { color: var(--admin-accent); }
+        
+        .code-sent-banner {
+            padding: 0.75rem 1rem;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: #065f46;
+            margin-bottom: 1rem;
+        }
+        
+        /* Forgot password modal */
+        .forgot-password-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .forgot-password-overlay.active { display: flex; }
+        .forgot-password-box {
+            background: var(--admin-card);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            max-width: 420px;
+            width: 100%;
+        }
+        .forgot-password-box h3 { margin-bottom: 0.5rem; color: var(--admin-text); }
+        .forgot-password-box p { color: var(--admin-muted); font-size: 0.9rem; margin-bottom: 1rem; }
+        .forgot-password-box .login-section label { margin-top: 1rem; }
+        .forgot-password-box .login-section input { margin-bottom: 0.5rem; }
+        .forgot-password-box .forgot-actions { margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .forgot-password-box .forgot-actions .login-btn { flex: 1; min-width: 120px; margin-top: 0; }
+        .forgot-password-box .forgot-cancel { background: transparent; color: var(--admin-muted); border: 1px solid var(--admin-border); }
+        .forgot-password-box .forgot-cancel:hover { background: var(--admin-bg); color: var(--admin-text); }
+        .forgot-password-box input[type="email"],
+        .forgot-password-box input[type="password"],
+        .forgot-password-box input[type="text"] {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--admin-border);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background: var(--admin-card);
+            color: var(--admin-text);
+            box-sizing: border-box;
+            margin-bottom: 0.5rem;
+        }
+        .forgot-password-box input:focus {
+            outline: none;
+            border-color: var(--admin-accent);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* ----- Mobile: match main site breakpoints and touch-friendly ----- */
         @media (max-width: 768px) {
-            .admin-container { margin: 80px auto 20px; padding: 0 12px; }
-            .admin-header { flex-direction: column; gap: 1rem; text-align: center; }
+            .admin-container { padding: 88px 16px 24px; }
+            .admin-header { margin-bottom: 1.5rem; }
             .admin-header h1 { font-size: 1.5rem !important; }
-            .stats-grid { grid-template-columns: 1fr !important; gap: 1rem; }
-            .order-card { padding: 1rem !important; }
-            .order-header { flex-direction: column; gap: 1rem; }
-            .filters-container { flex-direction: column; gap: 0.5rem; }
-            .filters-container > div { width: 100% !important; }
-            select, input[type="text"] { width: 100% !important; font-size: 0.9rem !important; }
-            button { font-size: 0.85rem !important; padding: 0.6rem 1rem !important; }
-            .order-item-row { flex-direction: column; gap: 0.5rem; }
-            .login-section { padding: 2rem 1.5rem; }
+            .admin-header p { font-size: 0.9rem; }
+            .admin-tabs {
+                flex-wrap: wrap;
+                gap: 0;
+                border-bottom: 1px solid var(--admin-border);
+                margin-bottom: 1.25rem;
+            }
+            .admin-tab {
+                flex: 1 1 50%;
+                min-width: 0;
+                padding: 1rem 0.75rem;
+                font-size: 0.9rem;
+                text-align: center;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+                margin-bottom: 1.5rem;
+            }
+            .stat-card { padding: 1rem; }
+            .stat-card .stat-value { font-size: 1.35rem; }
+            .stat-card h3 { font-size: 0.75rem; }
+            .order-card { padding: 1rem; }
+            .order-header { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+            .order-actions { flex-direction: column; align-items: flex-start; width: 100%; }
+            .order-actions .status-select,
+            .order-actions .mark-paid-btn,
+            .order-actions .delete-order-btn { min-height: 44px; width: 100%; max-width: 100%; }
+            .login-section { padding: 1.75rem 1.25rem; max-width: 100%; }
+            .login-btn { min-height: 48px; }
+            .google-signin-btn { min-height: 48px; }
+        }
+        @media (max-width: 480px) {
+            .admin-container { padding: 80px 12px 20px; }
+            .admin-tab { flex: 1 1 100%; padding: 1rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .stat-card .stat-value { font-size: 1.5rem; }
+        }
+        
+        /* Orders filter section: stack on mobile */
+        @media (max-width: 768px) {
+            .admin-orders-filters-wrap { padding: 1rem; margin-bottom: 1.5rem; }
+            .admin-orders-filters-grid {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            .admin-orders-filters-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .admin-orders-filters-actions label { margin-bottom: 0.25rem; }
+            #orderSearchInput,
+            #statusFilter,
+            #paymentFilter,
+            #dateFilter {
+                width: 100% !important;
+                min-height: 44px;
+                padding: 0.75rem 1rem !important;
+                font-size: 16px !important;
+            }
+            #bulkActionBtn,
+            .admin-orders-filters-actions button {
+                min-height: 44px;
+                padding: 0.75rem 1rem !important;
+            }
+        }
+        
+        /* Product management mobile */
+        @media (max-width: 768px) {
+            .product-management { padding: 1rem; }
+            .search-product-box { flex-direction: column; }
+            .product-search-input { min-height: 44px; }
+            .add-product-btn { min-height: 44px; width: 100%; }
+            .product-results { grid-template-columns: 1fr; gap: 1rem; }
+        }
+        
+        /* Admin top bar: match main site promo bar */
+        .admin-top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 38px;
+            background: #333333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+        .admin-top-bar-text {
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+        }
+        /* Admin navbar: below top bar, match main site */
+        #adminDashboard .navbar.admin-navbar {
+            top: 38px;
+            background: #fff;
+            border-bottom: 1px solid var(--admin-border);
+        }
+        #adminDashboard .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+        @media (max-width: 768px) {
+            .admin-top-bar { height: 36px; }
+            .admin-top-bar-text { font-size: 0.75rem; }
+            #adminDashboard .navbar.admin-navbar { top: 36px; padding: 0 12px; height: 56px; }
+            #adminDashboard .nav-container { padding: 0 8px; }
+            #adminDashboard .nav-menu { display: none; }
+            #adminDashboard .back-to-site { font-size: 0.8rem; margin-right: 0.5rem !important; }
+            .admin-container { padding-top: 94px; }
+        }
+        @media (max-width: 480px) {
+            .admin-container { padding-top: 92px; }
+        }
+        
+        /* Dark mode toggle: touch-friendly on mobile */
+        #darkModeToggle {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            min-height: 52px;
+        }
+        @media (max-width: 768px) {
+            #darkModeToggle { bottom: 16px; right: 16px; width: 48px; height: 48px; min-width: 48px; min-height: 48px; }
         }
         
         /* ----- Dashboard ----- */
@@ -178,7 +505,8 @@
             background: var(--admin-card);
             padding: 1.25rem;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid var(--admin-border);
             text-align: center;
         }
         
@@ -197,66 +525,68 @@
             color: var(--admin-text);
         }
         
-        .orders-list { display: flex; flex-direction: column; gap: 1.25rem; }
+        .orders-list { display: flex; flex-direction: column; gap: 0.75rem; }
         
         .order-card {
             background: var(--admin-card);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid var(--admin-border);
         }
         
         .order-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 1.25rem;
-            padding-bottom: 1rem;
+            gap: 0.75rem;
+            margin-bottom: 0.6rem;
+            padding-bottom: 0.6rem;
             border-bottom: 1px solid var(--admin-border);
         }
         
-        .order-info h3 { margin-bottom: 0.35rem; color: var(--admin-text); font-size: 1.1rem; }
+        .order-info h3 { margin-bottom: 0.2rem; color: var(--admin-text); font-size: 0.95rem; }
         
         .order-date, .order-customer, .order-phone, .order-address {
             color: var(--admin-muted);
-            font-size: 0.875rem;
-            margin-bottom: 0.2rem;
+            font-size: 0.8rem;
+            margin-bottom: 0.1rem;
         }
         
         .order-status {
-            padding: 0.4rem 0.85rem;
-            border-radius: 8px;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
+            white-space: nowrap;
         }
         
         .status-pending { background: #fef3c7; color: #92400e; }
         .status-confirmed { background: #dbeafe; color: #1e40af; }
-        .status-processing { background: #d1fae5; color: #065f46; }
+        .status-processing { background: #cffafe; color: #0e7490; }
         .status-dispatched { background: #e0e7ff; color: #3730a3; }
         .status-delivered { background: #d1fae5; color: #065f46; }
         .status-cancelled { background: #fee2e2; color: #991b1b; }
         
-        .order-items { margin-bottom: 1.25rem; }
-        .order-items h4 { margin-bottom: 0.75rem; color: var(--admin-text); font-size: 0.95rem; }
+        .order-items { margin-bottom: 0.6rem; }
+        .order-items h4 { margin-bottom: 0.4rem; color: var(--admin-text); font-size: 0.85rem; }
         .order-item-row {
             display: flex;
             justify-content: space-between;
-            padding: 0.4rem 0;
-            border-bottom: 1px solid var(--admin-border);
-            font-size: 0.9rem;
+            padding: 0.2rem 0;
+            font-size: 0.8rem;
         }
         .order-item-row.total-row {
             border-top: 1px solid var(--admin-border);
-            margin-top: 0.5rem;
-            padding-top: 0.75rem;
-            font-size: 1rem;
+            margin-top: 0.35rem;
+            padding-top: 0.4rem;
+            font-size: 0.9rem;
             font-weight: 600;
         }
         .paid { color: #059669; }
         .unpaid { color: #dc2626; }
         
-        .order-actions { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+        .order-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
         .status-select {
             padding: 0.45rem 0.85rem;
             border: 1px solid var(--admin-border);
@@ -319,7 +649,8 @@
             background: var(--admin-card);
             padding: 1.5rem;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid var(--admin-border);
         }
         .search-product-box { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
         .product-search-input {
@@ -367,7 +698,7 @@
         }
 
         .product-edit-card h3 {
-            color: var(--dark);
+            color: var(--admin-text);
             margin-bottom: 0.5rem;
         }
 
@@ -397,7 +728,7 @@
         .product-edit-card input:focus,
         .product-edit-card textarea:focus {
             outline: none;
-            border-color: var(--primary-pink);
+            border-color: var(--admin-accent);
         }
 
         .product-edit-card .edit-buttons {
@@ -452,7 +783,7 @@
 
         .product-modal-content h2 {
             margin-bottom: 1.5rem;
-            color: var(--dark);
+            color: var(--admin-text);
         }
 
         .product-modal-content .form-group {
@@ -462,7 +793,7 @@
         .product-modal-content label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--dark);
+            color: var(--admin-text);
             font-weight: 600;
         }
 
@@ -498,45 +829,34 @@
         }
 
         .product-modal-content .cancel-btn {
-            background: #e0e0e0;
-            color: var(--dark);
+            background: var(--admin-border);
+            color: var(--admin-text);
         }
         
-        /* Customer Communication Buttons */
+        /* Customer Communication Buttons - compact */
+        .order-contact-wrap .comm-btn {
+            padding: 0.35rem 0.6rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-size: 0.75rem;
+        }
         .comm-btn {
-            padding: 0.6rem 1.2rem;
+            padding: 0.5rem 0.9rem;
             border: none;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9rem;
+            transition: opacity 0.2s;
+            font-size: 0.85rem;
         }
-        
-        .call-btn {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        .sms-btn {
-            background: #2196F3;
-            color: white;
-        }
-        
-        .whatsapp-btn {
-            background: #25D366;
-            color: white;
-        }
-        
-        .proof-btn {
-            background: #9C27B0;
-            color: white;
-        }
-        
-        .comm-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
+        .call-btn { background: #2e7d32; color: white; }
+        .sms-btn { background: #1565c0; color: white; }
+        .whatsapp-btn { background: #25D366; color: white; }
+        .proof-btn { background: #7b1fa2; color: white; }
+        .comm-btn:hover { opacity: 0.9; }
         
         /* Delivery Proof Viewer Modal */
         .delivery-proof-viewer-modal {
@@ -570,41 +890,81 @@
         
         /* Dark mode */
         body.dark-mode { --admin-bg: #1e1e2e; --admin-card: #2d2d44; --admin-border: #3d3d5c; --admin-text: #e2e8f0; --admin-muted: #94a3b8; --admin-accent: #818cf8; --admin-accent-hover: #a5b4fc; }
-        body.dark-mode .login-section input[type="email"] { background: #1e1e2e; color: #e2e8f0; }
+        body.dark-mode .login-section input[type="email"],
+        body.dark-mode .login-section input[type="password"],
+        body.dark-mode .login-section #adminPassword { background: #1e1e2e; color: #e2e8f0; border-color: #3d3d5c; }
         body.dark-mode .product-edit-card input, body.dark-mode .product-edit-card textarea { background: #1e1e2e; color: #e2e8f0; border-color: #3d3d5c; }
         body.dark-mode .product-modal-content input, body.dark-mode .product-modal-content textarea, body.dark-mode .product-modal-content select { background: #1e1e2e; color: #e2e8f0; border-color: #3d3d5c; }
     </style>
 </head>
-<body>
-    <!-- Login Section (admin link only – normal login with admin email does not grant access) -->
+<body class="admin-page">
+    <!-- Show when opened via file:// – Firebase Auth requires http/https -->
+    <div id="fileProtocolWarning" class="file-protocol-warning" style="display: none;">
+        <strong>Google sign-in does not work when the page is opened from your file system.</strong> Run the site with a local server and open the admin page over <code>http://</code>. From the project folder run: <code>npx serve deploy</code> or <code>firebase serve</code>, then open <code>http://localhost:5000/admin.html</code> (or the port shown).
+    </div>
+    <script>
+        (function(){ if (typeof location !== 'undefined' && location.protocol === 'file:') {
+            var w = document.getElementById('fileProtocolWarning');
+            if (w) w.style.display = 'block';
+        } })();
+    </script>
+    <!-- Login Section: Google Sign-In (2-Step Verification required on Google account) -->
+    <div class="login-page-wrap">
     <div id="loginSection" class="login-section">
         <div class="admin-login-icon" aria-hidden="true">🔒</div>
         <h2>Admin Login</h2>
-        <p>Use the admin link to sign in. Normal site login does not grant admin access.</p>
-        <form id="adminLoginForm">
-            <div style="margin-bottom: 1.5rem;">
-                <label for="adminEmail">Email Address</label>
-                <input 
-                    type="email" 
-                    id="adminEmail" 
-                    placeholder="admin@example.com" 
-                    required
-                >
-            </div>
-            <div id="loginError"></div>
-            <button type="submit" class="login-btn">
-                <span>Login to Dashboard</span>
-            </button>
-        </form>
-        <a href="index.html" class="back-to-site">
+        <p>Sign in with your Google account. Only approved admin emails can access the dashboard.</p>
+        <p class="admin-2fa-note">Your Google account must have <strong>2-Step Verification</strong> enabled for security.</p>
+        <div id="loginError" class="login-code-error" style="margin-bottom: 1rem; display: none;"></div>
+        <button type="button" class="login-btn google-signin-btn" id="adminGoogleSignInBtn" onclick="typeof window.adminGoogleSignIn === 'function' && window.adminGoogleSignIn();">
+            <span class="google-icon" aria-hidden="true">G</span>
+            <span>Sign in with Google</span>
+        </button>
+        <p class="admin-2fa-note" style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--admin-muted);">You’ll be sent to Google and back (no popup). If you see “popup blocked”, open this page in its own tab and hard-refresh (Ctrl+Shift+R).</p>
+        <a href="index.html" class="back-to-site" style="margin-top: 1.5rem; display: inline-block;">
             <span>←</span>
             <span>Back to Website</span>
         </a>
     </div>
+    </div>
+
+    <!-- Forgot password removed: admin login is Google-only -->
+    <div id="forgotPasswordOverlay" class="forgot-password-overlay" style="display: none;" aria-hidden="true">
+        <div class="forgot-password-box">
+            <h3>Forgot password?</h3>
+            <p>Enter your admin email. We’ll send you a code to reset your password. Only allowed admin emails can use this.</p>
+            <div id="forgotStep1">
+                <label for="forgotEmail">Admin email</label>
+                <input type="email" id="forgotEmail" placeholder="admin@example.com">
+                <div id="forgotError1" class="login-code-error"></div>
+                <div class="forgot-actions">
+                    <button type="button" class="login-btn" id="forgotSendCodeBtn">Send code</button>
+                    <button type="button" class="login-btn forgot-cancel" id="forgotCancelBtn">Cancel</button>
+                </div>
+            </div>
+            <div id="forgotStep2" style="display: none;">
+                <p id="forgotCodeSentTo" class="login-code-email"></p>
+                <label for="forgotCode">6-digit code</label>
+                <input type="text" id="forgotCode" class="login-code-input" placeholder="000000" maxlength="6" pattern="[0-9]*" inputmode="numeric">
+                <label for="forgotNewPassword">New password</label>
+                <input type="password" id="forgotNewPassword" placeholder="New password">
+                <label for="forgotConfirmPassword">Confirm password</label>
+                <input type="password" id="forgotConfirmPassword" placeholder="Confirm">
+                <div id="forgotError2" class="login-code-error"></div>
+                <div class="forgot-actions">
+                    <button type="button" class="login-btn" id="forgotResetSubmitBtn">Reset password</button>
+                    <button type="button" class="login-btn forgot-cancel" id="forgotBackBtn">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Admin Dashboard -->
     <div id="adminDashboard" style="display: none;">
-        <nav class="navbar">
+        <div class="admin-top-bar">
+            <span class="admin-top-bar-text">Slay Station Admin</span>
+        </div>
+        <nav class="navbar admin-navbar">
             <div class="nav-container">
                 <div class="logo">
 <a href="index.html" class="logo-link">
@@ -616,7 +976,8 @@
                     <li><a href="index.html#products">Bags</a></li>
                     <li><a href="wallets.html">Wallets</a></li>
                     <li><a href="accessories.html">Accessories</a></li>
-                    <li><a href="lip-care.html">Lip Care</a></li>
+                    <li><a href="lip-care.html">Lip Products</a></li>
+                    <li><a href="fragrances.html">Fragrances</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="index.html#contact">Contact</a></li>
                 </ul>
@@ -644,16 +1005,16 @@
             <!-- Orders Tab -->
             <div id="ordersTab" class="admin-tab-content active">
                 <!-- Search and Filter Section -->
-                <div style="background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); margin-bottom: 2rem;">
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 1rem; align-items: end; flex-wrap: wrap;">
+                <div class="admin-orders-filters-wrap" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08); border: 1px solid var(--admin-border); margin-bottom: 2rem;">
+                    <div class="admin-orders-filters-grid" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 1rem; align-items: end;">
                         <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">🔍 Search Orders</label>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--admin-text);">🔍 Search Orders</label>
                             <input type="text" id="orderSearchInput" placeholder="Search by ID, name, phone, address..." 
                                 style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 10px; font-family: 'Poppins', sans-serif;"
                                 onkeyup="filterOrders()">
                         </div>
                         <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">📊 Status</label>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--admin-text);">📊 Status</label>
                             <select id="statusFilter" onchange="filterOrders()" 
                                 style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 10px; font-family: 'Poppins', sans-serif;">
                                 <option value="all">All Status</option>
@@ -666,16 +1027,16 @@
                             </select>
                         </div>
                         <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">💳 Payment</label>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--admin-text);">💳 Payment</label>
                             <select id="paymentFilter" onchange="filterOrders()" 
                                 style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 10px; font-family: 'Poppins', sans-serif;">
                                 <option value="all">All Methods</option>
-                                <option value="mpesa">M-Pesa</option>
-                                <option value="cash">Cash on Delivery</option>
+                                <option value="mpesa">M-Pesa (Till)</option>
+                                <option value="card">Card</option>
                             </select>
                         </div>
                         <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">📅 Date Range</label>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--admin-text);">📅 Date Range</label>
                             <select id="dateFilter" onchange="filterOrders()" 
                                 style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 10px; font-family: 'Poppins', sans-serif;">
                                 <option value="all">All Time</option>
@@ -686,13 +1047,13 @@
                             </select>
                         </div>
                     </div>
-                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                    <div class="admin-orders-filters-actions" style="margin-top: 1rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
                         <input type="checkbox" id="bulkSelectAll" onchange="toggleBulkSelect()" style="margin-right: 0.5rem;">
-                        <label for="bulkSelectAll" style="font-weight: 600; color: var(--dark);">Select All</label>
-                        <button onclick="bulkUpdateStatus()" id="bulkActionBtn" disabled style="padding: 0.5rem 1rem; background: var(--primary-pink); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; opacity: 0.5;">
+                        <label for="bulkSelectAll" style="font-weight: 600; color: var(--admin-text);">Select All</label>
+                        <button onclick="bulkUpdateStatus()" id="bulkActionBtn" disabled style="padding: 0.5rem 1rem; background: var(--admin-accent); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; opacity: 0.5;">
                             Bulk Actions (<span id="selectedCount">0</span>)
                         </button>
-                        <button onclick="clearFilters()" style="padding: 0.5rem 1rem; background: #666; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                        <button onclick="clearFilters()" style="padding: 0.5rem 1rem; background: var(--admin-muted); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
                             Clear Filters
                         </button>
                     </div>
@@ -736,7 +1097,7 @@
             <div id="productsTab" class="admin-tab-content">
                 <div class="product-management">
                     <div class="product-search-section">
-                        <h2 style="margin-bottom: 1.5rem; color: var(--dark);">✨ Product Management</h2>
+                        <h2 style="margin-bottom: 1.5rem; color: var(--admin-text);">✨ Product Management</h2>
                         <div class="search-product-box">
                             <input 
                                 type="text" 
@@ -757,12 +1118,19 @@
     </div>
 
     <!-- Dark Mode Toggle -->
-    <button id="darkModeToggle" onclick="toggleAdminDarkMode()" style="position: fixed; bottom: 20px; right: 20px; width: 52px; height: 52px; border-radius: 50%; background: var(--admin-accent); color: white; border: none; font-size: 1.35rem; cursor: pointer; box-shadow: 0 2px 12px rgba(99,102,241,0.4); z-index: 1000;">
+    <button id="darkModeToggle" onclick="toggleAdminDarkMode()" style="position: fixed; bottom: 20px; right: 20px; width: 52px; height: 52px; border-radius: 50%; background: var(--admin-accent); color: white; border: none; font-size: 1.35rem; cursor: pointer; box-shadow: 0 2px 12px rgba(0,0,0,0.2); z-index: 1000;">
         🌙
     </button>
     
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
+    <script src="firebase.js"></script>
+    <script src="admin-firebase.js"></script>
     <script src="delivery-fee-calculator.js"></script>
-    <script src="admin.js"></script>
+    <script src="admin.js?v=redirect"></script>
     <script src="script.js"></script>
     <script src="wallets.js"></script>
     <script src="accessories.js"></script>
@@ -1539,6 +1907,8 @@
         }
 
         function logout() {
+            var fb = window.SlayStationFirebase;
+            if (fb && fb.auth) fb.auth.signOut();
             localStorage.removeItem('slayStationAdminLoggedIn');
             localStorage.removeItem('slayStationAdminEmail');
             var loginSection = document.getElementById('loginSection');
@@ -1548,150 +1918,123 @@
             document.body.classList.add('login-page-active');
         }
         
-        // Handle admin authentication
-        function handleAdminLogin() {
+        // Handle admin login: step 1 – send code to email (only allowed emails)
+        function handleAdminLogin(e) {
+            if (e && e.preventDefault) e.preventDefault();
             const emailInput = document.getElementById('adminEmail');
             const errorMsg = document.getElementById('loginError');
-            
-            if (!emailInput) {
-                console.error('Email input not found');
-                if (errorMsg) {
-                    errorMsg.textContent = 'Error: Email input not found. Please refresh the page.';
-                    errorMsg.style.display = 'block';
-                }
-                return false;
-            }
-            
-            const email = emailInput.value.trim();
-            
-            if (!email) {
-                if (errorMsg) {
-                    errorMsg.textContent = 'Please enter your email address';
-                    errorMsg.style.display = 'block';
-                }
-                return false;
-            }
-            
-            // Check if authenticateAdmin function is available
-            if (typeof window.authenticateAdmin === 'function') {
+            if (!emailInput) return false;
+            if (typeof window.requestLoginCode === 'function') {
                 try {
-                    const success = window.authenticateAdmin();
-                    if (success) {
-                        // authenticateAdmin already handles UI updates, just ensure localStorage is set
-                        localStorage.setItem('slayStationAdminLoggedIn', 'true');
-                        localStorage.setItem('slayStationAdminEmail', email);
-                        document.body.classList.remove('login-page-active');
-                        return true;
-                    } else {
-                        // Show error message if login fails
-                        if (errorMsg) {
-                            errorMsg.textContent = 'Invalid email! Access denied. Please use an admin email.';
-                            errorMsg.style.display = 'block';
-                        }
+                    const sent = window.requestLoginCode();
+                    if (sent) {
+                        const form = document.getElementById('adminLoginForm');
+                        const codeStep = document.getElementById('loginCodeStep');
+                        const codeEmailEl = document.getElementById('loginCodeEmail');
+                        if (form) form.style.display = 'none';
+                        if (codeStep) codeStep.style.display = 'block';
+                        if (codeEmailEl) codeEmailEl.textContent = emailInput.value.trim();
                         return false;
                     }
-                } catch (error) {
-                    console.error('Error during authentication:', error);
-                    if (errorMsg) {
-                        errorMsg.textContent = 'An error occurred. Please try again.';
-                        errorMsg.style.display = 'block';
-                    }
-                    return false;
+                } catch (err) {
+                    console.error(err);
+                    if (errorMsg) { errorMsg.textContent = 'An error occurred. Please try again.'; errorMsg.style.display = 'block'; }
                 }
+                return false;
+            }
+            if (typeof window.authenticateAdmin === 'function') {
+                return window.authenticateAdmin();
+            }
+            return false;
+        }
+        
+        function handleVerifyCode() {
+            if (typeof window.verifyLoginCodeAndLogin !== 'function') return;
+            window.verifyLoginCodeAndLogin();
+        }
+        
+        function handleBackToEmail() {
+            var form = document.getElementById('adminLoginForm');
+            var codeStep = document.getElementById('loginCodeStep');
+            var codeInput = document.getElementById('adminLoginCode');
+            var codeError = document.getElementById('loginCodeError');
+            if (form) form.style.display = '';
+            if (codeStep) codeStep.style.display = 'none';
+            if (codeInput) codeInput.value = '';
+            if (codeError) codeError.textContent = '';
+        }
+        
+        function openForgotPassword() {
+            document.getElementById('forgotPasswordOverlay').classList.add('active');
+            document.getElementById('forgotStep1').style.display = 'block';
+            document.getElementById('forgotStep2').style.display = 'none';
+            document.getElementById('forgotError1').textContent = '';
+            document.getElementById('forgotError2').textContent = '';
+        }
+        
+        function closeForgotPassword() {
+            document.getElementById('forgotPasswordOverlay').classList.remove('active');
+        }
+        
+        function handleForgotSendCode() {
+            var email = (document.getElementById('forgotEmail').value || '').trim();
+            var err = document.getElementById('forgotError1');
+            if (!email) { err.textContent = 'Please enter your admin email.'; return; }
+            if (typeof window.sendForgotPasswordCode !== 'function') { err.textContent = 'Feature not loaded.'; return; }
+            var result = window.sendForgotPasswordCode(email);
+            function onResult(r) {
+                if (!r || !r.ok) { err.textContent = (r && r.message) ? r.message : 'Failed.'; return; }
+                err.textContent = '';
+                document.getElementById('forgotStep1').style.display = 'none';
+                document.getElementById('forgotStep2').style.display = 'block';
+                document.getElementById('forgotCodeSentTo').textContent = 'Code sent to ' + email + '. Enter the code and your new password.';
+                window._forgotEmail = email;
+            }
+            if (result && typeof result.then === 'function') {
+                result.then(onResult).catch(function () { err.textContent = 'Could not send code. Try again.'; });
             } else {
-                // Fallback if admin.js hasn't loaded yet
-                console.warn('authenticateAdmin function not found, using fallback');
-                // Use admin emails from admin.js if available, otherwise use fallback
-                const fallbackAdminEmails = [
-                    'preston.mwendwa@riarauniversity.ac.ke',
-                    'isabellewambui@gmail.com'
-                ];
-                const normalizedEmail = email.toLowerCase().trim();
-                const isAdmin = fallbackAdminEmails.some(adminEmail => adminEmail.toLowerCase() === normalizedEmail);
-                
-                if (isAdmin) {
-                    localStorage.setItem('slayStationAdminLoggedIn', 'true');
-                    localStorage.setItem('slayStationAdminEmail', email);
-                    const loginSection = document.getElementById('loginSection');
-                    const adminDashboard = document.getElementById('adminDashboard');
-                    if (loginSection) loginSection.style.display = 'none';
-                    if (adminDashboard) adminDashboard.style.display = 'block';
-                    document.body.classList.remove('login-page-active');
-                    if (window.loadOrders) {
-                        window.loadOrders();
-                    }
-                    if (errorMsg) {
-                        errorMsg.style.display = 'none';
-                    }
-                    return true;
-                } else {
-                    if (errorMsg) {
-                        errorMsg.textContent = 'Invalid email! Access denied. Admin emails: preston.mwendwa@riarauniversity.ac.ke or isabellewambui@gmail.com';
-                        errorMsg.style.display = 'block';
-                    }
-                    return false;
-                }
+                onResult(result);
             }
         }
         
-        // Update form to use handleAdminLogin
+        function handleForgotResetSubmit() {
+            var email = window._forgotEmail;
+            var code = (document.getElementById('forgotCode').value || '').trim();
+            var newPass = (document.getElementById('forgotNewPassword').value || '');
+            var confirmPass = (document.getElementById('forgotConfirmPassword').value || '');
+            var err = document.getElementById('forgotError2');
+            if (!email) { err.textContent = 'Session expired. Start over.'; return; }
+            if (typeof window.verifyForgotCodeAndSetPassword !== 'function') { err.textContent = 'Feature not loaded.'; return; }
+            var result = window.verifyForgotCodeAndSetPassword(email, code, newPass, confirmPass);
+            function onResult(r) {
+                if (!r || !r.ok) { err.textContent = (r && r.message) ? r.message : 'Failed.'; return; }
+                err.textContent = '';
+                alert('Password updated. You can now log in with your new password.');
+                closeForgotPassword();
+                document.getElementById('forgotCode').value = '';
+                document.getElementById('forgotNewPassword').value = '';
+                document.getElementById('forgotConfirmPassword').value = '';
+                window._forgotEmail = null;
+            }
+            if (result && typeof result.then === 'function') {
+                result.then(onResult).catch(function () { err.textContent = 'Could not reset password. Try again.'; });
+            } else {
+                onResult(result);
+            }
+        }
+        
+        function handleForgotBack() {
+            document.getElementById('forgotStep2').style.display = 'none';
+            document.getElementById('forgotStep1').style.display = 'block';
+            document.getElementById('forgotError2').textContent = '';
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
-            // Add login page class if login section is visible
-            const loginSection = document.getElementById('loginSection');
+            var loginSection = document.getElementById('loginSection');
             if (loginSection && loginSection.style.display !== 'none') {
                 document.body.classList.add('login-page-active');
             }
-            
-            const loginForm = document.getElementById('adminLoginForm');
-            if (loginForm) {
-                loginForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleAdminLogin();
-                    return false;
-                });
-            }
-            
-            // Also add click handler to button as fallback
-            const loginBtn = document.querySelector('.login-btn[type="submit"]');
-            if (loginBtn) {
-                loginBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const form = document.getElementById('adminLoginForm');
-                    if (form) {
-                        handleAdminLogin();
-                    }
-                    return false;
-                });
-            }
-            
-            // Allow Enter key to submit
-            const emailInput = document.getElementById('adminEmail');
-            if (emailInput) {
-                emailInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        handleAdminLogin();
-                    }
-                });
-            }
         });
-        
-        // Auto-show dashboard only if user logged in via admin link (admin.html form)
-        var loginSectionEl = document.getElementById('loginSection');
-        var adminDashboardEl = document.getElementById('adminDashboard');
-        if (localStorage.getItem('slayStationAdminLoggedIn') === 'true' && loginSectionEl && adminDashboardEl) {
-            loginSectionEl.style.display = 'none';
-            adminDashboardEl.style.display = 'block';
-            document.body.classList.remove('login-page-active');
-            if (window.loadOrders) window.loadOrders();
-            setTimeout(function() {
-                if (document.getElementById('productsTab') && document.getElementById('productsTab').classList.contains('active')) {
-                    loadAllProducts();
-                }
-            }, 100);
-        }
         
         // Load products when products tab is clicked
         document.addEventListener('DOMContentLoaded', function() {

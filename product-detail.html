@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>(function(){var h=window.location.hostname||'';var p=window.location.pathname||'';if(h.indexOf('github.io')!==-1&&p.indexOf('/slaystation')===0){var b=document.createElement('base');b.href=window.location.origin+'/slaystation/';document.head.insertBefore(b,document.head.firstChild);}})();</script>
-    <script>(function(){var path=window.location.pathname||'/';var base=window.location.origin+(path.replace(/\/[^/]*$/,'/')||'/');function abs(u){if(!u||u.indexOf('http')===0||u.indexOf('data:')===0)return u;return base+(u.charAt(0)==='/'?'':'')+u;}document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('img[src^="images/"], source[src^="images/"]').forEach(function(el){var s=el.getAttribute('src');if(s)el.src=abs(s);});document.querySelectorAll('[style*="images/"]').forEach(function(el){var st=el.getAttribute('style');if(st&&/url\(.*images\//.test(st)){el.style.cssText=st.replace(/url\(['"]?(images\/[^'")]+)['"]?\)/g,function(_,p){return 'url(\''+abs(p)+'\')';});}});});})();</script>
+    <script>(function(){var path=window.location.pathname||'/';var hasFile=/\.[^/]+$/.test(path);var dir=hasFile?path.replace(/\/[^/]*$/,''):path;dir=(dir===''?'/':dir);var base=window.location.origin+(dir.endsWith('/')?dir:dir+'/');function abs(u){if(!u||u.indexOf('http')===0||u.indexOf('data:')===0)return u;var r=u.charAt(0)==='/'?u.slice(1):u;r=r.split('/').map(function(p){return p.toLowerCase();}).join('/');return base+r;}document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('img[src^="images/"], img[src^="./images/"], source[src^="images/"], source[src^="./images/"]').forEach(function(el){var s=el.getAttribute('src');if(s)el.src=abs(s);});document.querySelectorAll('[style*="images/"]').forEach(function(el){var st=el.getAttribute('style');if(st&&/url\(.*images\//.test(st)){el.style.cssText=st.replace(/url\(['"]?(images\/[^'")]+)['"]?\)/g,function(_,p){return 'url(\''+abs(p)+'\')';});}});});})();</script>
     <title>Product Details - Slay Station</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,17 +28,55 @@
         .product-detail-image {
             width: 100%;
             aspect-ratio: 1;
-            background: var(--light-gray);
+            background: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            border: none;
         }
         
-        .product-detail-image img {
+        .product-detail-image .product-detail-main-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            object-position: center;
+            border: none;
+        }
+        
+        .product-detail-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 0.75rem;
+        }
+        
+        .product-detail-thumb {
+            width: 56px;
+            height: 56px;
+            padding: 0;
+            border: 2px solid transparent;
+            border-radius: 0;
+            background: #fff;
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .product-detail-thumb:hover {
+            border-color: rgba(0,0,0,0.2);
+        }
+        
+        .product-detail-thumb.active {
+            border-color: #1a1a1a;
+        }
+        
+        .product-detail-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
         }
         
         .product-detail-info {
@@ -393,7 +431,8 @@
                     <li><a href="index.html#products">Bags</a></li>
                     <li><a href="wallets.html">Wallets</a></li>
                     <li><a href="accessories.html">Accessories</a></li>
-                    <li><a href="lip-care.html">Lip Care</a></li>
+                    <li><a href="lip-care.html">Lip Products</a></li>
+                    <li><a href="fragrances.html">Fragrances</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="index.html#contact">Contact</a></li>
                 </ul>
@@ -482,9 +521,6 @@
                 </div>
             </div>
             <div class="cart-footer">
-                <div class="delivery-fee-info">
-                    <small>Delivery fee will be paid separately (KSH 200)</small>
-                </div>
                 <div class="cart-total">
                     <strong>Total: KSH <span id="cartTotal">0</span></strong>
                 </div>
@@ -493,27 +529,119 @@
         </div>
     </div>
 
+    <!-- Footer – same as main site so it shows when viewing a product -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div class="footer-left">
+                    <h3>Join Our Circle</h3>
+                    <div class="footer-newsletter">
+                        <input type="email" id="footerEmailProduct" placeholder="Email" aria-label="Email for newsletter">
+                        <button type="button" onclick="var e=document.getElementById('footerEmailProduct');if(e&&e.value){alert('Thanks for signing up!');e.value='';}else{alert('Please enter your email.');}" aria-label="Subscribe">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                    <h3>Follow Us</h3>
+                    <div class="footer-social-row">
+                        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/slaystation" target="_blank" rel="noopener noreferrer" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" title="X"><i class="fab fa-x-twitter"></i></a>
+                        <a href="https://wa.me/254719563607" target="_blank" rel="noopener noreferrer" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                    <div class="footer-app-block">
+                        <h3>Download the App</h3>
+                        <div class="footer-app-buttons">
+                            <a href="#" target="_blank" rel="noopener noreferrer" class="footer-app-btn">
+                                <span class="footer-app-btn-icon"><i class="fab fa-apple"></i></span>
+                                <span class="footer-app-btn-text"><span>Download on the</span><span>App Store</span></span>
+                            </a>
+                            <a href="#" target="_blank" rel="noopener noreferrer" class="footer-app-btn">
+                                <span class="footer-app-btn-icon"><i class="fab fa-google-play"></i></span>
+                                <span class="footer-app-btn-text"><span>GET IT ON</span><span>Google Play</span></span>
+                            </a>
+                        </div>
+                        <p class="footer-app-disclaimer">Android and Google Play are trademarks of Google LLC.</p>
+                    </div>
+                </div>
+                <div class="footer-columns">
+                    <div class="footer-col">
+                        <h3>Customer Service</h3>
+                        <ul>
+                            <li><a href="index.html#contact">Contact Us</a></li>
+                            <li><a href="login.html">My Account</a></li>
+                            <li><a href="index.html#products">Alerts</a></li>
+                            <li><a href="index.html#contact">Shipping</a></li>
+                            <li><a href="index.html#contact">FAQ</a></li>
+                            <li><a href="index.html#contact">Give Us feedback</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h3>Shop with Us</h3>
+                        <ul>
+                            <li><a href="index.html#products">Bags</a></li>
+                            <li><a href="wallets.html">Wallets</a></li>
+                            <li><a href="accessories.html">Accessories</a></li>
+                            <li><a href="lip-care.html">Lip Care</a></li>
+                            <li><a href="index.html#contact">Gift Cards</a></li>
+                            <li><a href="index.html#contact">Personal Shopping</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h3>About Us</h3>
+                        <ul>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="index.html#contact">Locations</a></li>
+                            <li><a href="index.html#contact">Careers</a></li>
+                            <li><a href="index.html#contact">Sustainability</a></li>
+                            <li><a href="index.html#contact">Influencer Program</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-left">
+                    <p class="footer-copyright">&copy; 2025 Slay Station. All rights reserved.</p>
+                </div>
+                <div class="footer-legal">
+                    <a href="index.html#contact">Accessibility Statement</a>
+                    <a href="index.html#contact">Privacy Policy</a>
+                    <a href="index.html#contact">Terms of use</a>
+                    <a href="index.html#contact">Your privacy choices</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Load script.js first so products is always defined before inline script (avoids Product Not Found on published site) -->
+    <script src="script.js"></script>
     <script src="auth.js"></script>
     <script src="wallets.js"></script>
     <script src="accessories.js"></script>
     <script src="lip-care.js"></script>
-    <script src="script.js"></script>
+    <script src="fragrances.js"></script>
     <script>
         // Get product ID and category from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = parseInt(urlParams.get('id'));
-        const category = urlParams.get('category');
-        // Resolve product by category first, then fall back to bags
-        let product = null;
-        if (category === 'wallet' && typeof walletProducts !== 'undefined') {
-            product = walletProducts.find(p => p.id === productId);
-        } else if (category === 'accessory' && typeof accessoryProducts !== 'undefined') {
-            product = accessoryProducts.find(p => p.id === productId);
-        } else if (category === 'lip-care' && typeof lipCareProducts !== 'undefined') {
-            product = lipCareProducts.find(p => p.id === productId);
-        }
-        if (!product && typeof products !== 'undefined') {
-            product = products.find(p => p.id === productId);
+        var urlParams = new URLSearchParams(window.location.search);
+        var idParam = urlParams.get('id');
+        var productId = idParam !== null && idParam !== '' ? parseInt(idParam, 10) : NaN;
+        if (isNaN(productId)) productId = null;
+        var category = urlParams.get('category');
+        // Resolve product by category first, then fall back to bags (products from script.js loaded first)
+        var product = null;
+        if (productId != null) {
+            if (category === 'wallet' && typeof walletProducts !== 'undefined') {
+                product = walletProducts.find(function(p) { return p.id === productId; });
+            } else if (category === 'accessory' && typeof accessoryProducts !== 'undefined') {
+                product = accessoryProducts.find(function(p) { return p.id === productId; });
+            } else if (category === 'lip-care' && typeof lipCareProducts !== 'undefined') {
+                product = lipCareProducts.find(function(p) { return p.id === productId; });
+            } else if (category === 'fragrance' && typeof fragranceProducts !== 'undefined') {
+                product = fragranceProducts.find(function(p) { return p.id === productId; });
+            }
+            if (!product && typeof products !== 'undefined') {
+                product = products.find(function(p) { return p.id === productId; });
+            }
         }
         
         if (!product) {
@@ -572,10 +700,27 @@
                 ? `<span class="original-price">KSH ${product.originalPrice.toLocaleString()}</span> <span class="current-price">KSH ${product.price.toLocaleString()} KES</span> ${priceOffHTML}`
                 : `<span class="current-price">KSH ${product.price.toLocaleString()} KES</span>`;
             
+            var allImagePaths = [product.image].concat(typeof getHoverImagePaths === 'function' ? (getHoverImagePaths(product.image) || []) : []);
+            var allImageUrls = allImagePaths.map(function(p) { return typeof assetUrl === 'function' ? assetUrl(p) : p; });
+            var escapeAttr = function(s) { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); };
+            var mainSrc = allImageUrls[0] || '';
+            var galleryHTML = allImageUrls.length ? '<div class="product-detail-gallery">' + allImageUrls.map(function(url, i) {
+                return '<button type="button" class="product-detail-thumb' + (i === 0 ? ' active' : '') + '" data-src="' + escapeAttr(url) + '" onclick="window.setProductDetailImage(this)" aria-label="View image ' + (i + 1) + '"><img src="' + escapeAttr(url) + '" alt="" onerror="var b=this.closest(\'.product-detail-thumb\');if(b)b.remove();"></button>';
+            }).join('') + '</div>' : '';
+            window.setProductDetailImage = function(btn) {
+                var src = btn.getAttribute('data-src');
+                if (src) {
+                    var main = document.getElementById('productDetailMainImg');
+                    if (main) main.src = src;
+                }
+                document.querySelectorAll('.product-detail-thumb').forEach(function(t) { t.classList.remove('active'); });
+                btn.classList.add('active');
+            };
             document.getElementById('productDetailContent').innerHTML = `
                 <div class="product-detail-content">
                     <div class="product-detail-image">
-                        <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='👜';">
+                        <img id="productDetailMainImg" class="product-detail-main-img" src="${escapeAttr(mainSrc)}" alt="${escapeAttr(product.name || '')}" onerror="this.onerror=null; this.style.display='none';">
+                        ${galleryHTML}
                     </div>
                     <div class="product-detail-info">
                         <div class="product-detail-info-block">

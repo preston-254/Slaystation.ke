@@ -1,37 +1,11 @@
-// Product Data - Wallets
+// Product Data - Wallets (from images/wallet folder)
 const walletProducts = [
-    {
-        id: 101,
-        name: "Classic Leather Wallet",
-        description: "Timeless leather wallet with multiple card slots and coin compartment.",
-        price: 1500,
-        image: "images/wallet/IMG-20251123-WA0022.jpg",
-        category: "wallet"
-    },
-    {
-        id: 102,
-        name: "Elegant Designer Wallet",
-        description: "Sophisticated wallet with premium design and quality finish.",
-        price: 1500,
-        image: "images/wallet/IMG-20251123-WA0024.jpg",
-        category: "wallet"
-    },
-    {
-        id: 103,
-        name: "Stylish Compact Wallet",
-        description: "Modern compact wallet perfect for everyday use.",
-        price: 1500,
-        image: "images/wallet/IMG-20251123-WA0057.jpg",
-        category: "wallet"
-    },
-    {
-        id: 104,
-        name: "Luxury Leather Wallet",
-        description: "Premium leather wallet with elegant styling.",
-        price: 1500,
-        image: "images/wallet/IMG-20251123-WA0059.jpg",
-        category: "wallet"
-    }
+    { id: 101, name: "Coach Khaki Wallet", description: "Classic Coach wallet in khaki. Timeless design with multiple card slots.", price: 1500, image: "images/wallet/coach khaki wallet.jpg", category: "wallet" },
+    { id: 102, name: "Coach Wallet Blue", description: "Elegant blue Coach wallet. Premium finish and compact style.", price: 1500, image: "images/wallet/coach wallet blue.jpg", category: "wallet" },
+    { id: 103, name: "Coach Wallet Purple", description: "Sophisticated purple Coach wallet for everyday use.", price: 1500, image: "images/wallet/coach wallet purple .jpg", category: "wallet" },
+    { id: 104, name: "Designer Wallet", description: "Refined designer wallet with quality leather and multiple compartments.", price: 1500, image: "images/wallet/DSC09519.jpg", category: "wallet" },
+    { id: 105, name: "Victoria's Secret Wallet", description: "Victoria's Secret style wallet. Compact and stylish.", price: 1500, image: "images/wallet/victorias secret 1.jpg", category: "wallet" },
+    { id: 106, name: "Victoria's Secret Wallet 2", description: "Second style Victoria's Secret wallet. Premium and practical.", price: 1500, image: "images/wallet/victorias secret 2.jpg", category: "wallet" }
 ];
 
 // Export walletProducts to window for global access
@@ -47,7 +21,7 @@ if (typeof window.cart === 'undefined') {
 // Taupe editorial banners – wallet product images in animated layout
 var walletBannerLeft = walletProducts.slice(0, 2).map(function(p) { return p.image; });
 var walletBannerRight = walletProducts.slice(2, 4).map(function(p) { return p.image; });
-const editorialBanners = [
+const editorialBannersWallets = [
     { headline: 'Shop', title: 'Premium Wallets', body: 'Refined leather and compact styles for every occasion. Quality and style that last.', ctaText: 'Shop Wallets', ctaUrl: 'wallets.html', leftImgs: walletBannerLeft, rightImgs: walletBannerRight }
 ];
 function createEditorialBanner(config) {
@@ -107,8 +81,10 @@ function initWalletMobileFilter() {
     if (closeBtn) closeBtn.addEventListener('click', closeFilter);
 }
 
-// Load products on page load
+// Load products on page load (skip on admin page – no cart/filters DOM)
 document.addEventListener('DOMContentLoaded', function() {
+    var isAdminPage = typeof window !== 'undefined' && window.location && (/(^|\/)admin\.html$/i.test((window.location.pathname || '') + (window.location.href || '')));
+    if (isAdminPage) return;
     renderProducts(walletProducts);
     var countEl = document.getElementById('walletItemCount');
     if (countEl) countEl.textContent = walletProducts.length;
@@ -131,7 +107,7 @@ function renderProducts(filteredProducts) {
     var bannerIndex = 0;
     list.forEach(function(product, i) {
         const productCard = document.createElement('div');
-        productCard.className = 'product-card';
+        productCard.className = 'product-card product-card--no-hover';
         productCard.onclick = function() { window.location.href = 'product-detail.html?id=' + product.id + '&category=wallet'; };
         productCard.style.cursor = 'pointer';
         productCard.innerHTML = `
@@ -141,10 +117,11 @@ function renderProducts(filteredProducts) {
             <h3 class="product-name">${product.name}</h3>
             <p class="product-description">${product.description}</p>
             <div class="product-price">KSH ${product.price.toLocaleString()}</div>
+            <button type="button" class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(${product.id});">Add to Cart</button>
         `;
         productsGrid.appendChild(productCard);
-        if ((i + 1) % 2 === 0 && i + 1 < list.length && editorialBanners.length > 0) {
-            var config = editorialBanners[bannerIndex % editorialBanners.length];
+        if ((i + 1) % 2 === 0 && i + 1 < list.length && editorialBannersWallets.length > 0) {
+            var config = editorialBannersWallets[bannerIndex % editorialBannersWallets.length];
             productsGrid.appendChild(createEditorialBanner(config));
             bannerIndex++;
         }
@@ -161,12 +138,11 @@ function getSharedCart() {
     return [];
 }
 
-// Add to Cart (shared across all pages)
-function addToCart(productId) {
+// Add to Cart – use unified (script.js) when available so product-detail works for all categories
+function addToCartWallets(productId) {
     const product = walletProducts.find(p => p.id === productId);
     if (!product) return;
 
-    // Get all items from shared cart
     const allCartItems = getSharedCart();
     const existingItem = allCartItems.find(item => item.id === productId && item.category === product.category);
     
@@ -174,25 +150,20 @@ function addToCart(productId) {
         existingItem.quantity += 1;
         window.cart = allCartItems;
     } else {
-        const itemToAdd = {
-            ...product,
-            quantity: 1,
-            category: product.category || 'wallet'
-        };
+        const itemToAdd = { ...product, quantity: 1, category: product.category || 'wallet' };
         allCartItems.push(itemToAdd);
         window.cart = allCartItems;
     }
-
     saveCartToStorage();
     updateCartCount();
     showNotification(`${product.name} added to cart! ✨`);
-    
-    // Update cart display if it's open
-    if (document.getElementById('cartOverlay').classList.contains('active')) {
+    var cartOverlay = document.getElementById('cartOverlay');
+    if (cartOverlay && cartOverlay.classList.contains('active')) {
         renderCart();
         if (typeof renderYouMayAlsoLike === 'function') renderYouMayAlsoLike('cartYouMayAlsoLike');
     }
 }
+window.addToCart = (typeof window.addToCartUnified === 'function') ? window.addToCartUnified : addToCartWallets;
 
 // Remove from Cart
 function removeFromCart(productId) {
@@ -267,10 +238,18 @@ function renderCart() {
 // Update Cart Count (shows count from all pages)
 function updateCartCount() {
     const cartCount = document.getElementById('cartCount');
-    // Get total from shared cart to include items from all pages
+    if (!cartCount) return;
     const allCartItems = getSharedCart();
-    const totalItems = allCartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const totalItems = (allCartItems || []).reduce((sum, item) => sum + (item.quantity || 1), 0);
     cartCount.textContent = totalItems;
+    if (totalItems > 0) {
+        cartCount.style.display = '';
+        cartCount.style.visibility = 'visible';
+        cartCount.removeAttribute('aria-hidden');
+    } else {
+        cartCount.style.display = 'none';
+        cartCount.setAttribute('aria-hidden', 'true');
+    }
 }
 
 // Toggle Cart
@@ -315,7 +294,7 @@ function renderYouMayAlsoLike(containerId) {
         const price = typeof p.price === 'number' ? p.price : parseInt(p.price, 10) || 0;
         const count = wishlistCounts[i % wishlistCounts.length];
         const href = 'product-detail.html?id=' + (p.id || '') + '&category=wallet';
-        const img = (p.image || '').indexOf('http') === 0 ? p.image : (p.image || 'images/bags/IMG_1328.jpg');
+        const img = (p.image || '').indexOf('http') === 0 ? p.image : (p.image || 'images/bags/img_1328.jpg');
         const name = (p.name || 'Product').substring(0, 45);
         const escName = name.replace(/"/g, '&quot;');
         if (isCartYmal) {
@@ -360,53 +339,31 @@ function scrollYouMayAlsoLike(containerId, direction) {
     container.scrollBy({ left: direction * step, behavior: 'smooth' });
 }
 
-// Checkout
+// Checkout – same as bags: go to full-page checkout.html
 function checkout() {
-    if (!window.cart || window.cart.length === 0) {
+    var items = typeof getSharedCart === 'function' ? getSharedCart() : (window.cart || []);
+    if (!items || items.length === 0) {
         alert('Your cart is empty! Add some items first. 💕');
         return;
     }
-
-    const orderModal = document.getElementById('orderModal');
-    const orderSummary = document.getElementById('orderSummary');
-    
-    // Render order summary
-    let summaryHTML = '';
-    let total = 0;
-    
-    (window.cart || []).forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
-        summaryHTML += `
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                <span>${item.name} x${item.quantity}</span>
-                <span>KSH ${itemTotal.toLocaleString()}</span>
-            </div>
-        `;
-    });
-    
-    summaryHTML += `
-        <div style="display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 1rem; border-top: 2px solid white; font-weight: bold; font-size: 1.2rem;">
-            <span>Total</span>
-            <span>KSH ${total.toLocaleString()}</span>
-        </div>
-    `;
-    
-    orderSummary.innerHTML = summaryHTML;
-    
-    // Close cart and open order modal
-    document.getElementById('cartOverlay').classList.remove('active');
-    orderModal.classList.add('active');
-    if (typeof renderYouMayAlsoLike === 'function') renderYouMayAlsoLike('checkoutYouMayAlsoLike');
+    if (typeof saveCartToStorage === 'function') saveCartToStorage();
+    var path = typeof location !== 'undefined' && location.pathname ? location.pathname : '/';
+    var dir = path.replace(/\/[^/]*$/, '') || '/';
+    if (!dir.endsWith('/')) dir += '/';
+    var base = (typeof location !== 'undefined' && location.origin ? location.origin : '') + dir;
+    window.location.href = base + 'checkout.html';
 }
 
 // Close Order Modal
 function closeOrderModal() {
-    document.getElementById('orderModal').classList.remove('active');
+    var modal = document.getElementById('orderModal');
+    if (modal) modal.classList.remove('active');
 }
 
-// Handle Order Form Submission
-document.getElementById('orderForm').addEventListener('submit', function(e) {
+// Handle Order Form Submission (only on pages that have orderForm)
+var orderFormEl = document.getElementById('orderForm');
+if (orderFormEl) {
+    orderFormEl.addEventListener('submit', function(e) {
     e.preventDefault();
     
     const formData = new FormData(e.target);
@@ -476,7 +433,8 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     // Close modal and reset form
     closeOrderModal();
     e.target.reset();
-});
+    });
+}
 
 // Save Cart to Local Storage
 function saveCartToStorage() {
@@ -553,14 +511,16 @@ if (!document.getElementById('wallet-notification-styles')) {
 }
 
 // Close cart when clicking outside
-document.getElementById('cartOverlay').addEventListener('click', function(e) {
+var cartOverlayEl = document.getElementById('cartOverlay');
+if (cartOverlayEl) cartOverlayEl.addEventListener('click', function(e) {
     if (e.target === this) {
         toggleCart();
     }
 });
 
 // Close modal when clicking outside
-document.getElementById('orderModal').addEventListener('click', function(e) {
+var orderModalEl = document.getElementById('orderModal');
+if (orderModalEl) orderModalEl.addEventListener('click', function(e) {
     if (e.target === this) {
         closeOrderModal();
     }

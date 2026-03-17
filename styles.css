@@ -69,10 +69,15 @@ html {
     box-sizing: border-box;
 }
 
-/* ========== HEADER (clean two-tier: promo bar + main nav) ========== */
+/* ========== HEADER (main nav only; promo bar hidden) ========== */
 
-/* Top bar: dark grey — left link | center promo | right pause (no gap with navbar below) */
+/* Promo bar hidden so it does not show when opening the website */
 .promo-bar {
+    display: none !important;
+}
+
+/* Top bar (kept for reference if re-enabled): dark grey — left link | center promo | right pause */
+.promo-bar.promo-bar--visible {
     position: fixed;
     top: 0;
     left: 0;
@@ -158,10 +163,10 @@ html {
     opacity: 0.85;
 }
 
-/* Main nav: white — sits flush under promo bar (no gap) */
+/* Main nav: white — at top (promo bar hidden) */
 .navbar {
     position: fixed;
-    top: 38px;
+    top: 0;
     left: 0;
     right: 0;
     height: 68px;
@@ -177,7 +182,6 @@ html {
 }
 
 body:not(.page-home) .navbar { top: 0; }
-body:not(.page-home) .promo-bar ~ .navbar { top: 38px; }
 
 .nav-container {
     width: 100%;
@@ -557,7 +561,7 @@ body.search-open .nav-container,
     flex-shrink: 0;
 }
 
-/* Mobile: hamburger | logo | wishlist | cart; search bar below (no gap with promo) */
+/* Mobile: header sticks flush to top (no gap) */
 @media (max-width: 768px) {
     .promo-bar {
         height: 36px;
@@ -567,13 +571,13 @@ body.search-open .nav-container,
     .promo-bar-messages { min-height: 36px; }
     .promo-bar-text, .promo-bar-message { font-size: 0.75rem; }
     .navbar {
-        top: 36px;
+        top: 0;
         height: 56px;
         padding: 0 12px;
         margin: 0;
         border-top: none;
     }
-    body:not(.page-home) .navbar { top: 36px; }
+    body:not(.page-home) .navbar { top: 0; }
     .nav-container { gap: 0.5rem; padding: 0 8px; }
     .nav-mobile-left {
         display: flex;
@@ -603,11 +607,11 @@ body.search-open .nav-container,
     .nav-logo-wrap .logo-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .nav-menu-drawer {
         position: fixed;
-        top: 92px;
+        top: 56px;
         left: -100%;
         width: 100%;
         max-width: 100vw;
-        height: calc(100vh - 92px);
+        height: calc(100vh - 56px);
         background: #fff;
         z-index: 998;
         overflow-y: auto;
@@ -705,7 +709,7 @@ body.search-open .nav-container,
         color: #1a1a1a;
         cursor: pointer;
     }
-    body:not(.page-home) .mobile-search-bar { top: 92px; }
+    body:not(.page-home) .mobile-search-bar { top: 56px; }
 }
 
 /* User Info Display */
@@ -1345,16 +1349,62 @@ body.search-open .nav-container,
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Hero Section */
+/* Hero Section – background matches bag image backgrounds (no visible border) */
 .hero {
-    min-height: 70vh;
+    min-height: 50vh;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    padding: 160px 20px 80px;
+    padding: 120px 20px 2rem;
     overflow: hidden;
-    background: var(--white);
+    background: #fafafa;
+}
+/* Home: hero directly above banner carousel – minimal gap */
+.hero + .valentine-banner {
+    margin-top: 0;
+}
+
+/* Wallets page: compact hero so banner sits close to "Stylish Wallets" */
+.hero--wallets {
+    min-height: 0;
+    padding: 120px 20px 1.5rem;
+}
+.hero--wallets + .taper-banner {
+    margin-top: 0;
+}
+
+/* Fragrances page: compact hero, wallpaper background, less space above banner */
+.hero--fragrances {
+    min-height: 0;
+    padding: 88px 20px 0.25rem;
+    background-color: #faf5f8;
+    background-image: url('images/fragrances/beija%20flor%20elasti-cream%201.jpg'), url('images/fragrances/sol%20de%20janeiro%20bum%20bum%20jet%20set%201.jpg');
+    background-size: 50% 100%, 50% 100%;
+    background-position: left center, right center;
+    background-repeat: no-repeat, no-repeat;
+}
+.hero--fragrances::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(250,245,248,0.9) 100%);
+    z-index: 0;
+    pointer-events: none;
+}
+.hero--fragrances .hero-content {
+    z-index: 1;
+}
+.hero--fragrances .hero-title {
+    color: var(--text-dark);
+    text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+}
+.hero--fragrances .hero-subtitle {
+    color: var(--text-dark);
+    text-shadow: 0 1px 1px rgba(255,255,255,0.8);
+}
+.hero--fragrances + .taper-banner {
+    margin-top: 0;
 }
 
 /* Hero Carousel */
@@ -1365,6 +1415,7 @@ body.search-open .nav-container,
     width: 100%;
     height: 100%;
     z-index: 0;
+    background: #fafafa;
 }
 
 .hero-slide {
@@ -1373,7 +1424,7 @@ body.search-open .nav-container,
     left: 0;
     width: 100%;
     height: 100%;
-    background-size: cover;
+    background-size: 85%;
     background-position: center;
     background-repeat: no-repeat;
     opacity: 0;
@@ -1390,7 +1441,7 @@ body.search-open .nav-container,
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(250, 250, 250, 0.5);
     z-index: 1;
 }
 
@@ -1512,16 +1563,135 @@ body.search-open .nav-container,
     overflow: hidden;
 }
 
-.valentine-banner:not(.valentine-banner--video) {
-    background: linear-gradient(180deg, #8b1538 0%, #6b0f2a 50%, #5a0c24 100%);
+/* Hero banner carousel (multiple banners from images/banner) */
+.valentine-banner--carousel .valentine-banner-carousel {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+    overflow: hidden;
+}
+.valentine-banner--carousel .valentine-banner-slides {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+}
+.valentine-banner--carousel .valentine-banner-slide {
+    position: absolute;
+    inset: 0;
+    min-height: 320px;
+    opacity: 0;
+    visibility: hidden;
+    transition: none;
+}
+.valentine-banner--carousel .valentine-banner-slide.active {
+    position: relative;
+    min-height: 320px;
+    opacity: 1;
+    visibility: visible;
+    z-index: 1;
+}
+.valentine-banner--carousel .valentine-banner-slide .valentine-banner-video-wrap,
+.valentine-banner--carousel .valentine-banner-slide .valentine-banner-image-wrap {
+    position: absolute;
+    inset: 0;
+    min-height: 320px;
+}
+.valentine-banner--carousel .valentine-banner-slide .valentine-banner-video {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    object-fit: cover;
+}
+.valentine-banner--carousel .valentine-banner-dots {
+    display: none;
+}
+.valentine-banner--carousel .valentine-banner-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.8);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+.valentine-banner--carousel .valentine-banner-dot:hover {
+    background: rgba(255,255,255,0.4);
+}
+.valentine-banner--carousel .valentine-banner-dot.active {
+    background: rgba(255,255,255,0.95);
+    transform: scale(1.15);
 }
 
-/* Video background layer */
-.valentine-banner-video-wrap {
+/* Mobile: show full banner (no cropping) so "Shop now" and all content are visible on phone */
+@media (max-width: 768px) {
+    .valentine-banner--carousel .valentine-banner-carousel,
+    .valentine-banner--carousel .valentine-banner-slides {
+        min-height: 56vw;
+        max-height: 85vh;
+    }
+    .valentine-banner--carousel .valentine-banner-slide,
+    .valentine-banner--carousel .valentine-banner-slide.active {
+        min-height: 56vw;
+        max-height: 85vh;
+    }
+    .valentine-banner--carousel .valentine-banner-slide .valentine-banner-video-wrap,
+    .valentine-banner--carousel .valentine-banner-slide .valentine-banner-image-wrap {
+        min-height: 56vw;
+        max-height: 85vh;
+    }
+    .valentine-banner--carousel .valentine-banner-slide .valentine-banner-video {
+        object-fit: contain;
+        object-position: center;
+        min-height: 56vw;
+        max-height: 85vh;
+    }
+    .valentine-banner--carousel .valentine-banner-slide .valentine-banner-image-wrap {
+        background-size: contain;
+        background-position: center top;
+        background-repeat: no-repeat;
+    }
+}
+@media (max-width: 480px) {
+    .valentine-banner--carousel .valentine-banner-carousel,
+    .valentine-banner--carousel .valentine-banner-slides,
+    .valentine-banner--carousel .valentine-banner-slide,
+    .valentine-banner--carousel .valentine-banner-slide.active,
+    .valentine-banner--carousel .valentine-banner-slide .valentine-banner-video-wrap,
+    .valentine-banner--carousel .valentine-banner-slide .valentine-banner-image-wrap {
+        min-height: 52vw;
+        max-height: 80vh;
+    }
+    .valentine-banner--carousel .valentine-banner-slide .valentine-banner-video {
+        min-height: 52vw;
+        max-height: 80vh;
+    }
+}
+
+.valentine-banner:not(.valentine-banner--video):not(.valentine-banner--carousel) {
+    background: linear-gradient(180deg, #8b1538 0%, #6b0f2a 50%, #5a0c24 100%);
+}
+/* Carousel: no red background so banner images/videos show as-is */
+.valentine-banner--carousel {
+    background: transparent;
+}
+.valentine-banner--carousel .valentine-banner-video-overlay {
+    background: none;
+}
+
+/* Video or image background layer */
+.valentine-banner-video-wrap,
+.valentine-banner-image-wrap {
     position: absolute;
     inset: 0;
     z-index: 0;
     min-height: 100%;
+}
+
+.valentine-banner-image-wrap {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .valentine-banner-video {
@@ -1538,7 +1708,7 @@ body.search-open .nav-container,
 .valentine-banner-video-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(139, 21, 56, 0.78) 0%, rgba(107, 15, 42, 0.85) 50%, rgba(90, 12, 36, 0.9) 100%);
+    background: linear-gradient(180deg, rgba(139, 21, 56, 0.4) 0%, rgba(107, 15, 42, 0.5) 50%, rgba(90, 12, 36, 0.55) 100%);
     z-index: 1;
 }
 
@@ -1796,6 +1966,21 @@ body.search-open .nav-container,
         min-height: 280px;
         padding: 2rem 1rem;
     }
+    /* Video-only home banner: fit mobile with aspect ratio, no padding */
+    .valentine-banner.valentine-banner--video {
+        padding: 0;
+        min-height: 180px;
+        aspect-ratio: 16 / 9;
+        max-height: 45vh;
+    }
+    .valentine-banner.valentine-banner--video .valentine-banner-video-wrap {
+        min-height: 100%;
+    }
+    .valentine-banner.valentine-banner--video .valentine-banner-video {
+        min-height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
     .valentine-banner-inner {
         flex-direction: column;
         text-align: center;
@@ -1829,10 +2014,20 @@ body.search-open .nav-container,
     }
 }
 
+@media (max-width: 480px) {
+    .valentine-banner.valentine-banner--video {
+        max-height: 38vh;
+        aspect-ratio: 2 / 1;
+    }
+}
+
 /* Shop by Brand Section – single row left to right: Chanel, Hermes, LV, Jewelry, Watches, Gucci */
 .shop-by-brand-section {
-    padding: 64px 24px 72px;
+    padding: 2rem 24px 72px;
     background: #fafafa;
+}
+.valentine-banner--carousel + .shop-by-brand-section {
+    padding-top: 2rem;
 }
 
 .shop-by-brand-section .section-title {
@@ -2372,6 +2567,10 @@ body.search-open .nav-container,
     padding: 80px 20px;
     background: var(--white);
 }
+/* Fragrances page: minimal space between taper banner and "Our Fragrance Collection" */
+.products-section--fragrances {
+    padding-top: 0.5rem;
+}
 
 .section-title {
     text-align: center;
@@ -2399,6 +2598,26 @@ body.search-open .nav-container,
     overflow: hidden;
     margin: 0;
     padding: 0;
+}
+
+/* Video background for taper banner (e.g. wallets page) */
+.taper-banner--video .taper-banner__video-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+.taper-banner--video .taper-banner__video {
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+}
+.taper-banner--video .taper-banner__inner.taper-banner__inner--no-bg {
+    background: none;
+    position: relative;
+    z-index: 1;
 }
 
 .taper-banner__inner {
@@ -2468,6 +2687,128 @@ body.search-open .nav-container,
 }
 .taper-banner--lipcare .taper-banner__content {
     animation: taperContentSlideUp 1s ease-out 0.2s both;
+}
+
+/* ========== Lip Care "Pamper Your Lips" promo banner ========== */
+.lipcare-promo-banner {
+    width: 100%;
+    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 50%, #f4a0c0 100%);
+    position: relative;
+    overflow: hidden;
+}
+.lipcare-promo-banner--image {
+    background: none;
+    padding: 0;
+    display: block;
+}
+.lipcare-promo-banner--image::before,
+.lipcare-promo-banner--image::after {
+    display: none;
+}
+.lipcare-promo-banner__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+    vertical-align: middle;
+}
+.lipcare-promo-banner::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    width: 120px;
+    height: 120px;
+    border: 2px solid rgba(142, 69, 133, 0.35);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.lipcare-promo-banner::after {
+    content: '';
+    position: absolute;
+    bottom: 25%;
+    right: 12%;
+    width: 60px;
+    height: 60px;
+    border: 2px solid rgba(142, 69, 133, 0.25);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.lipcare-promo-banner__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 0;
+    position: relative;
+    z-index: 1;
+}
+.lipcare-promo-banner__content {
+    padding-bottom: 1.25rem;
+}
+.lipcare-promo-banner__headline {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    color: #424242;
+    margin: 0 0 0.1em 0;
+    line-height: 1.1;
+}
+.lipcare-promo-banner__title {
+    font-size: clamp(1.75rem, 5vw, 2.75rem);
+    font-weight: 700;
+    color: #424242;
+    margin: 0 0 0.35em 0;
+    letter-spacing: 0.02em;
+}
+.lipcare-promo-banner__tagline {
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
+    font-weight: 400;
+    color: #757575;
+    letter-spacing: 0.2em;
+    margin: 0;
+}
+.lipcare-promo-banner__offer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.6);
+    border-top: 1px solid rgba(142, 69, 133, 0.2);
+    padding: 0.85rem 1.25rem;
+    gap: 1rem;
+}
+.lipcare-promo-banner__offer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+.lipcare-promo-banner__offer-label {
+    font-size: 0.75rem;
+    color: #616161;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.lipcare-promo-banner__offer-discount {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #c2185b;
+}
+.lipcare-promo-banner__offer-right {
+    text-align: right;
+}
+.lipcare-promo-banner__offer-only {
+    display: block;
+    font-size: 0.7rem;
+    color: #757575;
+    letter-spacing: 0.1em;
+}
+.lipcare-promo-banner__offer-price {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #424242;
+}
+@media (max-width: 768px) {
+    .lipcare-promo-banner__inner { padding: 1.75rem 1rem 0; }
+    .lipcare-promo-banner__offer { flex-direction: column; align-items: flex-start; padding: 0.75rem 1rem; }
+    .lipcare-promo-banner__offer-right { text-align: left; }
 }
 
 .taper-banner__content {
@@ -2587,6 +2928,32 @@ body.search-open .nav-container,
     .taper-banner--accessories .taper-banner__inner { clip-path: polygon(0 0, 100% 5%, 100% 95%, 0 100%); -webkit-clip-path: polygon(0 0, 100% 5%, 100% 95%, 0 100%); }
     .taper-banner--wallets .taper-banner__inner { clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 95%); -webkit-clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 95%); }
     .taper-banner--lipcare .taper-banner__inner { clip-path: polygon(0 3%, 100% 8%, 100% 92%, 0 97%); -webkit-clip-path: polygon(0 3%, 100% 8%, 100% 92%, 0 97%); }
+    /* Video-only wallets banner: full width, tall enough to be fully visible on phone */
+    .taper-banner.taper-banner--video {
+        min-height: 280px;
+        aspect-ratio: 4 / 3;
+        max-height: none;
+        width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+    .taper-banner.taper-banner--video .taper-banner__video-wrap {
+        inset: 0;
+    }
+    .taper-banner.taper-banner--video .taper-banner__video {
+        min-height: 100%;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .taper-banner.taper-banner--video {
+        min-height: 260px;
+        aspect-ratio: 3 / 4;
+    }
 }
 
 .products-grid {
@@ -2605,7 +2972,7 @@ body.search-open .nav-container,
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    border: 1px solid var(--border-color);
+    border: none;
 }
 
 .product-card::before {
@@ -2649,7 +3016,7 @@ body.search-open .nav-container,
 .product-image {
     width: 100%;
     height: 350px;
-    background: var(--light-gray);
+    background: #fff;
     border-radius: 0;
     margin-bottom: 0;
     display: flex;
@@ -2664,14 +3031,52 @@ body.search-open .nav-container,
 .product-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
 }
 
-.product-image img {
+.product-image img:not(.product-img-hover) {
+    border-radius: 0;
+    transition: opacity 0.35s ease;
+}
+/* On product hover: hide main image so alternate image(s) show clearly */
+.product-card:hover .product-image img:not(.product-img-hover) {
+    opacity: 0;
+}
+/* Wallet page: no hover effect – keep main image visible and no scale on hover */
+.product-card--no-hover:hover .product-image img:not(.product-img-hover) {
+    opacity: 1;
+}
+.product-card--no-hover:hover .product-image img {
+    transform: none;
+}
+
+/* Hover image overlay: second/third picture (e.g. "miu miu 2.jpg", "miu miu 3.jpg") shows on product hover */
+.product-image .product-img-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: 15px;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    z-index: 1;
+}
+.product-card:hover .product-image .product-img-hover {
+    opacity: 1;
+}
+/* When multiple hover images (2, 3, 4): stagger so later images appear on top */
+.product-card:hover .product-image .product-img-hover:nth-of-type(3) {
+    transition-delay: 0.4s;
+    z-index: 2;
+}
+.product-card:hover .product-image .product-img-hover:nth-of-type(4) {
+    transition-delay: 0.7s;
+    z-index: 3;
 }
 
 .category-link {
@@ -2979,24 +3384,44 @@ body.search-open .nav-container,
 }
 
 .quantity-btn {
-    background: var(--primary-pink);
-    color: white;
-    border: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 5px;
+    background: #1a1a1a;
+    color: #fff;
+    border: 1px solid #333;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+}
+.quantity-btn:hover {
+    background: #333;
+    color: #fff;
 }
 
 .remove-item {
-    background: var(--coral);
-    color: white;
-    border: none;
-    padding: 0.5rem;
-    border-radius: 5px;
+    margin-left: auto;
+    background: #b71c1c;
+    color: #fff;
+    border: 1px solid #8e0000;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 0.8rem;
+    font-weight: 600;
+    transition: background 0.2s, border-color 0.2s;
+}
+.remove-item:hover {
+    background: #c62828;
+    border-color: #b71c1c;
+}
+.remove-item:active {
+    background: #8e0000;
 }
 
 .empty-cart {
@@ -3042,6 +3467,12 @@ body.search-open .nav-container,
     transition: background 0.2s, color 0.2s;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+}
+a.checkout-btn {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
 }
 
 .checkout-btn:hover {
@@ -3516,6 +3947,15 @@ body.search-open .nav-container,
     border-radius: 15px;
     margin: 1.5rem 0;
     border: 2px solid #2196F3;
+}
+
+/* Manual Payment Section (M-Pesa transaction ID + receipt email) */
+.manual-payment-section {
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin: 1.5rem 0;
+    border: 2px solid #FF9800;
 }
 
 /* M-Pesa Phone Prompt Animation */
@@ -5199,20 +5639,24 @@ body.search-open .nav-container,
         stroke-width: 1.5;
     }
 
-    /* Sub-pages (with promo bar): drawer and search bar below full header (92px) */
+    /* Sub-pages: drawer and search bar below nav (header flush to top) */
     body:not(.page-home) .mobile-search-bar {
-        top: 92px;
+        top: 56px;
     }
 
     body:not(.page-home) .nav-menu-drawer {
-        top: 92px;
-        height: calc(100vh - 92px);
+        top: 56px;
+        height: calc(100vh - 56px);
         z-index: 998;
         overflow-y: auto;
     }
 
     .hero {
-        padding-top: 148px;
+        padding-top: 80px;
+    }
+    .hero--wallets {
+        padding-top: 80px;
+        padding-bottom: 1rem;
     }
 
     .nav-btn-logout {
@@ -7455,8 +7899,9 @@ body.search-open .nav-container,
     }
 }
 
-/* Flash Sale Banner */
+/* Flash Sale Banner – hidden on site load (removed per request) */
 .flash-sale-banner {
+    display: none !important;
     position: fixed;
     top: 0;
     left: 0;
@@ -8045,98 +8490,140 @@ body.search-open .nav-container,
     }
 }
 
-/* Order History Styles */
+/* Order History Styles – visible and well styled on every page after login */
+#orderHistoryContent {
+    display: block;
+}
+
+#orderHistoryList.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+.account-history-empty {
+    padding: 2.5rem 1.5rem !important;
+    text-align: center;
+    color: #555;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(236, 72, 153, 0.2);
+}
+
+.account-history-empty a {
+    color: var(--primary-pink);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.account-history-empty a:hover {
+    text-decoration: underline;
+}
+
 .orders-list {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.75rem;
 }
 
+.order-history-card,
 .order-card {
     background: white;
-    border-radius: 15px;
-    padding: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 16px;
+    padding: 1.75rem 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+.order-history-card:hover,
 .order-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
+.order-history-header,
 .order-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
     border-bottom: 2px solid #f0f0f0;
     flex-wrap: wrap;
     gap: 1rem;
 }
 
 .order-info h3 {
-    color: var(--primary-pink);
-    margin-bottom: 0.5rem;
-    font-size: 1.5rem;
+    color: var(--primary-pink, #ec4899);
+    margin-bottom: 0.35rem;
+    font-size: 1.35rem;
+    font-weight: 700;
 }
 
 .order-date, .order-customer, .order-phone, .order-address, .order-payment {
-    margin: 0.5rem 0;
-    color: #666;
-    font-size: 0.95rem;
+    margin: 0.35rem 0;
+    color: #555;
+    font-size: 0.925rem;
+    line-height: 1.45;
 }
 
 .order-status {
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     white-space: nowrap;
 }
 
 .status-pending {
-    background: #FFF3CD;
-    color: #856404;
+    background: #fef3c7;
+    color: #92400e;
 }
 
 .status-processing {
-    background: #D1ECF1;
-    color: #0C5460;
+    background: #cffafe;
+    color: #0e7490;
 }
 
 .status-delivered {
-    background: #D4EDDA;
-    color: #155724;
+    background: #d1fae5;
+    color: #065f46;
 }
 
 .status-cancelled {
-    background: #F8D7DA;
-    color: #721C24;
+    background: #fee2e2;
+    color: #991b1b;
 }
 
+.order-history-items,
 .order-items {
-    margin: 1.5rem 0;
+    margin: 1.25rem 0;
 }
 
+.order-history-items h4,
 .order-items h4 {
-    margin-bottom: 1rem;
-    color: var(--dark);
+    margin-bottom: 0.75rem;
+    color: #1a1a1a;
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
 .order-item-row {
     display: flex;
     justify-content: space-between;
-    padding: 0.75rem 0;
+    padding: 0.6rem 0;
     border-bottom: 1px solid #f0f0f0;
     align-items: center;
+    font-size: 0.95rem;
 }
 
 .order-item-row.total-row {
     border-bottom: none;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     margin-top: 0.5rem;
+    padding-top: 0.75rem;
 }
 
 .order-item-row .paid {
@@ -8147,10 +8634,89 @@ body.search-open .nav-container,
     color: #dc3545;
 }
 
+/* Order history – Google Maps block */
+.order-history-map-wrap {
+    margin: 1.5rem 0;
+    padding: 1rem 0;
+    border-top: 1px solid #f0f0f0;
+}
+
+.order-history-map-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.order-history-map-link {
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.order-history-map-link:hover {
+    text-decoration: underline;
+}
+
+.order-history-map-iframe {
+    width: 100%;
+    height: 220px;
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.order-history-actions,
 .order-actions {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.order-track-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    background: linear-gradient(135deg, var(--primary-pink, #ec4899), #c77dff);
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.order-track-btn:hover {
+    opacity: 0.95;
+    transform: scale(1.02);
+    color: #fff;
+}
+
+/* Order history page – wider content, visible header */
+.order-history-page .order-history-inner {
+    max-width: 680px;
+}
+
+.order-history-header-block {
+    margin-bottom: 1.5rem;
+}
+
+.order-history-page .account-page-title {
+    font-size: 1.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.order-history-page .account-page-subtitle {
+    margin-bottom: 1.75rem;
+    font-size: 1rem;
+    color: #555;
 }
 
 /* Map Picker Styles */
@@ -8348,6 +8914,9 @@ body.search-open .nav-container,
 }
 .product-card .product-image img {
     transition: transform 0.35s ease;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 0 !important;
 }
 .product-card:hover .product-image img {
     transform: scale(1.03);
@@ -8536,6 +9105,27 @@ body.search-open .nav-container,
     background: transparent;
 }
 
+/* Image banner from folder (e.g. wallets-banner.jpg) */
+.products-grid .editorial-banner--image,
+.taupe-editorial-section .editorial-banner--image {
+    padding: 0;
+    min-height: 0;
+    background: transparent;
+}
+.editorial-banner--image .editorial-banner-image-link {
+    display: block;
+    width: 100%;
+    line-height: 0;
+}
+.editorial-banner--image .editorial-banner-image-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+    vertical-align: middle;
+}
+
 .editorial-banner-video-wrap {
     position: absolute;
     inset: 0;
@@ -8713,6 +9303,20 @@ body.search-open .nav-container,
     .products-grid .editorial-banner {
         min-height: 280px;
         padding: 2rem 1rem;
+        overflow: hidden;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .products-grid .editorial-banner .editorial-banner-inner {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 1rem;
+        box-sizing: border-box;
+    }
+    .products-grid .editorial-banner .editorial-banner-content {
+        max-width: 100%;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
     }
     /* Keep imagery visible on phone (Lip Care, Wallets, Accessories): images on top row */
     .products-grid .editorial-banner:not(.editorial-banner--video) .editorial-banner-inner {
@@ -8753,14 +9357,29 @@ body.search-open .nav-container,
 
 /* ========== Mobile: luxury product cards & editorial banners ========== */
 @media (max-width: 768px) {
+    .products-section {
+        overflow-x: hidden;
+        width: 100%;
+    }
     .products-section .container {
         padding-left: 1rem;
         padding-right: 1rem;
+        max-width: 100%;
     }
     .products-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
         margin-top: 1.5rem;
+        max-width: 100%;
+    }
+    .products-grid .editorial-banner {
+        overflow: hidden;
+    }
+    .products-grid .editorial-banner .editorial-banner-inner {
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        box-sizing: border-box;
     }
     .product-card {
         padding: 0 !important;
@@ -8775,6 +9394,8 @@ body.search-open .nav-container,
     .product-card .product-image img {
         height: 100% !important;
         min-height: 180px;
+        object-fit: contain !important;
+        object-position: center !important;
     }
     .product-card-body {
         padding: 0.75rem 0 0 !important;
@@ -8835,14 +9456,22 @@ body.search-open .nav-container,
 }
 
 @media (max-width: 480px) {
+    .products-section {
+        overflow-x: hidden;
+        width: 100%;
+    }
     .products-grid {
         gap: 0.75rem;
         padding-left: 0.5rem;
         padding-right: 0.5rem;
+        max-width: 100%;
+        overflow-x: hidden;
     }
     .products-section .container {
         padding-left: 0.75rem;
         padding-right: 0.75rem;
+        max-width: 100%;
+        overflow-x: hidden;
     }
     .product-card .product-image,
     .product-card .product-image img {
@@ -8867,6 +9496,10 @@ body.search-open .nav-container,
     .products-grid .editorial-banner {
         min-height: 240px;
         padding: 1.5rem 1rem;
+        overflow: hidden;
+    }
+    .products-grid .editorial-banner .editorial-banner-inner {
+        padding: 0 0.75rem;
     }
     .editorial-banner-title {
         font-size: 1.25rem;
@@ -8877,6 +9510,13 @@ body.search-open .nav-container,
     .editorial-banner-cta {
         padding: 0.5rem 1rem;
         font-size: 0.8rem;
+    }
+    /* Keep discount/circle badges inside card on small screens */
+    .banner-product-badge,
+    .product-badge {
+        max-width: 80%;
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
     }
 }
 
@@ -9038,8 +9678,8 @@ body.search-open .nav-container,
 /* ========== SIGNUP PAGE (Fashionphile-style two-column) ========== */
 .signup-page-wrap {
     display: flex;
-    min-height: calc(100vh - 106px);
-    margin-top: 106px;
+    min-height: calc(100vh - 68px);
+    margin-top: 68px;
     background: #fff;
 }
 .signup-form-col {
@@ -9297,7 +9937,7 @@ body.search-open .nav-container,
 /* ========== MY ACCOUNT PAGE (full page, Fashionphile-style) ========== */
 .page-account .account-page {
     min-height: calc(100vh - 140px);
-    margin-top: 106px;
+    margin-top: 68px;
     padding: 2.5rem 1.5rem 4rem;
     background: #fff;
 }

@@ -1,53 +1,33 @@
-// Product Data - Lip Care
+// Hover/asset helpers when script.js not loaded (for hover effect on lip products)
+if (typeof window !== 'undefined' && typeof window.getHoverImagePaths !== 'function') {
+    window.getHoverImagePaths = function(imagePath) {
+        if (!imagePath || typeof imagePath !== 'string' || imagePath.indexOf('http') === 0) return [];
+        var match = imagePath.match(/^(.+)\s+(\d+)(\.[a-zA-Z0-9]+)$/);
+        if (match) {
+            var base = match[1], num = parseInt(match[2], 10), ext = match[3], out = [];
+            for (var i = num + 1; i <= num + 3; i++) out.push(base + ' ' + i + ext);
+            return out;
+        }
+        var matchNum = imagePath.match(/^(.+\/)(\d+)(\.[a-zA-Z0-9]+)$/);
+        if (matchNum) {
+            var basePath = matchNum[1], num = parseInt(matchNum[2], 10), ext = matchNum[3], out = [];
+            for (var i = num + 1; i <= num + 3; i++) out.push(basePath + i + ext);
+            return out;
+        }
+        return [];
+    };
+}
+if (typeof window !== 'undefined' && typeof window.assetUrl !== 'function') {
+    window.assetUrl = function(rel) { return rel || ''; };
+}
+
+// Product Data - Lip Products (from images/lip products/; "name 1.jpg" = main, 2/3/4 = hover)
 const lipCareProducts = [
-    {
-        id: 301,
-        name: "Hydrating Lip Balm Set",
-        description: "Nourishing lip balms with shea butter and vitamin E. Keeps lips soft and protected.",
-        price: 850,
-        image: "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?w=400&h=400&fit=crop",
-        category: "lip-balm"
-    },
-    {
-        id: 302,
-        name: "Sugar Lip Scrub",
-        description: "Gentle exfoliating lip scrub with natural sugar and jojoba oil. Reveals smoother lips.",
-        price: 650,
-        image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop",
-        category: "lip-scrub"
-    },
-    {
-        id: 303,
-        name: "Tinted Lip Oil",
-        description: "Lightweight lip oil with a hint of color and shine. Non-sticky, long-lasting moisture.",
-        price: 1200,
-        image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&h=400&fit=crop",
-        category: "lip-oil"
-    },
-    {
-        id: 304,
-        name: "Overnight Lip Mask",
-        description: "Intensive overnight lip treatment. Wake up to visibly plumper, hydrated lips.",
-        price: 950,
-        image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=400&h=400&fit=crop",
-        category: "lip-mask"
-    },
-    {
-        id: 305,
-        name: "SPF Lip Balm",
-        description: "Broad-spectrum SPF 30 lip protection. Essential for sun-safe, healthy lips.",
-        price: 720,
-        image: "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?w=400&h=400&fit=crop",
-        category: "lip-balm"
-    },
-    {
-        id: 306,
-        name: "Lip Care Duo",
-        description: "Scrub + balm in one. Exfoliate then moisturize for a complete lip routine.",
-        price: 1100,
-        image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop",
-        category: "lip-set"
-    }
+    { id: 301, name: "Dior Lip Balm Set", description: "Luxury Dior lip balm set in signature packaging. Nourishing formulas for soft, protected lips.", price: 3200, image: "images/lip products/dior lipbalm set 1.jpg", category: "lip-balm" },
+    { id: 302, name: "E.l.f. Glow Reviving Melting Lip Balm", description: "Reviving melting lip balm with a subtle glow. Available in multiple shades.", price: 850, image: "images/lip products/e.l.f glow reviving melting lip balm 1.jpg", category: "lip-balm" },
+    { id: 303, name: "Laneige Lip Balm", description: "Laneige lip balms in a multi-pack. Hydrating formulas in a range of colours.", price: 1200, image: "images/lip products/laneige balm 1.jpg", category: "lip-balm" },
+    { id: 304, name: "Summer Fridays Lip Balm Set", description: "Summer Fridays lip balm set. A curated selection for everyday lip care.", price: 2800, image: "images/lip products/summer fridays lip balm set 1.jpg", category: "lip-set" },
+    { id: 305, name: "Summer Fridays Lip Butter Balm", description: "Cult-favourite lip butter balm. Buttery texture and lasting moisture in multiple shades.", price: 950, image: "images/lip products/summer fridays lip butter balm 1.jpg", category: "lip-balm" }
 ];
 
 // Cart Management (shared across all pages) – use window.cart only to avoid duplicate declaration with script.js
@@ -55,12 +35,10 @@ if (typeof window.cart === 'undefined') {
     window.cart = [];
 }
 
-// Taupe editorial banners – lip care product images in animated layout
+// No editorial banner on lip care page (banner removed per request)
 var lipBannerLeft = lipCareProducts.slice(0, 2).map(function(p) { return p.image; });
 var lipBannerRight = lipCareProducts.slice(2, 4).map(function(p) { return p.image; });
-const editorialBanners = [
-    { headline: 'Meet the', title: 'Lip Care Collection', body: 'Healthy lips are an essential part of your look. Balms, scrubs, oils and masks.', ctaText: 'Learn More', ctaUrl: 'lip-care.html', leftImgs: lipBannerLeft, rightImgs: lipBannerRight }
-];
+const editorialBannersLipCare = [];
 function createEditorialBanner(config) {
     const section = document.createElement('section');
     section.className = 'editorial-banner editorial-banner--animated-imagery';
@@ -152,17 +130,15 @@ function renderProducts(filteredProducts) {
         productCard.className = 'product-card';
         productCard.onclick = function() { window.location.href = 'product-detail.html?id=' + product.id + '&category=lip-care'; };
         productCard.style.cursor = 'pointer';
-        productCard.innerHTML = `
-            <div class="product-image" style="background: #fff;">
-                <img src="${(typeof assetUrl==='function'?assetUrl:function(p){return p||'';})(product.image)}" alt="${product.name}" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='💄';">
-            </div>
-            <h3 class="product-name">${product.name}</h3>
-            <p class="product-description">${product.description}</p>
-            <div class="product-price">KSH ${product.price.toLocaleString()}</div>
-        `;
+        var hoverPaths = (typeof getHoverImagePaths === 'function' && getHoverImagePaths(product.image)) || [];
+        var firstHoverSrc = hoverPaths[0] ? (typeof assetUrl === 'function' ? assetUrl(hoverPaths[0]) : hoverPaths[0]) : '';
+        var hoverHtml = hoverPaths.map(function(hoverPath) { return '<img class="product-img-hover" src="' + (typeof assetUrl === 'function' ? assetUrl(hoverPath) : hoverPath) + '" alt="' + (product.name || '').replace(/"/g, '&quot;') + '" onerror="this.style.display=\'none\'">'; }).join('');
+        var mainSrc = (typeof assetUrl === 'function' ? assetUrl(product.image) : product.image || '');
+        var fallbackAttr = firstHoverSrc ? ' data-fallback-src="' + firstHoverSrc.replace(/"/g, '&quot;') + '"' : '';
+        productCard.innerHTML = '<div class="product-image" style="background: #fff;"><img src="' + mainSrc + '" alt="' + (product.name || '').replace(/"/g, '&quot;') + '"' + fallbackAttr + ' onerror="if(this.dataset.fallbackSrc){this.onerror=null;this.src=this.dataset.fallbackSrc;}else{this.style.display=\'none\';}">' + hoverHtml + '</div><h3 class="product-name">' + (product.name || '') + '</h3><p class="product-description">' + (product.description || '') + '</p><div class="product-price">KSH ' + (product.price || 0).toLocaleString() + '</div><button type="button" class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(' + product.id + ');">Add to Cart</button>';
         productsGrid.appendChild(productCard);
-        if ((i + 1) % 2 === 0 && i + 1 < list.length && editorialBanners.length > 0) {
-            var config = editorialBanners[bannerIndex % editorialBanners.length];
+        if ((i + 1) % 2 === 0 && i + 1 < list.length && editorialBannersLipCare.length > 0) {
+            var config = editorialBannersLipCare[bannerIndex % editorialBannersLipCare.length];
             productsGrid.appendChild(createEditorialBanner(config));
             bannerIndex++;
         }
@@ -176,35 +152,29 @@ function getSharedCart() {
     return [];
 }
 
-function addToCart(productId) {
+// Add to Cart – use unified (script.js) when available so product-detail works for all categories
+function addToCartLipCare(productId) {
     const product = lipCareProducts.find(p => p.id === productId);
     if (!product) return;
-
     const allCartItems = getSharedCart();
     const existingItem = allCartItems.find(item => item.id === productId && item.category === product.category);
-
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
-        allCartItems.push({
-            ...product,
-            quantity: 1,
-            category: product.category || 'lip-care'
-        });
+        allCartItems.push({ ...product, quantity: 1, category: product.category || 'lip-care' });
     }
     window.cart = allCartItems;
     saveCartToStorage();
     updateCartCount();
-    if (typeof showNotification === 'function') {
-        showNotification(`${product.name} added to cart! ✨`);
-    } else {
-        alert(`${product.name} added to cart! ✨`);
-    }
-    if (document.getElementById('cartOverlay') && document.getElementById('cartOverlay').classList.contains('active')) {
+    if (typeof showNotification === 'function') showNotification(`${product.name} added to cart! ✨`);
+    else alert(`${product.name} added to cart! ✨`);
+    var cartOverlay = document.getElementById('cartOverlay');
+    if (cartOverlay && cartOverlay.classList.contains('active')) {
         renderCart();
         if (typeof renderYouMayAlsoLike === 'function') renderYouMayAlsoLike('cartYouMayAlsoLike');
     }
 }
+window.addToCart = (typeof window.addToCartUnified === 'function') ? window.addToCartUnified : addToCartLipCare;
 
 function removeFromCart(productId) {
     const allCartItems = getSharedCart().filter(item => item.id !== productId);
@@ -322,7 +292,7 @@ function renderYouMayAlsoLike(containerId) {
         const price = typeof p.price === 'number' ? p.price : parseInt(p.price, 10) || 0;
         const count = wishlistCounts[i % wishlistCounts.length];
         const href = 'product-detail.html?id=' + (p.id || '') + '&category=lip-care';
-        const img = (p.image || '').indexOf('http') === 0 ? p.image : (p.image || 'images/bags/IMG_1328.jpg');
+        const img = (p.image || '').indexOf('http') === 0 ? p.image : (p.image || 'images/bags/img_1328.jpg');
         const name = (p.name || 'Product').substring(0, 45);
         const escName = name.replace(/"/g, '&quot;');
         if (isCartYmal) {
@@ -367,29 +337,19 @@ function scrollYouMayAlsoLike(containerId, direction) {
     container.scrollBy({ left: direction * step, behavior: 'smooth' });
 }
 
+// Checkout – same as bags: go to full-page checkout.html
 function checkout() {
-    const allCartItems = getSharedCart();
-    if (allCartItems.length === 0) {
+    var items = typeof getSharedCart === 'function' ? getSharedCart() : (window.cart || []);
+    if (!items || items.length === 0) {
         alert('Your cart is empty! Add some items first. 💕');
         return;
     }
-    const orderModal = document.getElementById('orderModal');
-    const orderSummary = document.getElementById('orderSummary');
-    if (!orderModal || !orderSummary) return;
-
-    let summaryHTML = '';
-    let total = 0;
-    allCartItems.forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
-        summaryHTML += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;"><span>${item.name} x${item.quantity}</span><span>KSH ${itemTotal.toLocaleString()}</span></div>`;
-    });
-    summaryHTML += `<div style="display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 1rem; border-top: 2px solid white; font-weight: bold; font-size: 1.2rem;"><span>Total</span><span>KSH ${total.toLocaleString()}</span></div>`;
-    orderSummary.innerHTML = summaryHTML;
-
-    cartOverlay.classList.remove('active');
-    orderModal.classList.add('active');
-    if (typeof renderYouMayAlsoLike === 'function') renderYouMayAlsoLike('checkoutYouMayAlsoLike');
+    if (typeof saveCartToStorage === 'function') saveCartToStorage();
+    var path = typeof location !== 'undefined' && location.pathname ? location.pathname : '/';
+    var dir = path.replace(/\/[^/]*$/, '') || '/';
+    if (!dir.endsWith('/')) dir += '/';
+    var base = (typeof location !== 'undefined' && location.origin ? location.origin : '') + dir;
+    window.location.href = base + 'checkout.html';
 }
 
 function closeOrderModal() {
@@ -397,9 +357,9 @@ function closeOrderModal() {
     if (modal) modal.classList.remove('active');
 }
 
-const orderForm = document.getElementById('orderForm');
-if (orderForm) {
-    orderForm.addEventListener('submit', function(e) {
+var orderFormElLipCare = document.getElementById('orderForm');
+if (orderFormElLipCare) {
+    orderFormElLipCare.addEventListener('submit', function(e) {
         e.preventDefault();
         const formData = new FormData(e.target);
         const subtotal = getSharedCart().reduce((sum, item) => sum + item.price * item.quantity, 0);
