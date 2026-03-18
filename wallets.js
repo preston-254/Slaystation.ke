@@ -1,11 +1,11 @@
-// Product Data - Wallets (from images/wallet folder)
+// Product Data - Wallets (from images/wallet folder; hyphenated filenames for GitHub Pages)
 const walletProducts = [
-    { id: 101, name: "Coach Khaki Wallet", description: "Classic Coach wallet in khaki. Timeless design with multiple card slots.", price: 1500, image: "images/wallet/coach khaki wallet.jpg", category: "wallet" },
-    { id: 102, name: "Coach Wallet Blue", description: "Elegant blue Coach wallet. Premium finish and compact style.", price: 1500, image: "images/wallet/coach wallet blue.jpg", category: "wallet" },
-    { id: 103, name: "Coach Wallet Purple", description: "Sophisticated purple Coach wallet for everyday use.", price: 1500, image: "images/wallet/coach wallet purple .jpg", category: "wallet" },
+    { id: 101, name: "Coach Khaki Wallet", description: "Classic Coach wallet in khaki. Timeless design with multiple card slots.", price: 1500, image: "images/wallet/coach-khaki-wallet.jpg", category: "wallet" },
+    { id: 102, name: "Coach Wallet Blue", description: "Elegant blue Coach wallet. Premium finish and compact style.", price: 1500, image: "images/wallet/coach-wallet-blue.jpg", category: "wallet" },
+    { id: 103, name: "Coach Wallet Purple", description: "Sophisticated purple Coach wallet for everyday use.", price: 1500, image: "images/wallet/coach-wallet-purple-.jpg", category: "wallet" },
     { id: 104, name: "Designer Wallet", description: "Refined designer wallet with quality leather and multiple compartments.", price: 1500, image: "images/wallet/DSC09519.jpg", category: "wallet" },
-    { id: 105, name: "Victoria's Secret Wallet", description: "Victoria's Secret style wallet. Compact and stylish.", price: 1500, image: "images/wallet/victorias secret 1.jpg", category: "wallet" },
-    { id: 106, name: "Victoria's Secret Wallet 2", description: "Second style Victoria's Secret wallet. Premium and practical.", price: 1500, image: "images/wallet/victorias secret 2.jpg", category: "wallet" }
+    { id: 105, name: "Victoria's Secret Wallet", description: "Victoria's Secret style wallet. Compact and stylish.", price: 1500, image: "images/wallet/victorias-secret-1.jpg", category: "wallet" },
+    { id: 106, name: "Victoria's Secret Wallet 2", description: "Second style Victoria's Secret wallet. Premium and practical.", price: 1500, image: "images/wallet/victorias-secret-2.jpg", category: "wallet" }
 ];
 
 // Export walletProducts to window for global access
