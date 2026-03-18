@@ -21,13 +21,13 @@ if (typeof window !== 'undefined' && typeof window.assetUrl !== 'function') {
     window.assetUrl = function(rel) { return rel || ''; };
 }
 
-// Product Data - Lip Products (from images/lip products/; "name 1.jpg" = main, 2/3/4 = hover)
+// Product Data - Lip Products (from images/lip-products/; hyphenated filenames for GitHub Pages)
 const lipCareProducts = [
-    { id: 301, name: "Dior Lip Balm Set", description: "Luxury Dior lip balm set in signature packaging. Nourishing formulas for soft, protected lips.", price: 3200, image: "images/lip products/dior lipbalm set 1.jpg", category: "lip-balm" },
-    { id: 302, name: "E.l.f. Glow Reviving Melting Lip Balm", description: "Reviving melting lip balm with a subtle glow. Available in multiple shades.", price: 850, image: "images/lip products/e.l.f glow reviving melting lip balm 1.jpg", category: "lip-balm" },
-    { id: 303, name: "Laneige Lip Balm", description: "Laneige lip balms in a multi-pack. Hydrating formulas in a range of colours.", price: 1200, image: "images/lip products/laneige balm 1.jpg", category: "lip-balm" },
-    { id: 304, name: "Summer Fridays Lip Balm Set", description: "Summer Fridays lip balm set. A curated selection for everyday lip care.", price: 2800, image: "images/lip products/summer fridays lip balm set 1.jpg", category: "lip-set" },
-    { id: 305, name: "Summer Fridays Lip Butter Balm", description: "Cult-favourite lip butter balm. Buttery texture and lasting moisture in multiple shades.", price: 950, image: "images/lip products/summer fridays lip butter balm 1.jpg", category: "lip-balm" }
+    { id: 301, name: "Dior Lip Balm Set", description: "Luxury Dior lip balm set in signature packaging. Nourishing formulas for soft, protected lips.", price: 3200, image: "images/lip-products/dior-lipbalm-set-1.jpg", category: "lip-balm" },
+    { id: 302, name: "E.l.f. Glow Reviving Melting Lip Balm", description: "Reviving melting lip balm with a subtle glow. Available in multiple shades.", price: 850, image: "images/lip-products/e.l.f-glow-reviving-melting-lip-balm-1.jpg", category: "lip-balm" },
+    { id: 303, name: "Laneige Lip Balm", description: "Laneige lip balms in a multi-pack. Hydrating formulas in a range of colours.", price: 1200, image: "images/lip-products/laneige-balm-1.jpg", category: "lip-balm" },
+    { id: 304, name: "Summer Fridays Lip Balm Set", description: "Summer Fridays lip balm set. A curated selection for everyday lip care.", price: 2800, image: "images/lip-products/summer-fridays-lip-balm-set-1.jpg", category: "lip-set" },
+    { id: 305, name: "Summer Fridays Lip Butter Balm", description: "Cult-favourite lip butter balm. Buttery texture and lasting moisture in multiple shades.", price: 950, image: "images/lip-products/summer-fridays-lip-butter-balm-1.jpg", category: "lip-balm" }
 ];
 
 // Cart Management (shared across all pages) – use window.cart only to avoid duplicate declaration with script.js

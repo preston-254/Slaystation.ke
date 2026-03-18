@@ -23,22 +23,22 @@ function assetUrl(p) {
 if (typeof window !== 'undefined') { window.assetUrl = assetUrl; window.getBaseUrl = getBaseUrl; }
 
 // From main image path get alternate hover paths.
-// Supports: "images/bags/miu miu 1.jpg" -> "... 2.jpg", "... 3.jpg", "... 4.jpg"
-// and: "images/Fragrances/1.jpg" -> "images/Fragrances/2.jpg", "images/Fragrances/3.jpg", "images/Fragrances/4.jpg"
+// Supports: "images/bags/black-coach-1.jpg" -> "...-2.jpg", "...-3.jpg" (hyphenated filenames)
+// and: "images/bags/miu-miu-1.jpg" -> "...-2.jpg", "...-3.jpg", "...-4.jpg"
 function getHoverImagePaths(imagePath) {
     if (!imagePath || typeof imagePath !== 'string' || imagePath.indexOf('http') === 0) return [];
-    // Pattern: path ending with " name 1.jpg" (space + number + ext) – bags and others
-    var match = imagePath.match(/^(.+)\s+(\d+)(\.[a-zA-Z0-9]+)$/);
+    // Pattern: path ending with "-N.jpg" or "-N-.jpg" (hyphenated filenames for GitHub Pages)
+    var match = imagePath.match(/^(.+)-(\d+)(\-?\.[a-zA-Z0-9]+)$/);
     if (match) {
         var base = match[1];
         var num = parseInt(match[2], 10);
         var ext = match[3];
         var out = [];
-        out.push(base + ' ' + (num + 1) + ext);
-        out.push(base + ' ' + (num + 2) + ext);
+        out.push(base + '-' + (num + 1) + ext);
+        out.push(base + '-' + (num + 2) + ext);
         return out;
     }
-    // Pattern: path ending with "/1.jpg" (numeric filename only, e.g. fragrances 1, 2, 3...)
+    // Pattern: path ending with "/1.jpg" (numeric filename only)
     var matchNum = imagePath.match(/^(.+\/)(\d+)(\.[a-zA-Z0-9]+)$/);
     if (matchNum) {
         var basePath = matchNum[1];
@@ -51,26 +51,26 @@ function getHoverImagePaths(imagePath) {
     return [];
 }
 
-// Product Data - Bags (new quality pictures: name 1.jpg = main, 2/3/4 = hover)
+// Product Data - Bags (hyphenated filenames for GitHub Pages)
 const products = [
-    { id: 1, name: "Black Coach", description: "Classic black Coach bag, perfect for everyday elegance.", price: 3700, image: "images/bags/black coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 2, name: "Bossy Coach", description: "Bold Coach design that makes a statement.", price: 3700, image: "images/bags/bossy coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 3, name: "Brown Coach", description: "Timeless brown Coach bag with premium finish.", price: 3700, image: "images/bags/brown coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 4, name: "Chainy Brown Coach", description: "Chain-strap brown Coach for a chic look.", price: 3700, image: "images/bags/chainy brown coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 5, name: "Chainy Coach", description: "Coach bag with chain detail for extra style.", price: 3700, image: "images/bags/chainy coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 6, name: "Coach", description: "Iconic Coach bag in a versatile design.", price: 3700, image: "images/bags/coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 7, name: "Dark Coach", description: "Dark-toned Coach bag for a sophisticated look.", price: 3700, image: "images/bags/dark coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 8, name: "Flashy Coach", description: "Eye-catching Coach bag for those who love to stand out.", price: 3700, image: "images/bags/flashy coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 9, name: "Girly Coach", description: "Feminine Coach bag with a playful touch.", price: 3700, image: "images/bags/girly coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 10, name: "Grey Coach", description: "Elegant grey Coach bag for any outfit.", price: 3700, image: "images/bags/grey coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 11, name: "Malt Coach", description: "Malt-toned Coach bag with a warm finish.", price: 3700, image: "images/bags/malt coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 12, name: "Miu Miu", description: "Classic Miu Miu bag for the modern wardrobe.", price: 3200, image: "images/bags/miu miu 1.jpg", category: "miu miu-bag", size: "regular" },
-    { id: 13, name: "Orange Coach", description: "Vibrant orange Coach bag for a pop of color.", price: 3700, image: "images/bags/orange coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 14, name: "Pink Coach", description: "Pretty in pink – a Coach bag that brightens any look.", price: 3700, image: "images/bags/pink coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 15, name: "Plain Coach", description: "Clean, minimal Coach bag for everyday wear.", price: 3500, image: "images/bags/plain coach 1.jpg", category: "coach-bag", size: "regular" },
-    { id: 16, name: "Shinny Miu Miu", description: "Shimmering Miu Miu bag for special occasions.", price: 3200, image: "images/bags/shinny miu miu 1.jpg", category: "miu miu-bag", size: "regular" },
-    { id: 17, name: "White Coach", description: "Crisp white Coach bag for a fresh, clean style.", price: 3700, image: "images/bags/white coach 2.jpg", category: "coach-bag", size: "regular" },
-    { id: 18, name: "White LV", description: "Elegant white Louis Vuitton–inspired bag.", price: 3500, image: "images/bags/white lv 1.jpg", category: "tote-bag", size: "regular" }
+    { id: 1, name: "Black Coach", description: "Classic black Coach bag, perfect for everyday elegance.", price: 3700, image: "images/bags/black-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 2, name: "Bossy Coach", description: "Bold Coach design that makes a statement.", price: 3700, image: "images/bags/bossy-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 3, name: "Brown Coach", description: "Timeless brown Coach bag with premium finish.", price: 3700, image: "images/bags/brown-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 4, name: "Chainy Brown Coach", description: "Chain-strap brown Coach for a chic look.", price: 3700, image: "images/bags/chainy-brown-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 5, name: "Chainy Coach", description: "Coach bag with chain detail for extra style.", price: 3700, image: "images/bags/chainy-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 6, name: "Coach", description: "Iconic Coach bag in a versatile design.", price: 3700, image: "images/bags/coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 7, name: "Dark Coach", description: "Dark-toned Coach bag for a sophisticated look.", price: 3700, image: "images/bags/dark-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 8, name: "Flashy Coach", description: "Eye-catching Coach bag for those who love to stand out.", price: 3700, image: "images/bags/flashy-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 9, name: "Girly Coach", description: "Feminine Coach bag with a playful touch.", price: 3700, image: "images/bags/girly-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 10, name: "Grey Coach", description: "Elegant grey Coach bag for any outfit.", price: 3700, image: "images/bags/grey-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 11, name: "Malt Coach", description: "Malt-toned Coach bag with a warm finish.", price: 3700, image: "images/bags/malt-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 12, name: "Miu Miu", description: "Classic Miu Miu bag for the modern wardrobe.", price: 3200, image: "images/bags/miu-miu-1.jpg", category: "miu miu-bag", size: "regular" },
+    { id: 13, name: "Orange Coach", description: "Vibrant orange Coach bag for a pop of color.", price: 3700, image: "images/bags/orange-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 14, name: "Pink Coach", description: "Pretty in pink – a Coach bag that brightens any look.", price: 3700, image: "images/bags/pink-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 15, name: "Plain Coach", description: "Clean, minimal Coach bag for everyday wear.", price: 3500, image: "images/bags/plain-coach-1.jpg", category: "coach-bag", size: "regular" },
+    { id: 16, name: "Shinny Miu Miu", description: "Shimmering Miu Miu bag for special occasions.", price: 3200, image: "images/bags/shinny-miu-miu-1.jpg", category: "miu miu-bag", size: "regular" },
+    { id: 17, name: "White Coach", description: "Crisp white Coach bag for a fresh, clean style.", price: 3700, image: "images/bags/white-coach-2.jpg", category: "coach-bag", size: "regular" },
+    { id: 18, name: "White LV", description: "Elegant white Louis Vuitton–inspired bag.", price: 3500, image: "images/bags/white-lv-1.jpg", category: "tote-bag", size: "regular" }
 ];
 
 // Cart Management
@@ -315,7 +315,7 @@ let searchQuery = '';
 // Banner folder images – add more filenames here to rotate; one is picked at random per load (only include files that exist)
 const bannerFolderImages = [
     'images/banner/wallets-banner.jpg',
-    'images/banner/new product-banner.jpeg'
+    'images/banner/new-product-banner.jpeg'
 ];
 
 const editorialBanners = [
@@ -415,8 +415,8 @@ function observeEditorialBanners() {
 var heroBannerSlides = [
     { type: 'video', src: 'images/banner/banner1.mp4' },
     { type: 'video', src: 'images/banner/banner2.mp4' },
-    { type: 'video', src: 'images/banner/woman fashionable-banner.mp4' },
-    { type: 'image', src: 'images/banner/new product-banner.jpeg' },
+    { type: 'video', src: 'images/banner/woman-fashionable-banner.mp4' },
+    { type: 'image', src: 'images/banner/new-product-banner.jpeg' },
     { type: 'image', src: 'images/banner/wallets-banner.jpg' }
 ];
 var heroBannerCurrentIndex = 0;
