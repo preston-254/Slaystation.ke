@@ -1377,8 +1377,10 @@
             localStorage.setItem('slayStationResetTokens', JSON.stringify(resetTokens));
             console.log('Reset token stored for:', email.toLowerCase());
             
-            // Generate reset link (always use deployed URL, not localhost)
-            const deployedUrl = 'https://slay-station-28453.firebaseapp.com';
+            // Reset link must match where this site is hosted (Vercel, Firebase Hosting, or localhost)
+            var deployedUrl = (typeof window !== 'undefined' && window.location && window.location.protocol !== 'file:' && window.location.hostname)
+                ? window.location.origin.replace(/\/$/, '')
+                : 'https://slaystation-ke.vercel.app';
             const resetLink = `${deployedUrl}/reset-password.html?token=${encodeURIComponent(resetToken)}&email=${encodeURIComponent(email)}`;
             console.log('Generated reset link:', resetLink);
             
