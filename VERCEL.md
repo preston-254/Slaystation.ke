@@ -15,7 +15,7 @@ Use this when the site works on **localhost** but not on **Vercel** (`*.vercel.a
   git commit -m "Ensure LFS images pushed"
   git push origin main
   ```
-- **Vercel** runs `git lfs pull` during build (see `vercel.json`) so deployed files are real images.
+- **Vercel** fetches Git LFS files when it clones your GitHub repo—do **not** set `buildCommand` to `git lfs pull` (that command often fails in Vercel’s build environment and breaks the whole deploy).
 - In the browser: open DevTools → **Network** → click a broken image. If the response is a **few lines of text** starting with `version https://git-lfs.github.com/spec/v1`, LFS files were not fetched on deploy—fix push/LFS and redeploy.
 
 ### B. Branch and root directory
