@@ -30,7 +30,7 @@ const fragranceProducts = [
     { id: 403, name: "Laneige Sleeping Mask", description: "Overnight lip and skin care with a light, fresh scent. Wake up to hydrated, glowing skin.", price: 3200, image: "images/fragrances/laneige-sleeping-mask-1-.jpg", category: "fragrance" },
     { id: 404, name: "Sol de Janeiro Bum Bum Jet Set", description: "Travel-size cult favourite. Creamy body fragrance with warm, addictive notes.", price: 3500, image: "images/fragrances/sol-de-janeiro-bum-bum-jet-set-1.jpg", category: "fragrance" },
     { id: 405, name: "Sol del Janeiro Scent", description: "Signature body mist and fragrance. Bold, sunny scent that turns heads.", price: 2900, image: "images/fragrances/sol-del-janeiro-scent-1.jpg", category: "fragrance" },
-    { id: 406, name: "Sundays in Rio", description: "Relaxing, breezy fragrance inspired by lazy beach days. Light and uplifting.", price: 2700, image: "images/fragrances/sundays-in-rio-1.jpg", category: "fragrance" }
+    { id: 406, name: "Sundays in Rio", description: "Relaxing, breezy fragrance inspired by lazy beach days. Light and uplifting.", price: 2700, image: "images/fragrances/Sundays-in-rio-1.jpg", category: "fragrance" }
 ];
 
 if (typeof window !== 'undefined') {

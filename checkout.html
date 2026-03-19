@@ -313,7 +313,7 @@
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Google Places: if you see "This page can't load Google Maps correctly", go to Google Cloud Console → Credentials → your key → set Application restrictions to HTTP referrers and add: http://localhost/*, http://127.0.0.1/*, and your live site (e.g. https://yoursite.com/*). Enable "Maps JavaScript API" and "Places API". -->
+    <!-- Google Places: if Maps fail on Vercel but work locally, your API key is restricted to localhost. Google Cloud → Credentials → key → HTTP referrers: add https://YOUR-PROJECT.vercel.app/* and your custom domain. Also enable Maps JavaScript API + Places API. See VERCEL.md. -->
     <script>
     (function(){
       var key = (window.SLAYSTATION_GOOGLE_MAPS_KEY || '').trim();

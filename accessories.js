@@ -332,7 +332,7 @@ function renderYouMayAlsoLike(containerId) {
         const price = typeof p.price === 'number' ? p.price : parseInt(p.price, 10) || 0;
         const count = wishlistCounts[i % wishlistCounts.length];
         const href = 'product-detail.html?id=' + (p.id || '') + '&category=accessory';
-        const img = (p.image || '').indexOf('http') === 0 ? p.image : (p.image || 'images/bags/img_1328.jpg');
+        const img = (p.image || '').indexOf('http') === 0 ? p.image : (p.image || 'images/bags/IMG_1328.jpg');
         const name = (p.name || 'Product').substring(0, 45);
         const escName = name.replace(/"/g, '&quot;');
         if (isCartYmal) {

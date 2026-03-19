@@ -199,7 +199,7 @@
         container.innerHTML = cart.map(function(item) {
             var price = typeof item.price === 'number' ? item.price : parseInt(item.price, 10) || 0;
             var qty = item.quantity || 1;
-            var img = item.image ? imgSrc(item.image) : (baseUrl + 'images/bags/img_1328.jpg');
+            var img = item.image ? imgSrc(item.image) : (baseUrl + 'images/bags/IMG_1328.jpg');
             var cat = (item.category || 'bag');
             var name = (item.name || 'Item').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
             return '<div class="checkout-summary-item cart-item">' +

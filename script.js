@@ -1533,7 +1533,7 @@ function renderYouMayAlsoLike(containerId) {
         const price = typeof p.price === 'number' ? p.price : parseInt(p.price, 10) || 0;
         const count = wishlistCounts[i % wishlistCounts.length];
         const href = (typeof productDetailUrl === 'function' ? productDetailUrl(p.id) : null) || 'product-detail.html?id=' + p.id || 'index.html#products';
-        const imgRaw = (p.image || '').indexOf('http') === 0 ? p.image : (p.image || 'images/bags/img_1328.jpg');
+        const imgRaw = (p.image || '').indexOf('http') === 0 ? p.image : (p.image || 'images/bags/IMG_1328.jpg');
         const img = (typeof assetUrl === 'function' ? assetUrl(imgRaw) : imgRaw);
         const name = (p.name || 'Product').substring(0, 45);
         const escName = name.replace(/"/g, '&quot;');

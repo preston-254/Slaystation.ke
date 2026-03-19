@@ -1,6 +1,9 @@
 /**
  * Slay Station – Firebase (compat SDK, no build step)
  *
+ * Production (Vercel / custom domain): add your site hostname under Firebase Console →
+ * Authentication → Settings → Authorized domains. See VERCEL.md.
+ *
  * Load in HTML before auth.js, in this order:
  *   1. firebase-app-compat.js
  *   2. firebase-analytics-compat.js

@@ -658,9 +658,9 @@ function renderOrders() {
                 ` : ''}
                 ${order.deliveryFeeSet && !order.deliveryFeePaid && order.items && order.items.length ? (function() {
                     var imgs = order.items.slice(0, 4).map(function(item) {
-                        var src = (item.image && (item.image.indexOf('images/') !== -1 || item.image.indexOf('/') !== -1)) ? item.image : 'images/bags/img_1328.jpg';
+                        var src = (item.image && (item.image.indexOf('images/') !== -1 || item.image.indexOf('/') !== -1)) ? item.image : 'images/bags/IMG_1328.jpg';
                         var alt = (item.name || 'Product').replace(/"/g, '&quot;');
-                        return '<img src="' + src + '" alt="' + alt + '" style="width: 56px; height: 56px; object-fit: cover; border-radius: 8px; border: 1px solid #e0e0e0;" onerror="this.onerror=null; this.src=\'images/bags/img_1328.jpg\'; this.alt=\'Product\';">';
+                        return '<img src="' + src + '" alt="' + alt + '" style="width: 56px; height: 56px; object-fit: cover; border-radius: 8px; border: 1px solid #e0e0e0;" onerror="this.onerror=null; this.src=\'images/bags/IMG_1328.jpg\'; this.alt=\'Product\';">';
                     });
                     return '<div style="margin-bottom: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 10px; border: 2px solid #e0e0e0;"><p style="margin-bottom: 0.5rem; font-weight: 600; color: var(--admin-text);">Product</p><div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">' + imgs.join('') + '</div></div>';
                 })() : ''}
